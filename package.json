@@ -1,0 +1,12 @@
+{
+  "name": "storywise",
+  "scripts": {
+    "build:api": "npm run build -w api",
+    "build:frontend": "npm run build -w frontend",
+    "build": "npm run build:api && npm run build:frontend"
+  },
+  "workspaces": [
+    "api",
+    "frontend"
+  ]
+}
