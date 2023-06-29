@@ -3,7 +3,8 @@
   "scripts": {
     "build:api": "npm run build -w api",
     "build:frontend": "npm run build -w frontend",
-    "build": "npm run build:api && npm run build:frontend"
+    "build": "npm run build:api && npm run build:frontend && npm run copy:frontend",
+    "copy:frontend": "cp -r frontend/dist api/dist-frontend"
   },
   "workspaces": [
     "api",
