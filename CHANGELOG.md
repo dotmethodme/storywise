@@ -1,3 +1,12 @@
+# [0.4.0](https://github.com/dotmethodme/storywise/compare/0.3.1...0.4.0) (2023-06-29)
+
+
+### Features
+
+* time range selector ([f4b0c4c](https://github.com/dotmethodme/storywise/commit/f4b0c4c1d93419bc6c407af34bd6954a3c5545c2))
+
+
+
 ## [0.3.1](https://github.com/dotmethodme/storywise/compare/0.3.0...0.3.1) (2023-06-29)
 
 
