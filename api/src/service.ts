@@ -1,7 +1,7 @@
 import { Request } from "express";
 import { MongoClient } from "mongodb";
 import UAParser from "ua-parser-js";
-import { WebEvent } from "./models";
+import { WebEvent } from "./types/models";
 import fs from "fs";
 import path from "path";
 

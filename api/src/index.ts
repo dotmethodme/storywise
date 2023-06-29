@@ -14,13 +14,18 @@ import {
 import { authMiddleware } from "./middlewares/auth";
 import { connect } from "./service";
 import proxy from "express-http-proxy";
+import cors from "cors";
+
+const isLocalEnv = process.env.NODE_ENV === "local";
+const allowedOrigin = process.env.ALLOWED_ORIGIN || "localhost:8080";
 
 (async () => {
-  const isLocalEnv = process.env.LOCAL_ENV === "true";
+  const frontendPath = "dist-frontend";
   const app = express();
 
   await connect();
 
+  app.use(cors({ origin: allowedOrigin, credentials: true }));
   app.use(Fingerprint());
 
   app.use(express.json());
@@ -32,8 +37,14 @@ import proxy from "express-http-proxy";
   app.get("/admin/api/hits_per_page", authMiddleware, getHitsPerPageHandler);
   app.get("/admin/api/unique_sessions_per_page", getUniqueSessionsPerPageHandler);
   app.get("/admin/api/top_referrers", authMiddleware, getTopReferrersHandler);
-  app.get("/admin", authMiddleware, isLocalEnv ? proxy("localhost:5173") : express.static("public"));
-  app.get("/admin/*", authMiddleware, isLocalEnv ? proxy("localhost:5173") : express.static("public"));
+
+  if (isLocalEnv) {
+    app.get("/admin", authMiddleware, proxy("localhost:5173"));
+    app.get("/admin/*", authMiddleware, proxy("localhost:5173"));
+  } else {
+    app.use("/admin", authMiddleware, express.static(frontendPath));
+  }
+
   app.get("/api/headers", getHeadersHandler);
   app.get("/js/script.js", getJsFileHandler);
 

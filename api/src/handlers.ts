@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { WebEvent } from "./models";
+import { WebEvent } from "./types/models";
 import {
   createEvent,
   enrichEvent,
