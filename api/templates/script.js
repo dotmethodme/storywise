@@ -1,9 +1,7 @@
-const API_BASE_URL = "{{API_BASE_URL}}";
-
 // track an event by sending a POST request to the /api/event endpoint
 function registerPageview() {
-  // construct the URL for the API endpoint
-  const url = `${API_BASE_URL}/api/event`;
+  const base = "{{API_BASE_URL}}";
+  const url = `${base}/api/event`;
 
   const sessionId = getSessionId();
   const referrer = document.referrer;
