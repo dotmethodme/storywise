@@ -4,11 +4,15 @@ import { useGlobalStore } from "@/stores/counter";
 import * as echarts from "echarts";
 import { onMounted, ref } from "vue";
 
-const chart = ref<HTMLElement>();
+const chartEl = ref<HTMLElement>();
+const chartObj = ref<echarts.ECharts>();
 const store = useGlobalStore();
 
 async function init(days: number | undefined) {
-  if (!chart.value) return;
+  if (!chartEl.value) return;
+  if (chartObj.value) {
+    chartObj.value.dispose();
+  }
 
   const data = await getSessions(days);
 
@@ -43,8 +47,10 @@ async function init(days: number | undefined) {
     ],
   };
 
-  const myChart = echarts.init(chart.value);
-  myChart.setOption(option);
+  const chart = echarts.init(chartEl.value);
+  chart.setOption(option);
+
+  chartObj.value = chart;
 }
 
 onMounted(async () => init(store.selectedDays));
@@ -54,7 +60,7 @@ store.$subscribe(async (_, { selectedDays }) => {
 </script>
 
 <template>
-  <div ref="chart" class="chart"></div>
+  <div ref="chartEl" class="chart"></div>
 </template>
 
 <style scoped>
