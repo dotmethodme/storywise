@@ -1,4 +1,13 @@
-# 0.1.0 (2023-06-29)
+# [0.2.0](https://github.com/dotmethodme/storywise/compare/0.1.0...0.2.0) (2023-06-29)
+
+
+### Features
+
+* start command for package.json ([fbc725f](https://github.com/dotmethodme/storywise/commit/fbc725fd0bd09cc3f1c42f41593523250388e7d9))
+
+
+
+# [0.1.0](https://github.com/dotmethodme/storywise/compare/f1b82bf440955b5d933be6d2a9119f770945a158...0.1.0) (2023-06-29)
 
 
 ### Bug Fixes
