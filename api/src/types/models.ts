@@ -13,3 +13,9 @@ export type WebEvent = {
   device?: Record<string, any> | null;
   device_type?: string | null;
 };
+
+export type EventCreateRequest = {
+  path: string;
+  referrer?: string;
+  session_id?: string;
+};

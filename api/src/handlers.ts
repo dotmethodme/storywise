@@ -1,24 +1,18 @@
 import { Request, Response } from "express";
-import { WebEvent } from "./types/models";
 import {
   createEvent,
-  enrichEvent,
+  extractEvent,
   getAnalyticsCode,
   getHitsPerPage,
   getSessionsPerDay,
   getTopReferrers,
   getUniqueSessionsPerPage,
 } from "./service";
+import { EventCreateRequest, WebEvent } from "./types/models";
 
-export async function handleCreateEvent(req: Request, res: Response) {
+export async function handleCreateEvent(req: Request<{}, {}, EventCreateRequest>, res: Response) {
   try {
-    const { body } = req;
-    const event: WebEvent = {
-      session_id: req.fingerprint?.hash!,
-      path: body.path,
-      referrer: body.referrer,
-    };
-    enrichEvent(event, req);
+    const event = extractEvent(req);
     await createEvent(event);
     res.json({ message: "Success" });
   } catch (err) {
@@ -29,11 +23,7 @@ export async function handleCreateEvent(req: Request, res: Response) {
 
 export async function getEventHandler(req: Request, res: Response) {
   try {
-    const event: WebEvent = {
-      session_id: "test",
-      path: "/test",
-    };
-    enrichEvent(event, req);
+    const event = extractEvent(req);
     res.json(event);
   } catch (err) {
     console.error(err);

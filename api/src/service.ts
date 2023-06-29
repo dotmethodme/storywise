@@ -172,7 +172,13 @@ export async function getTopReferrers(number_of_days: number = 7): Promise<any[]
   return results;
 }
 
-export function enrichEvent(event: WebEvent, request: Request): void {
+export function extractEvent(request: Request): WebEvent {
+  const event: WebEvent = {
+    session_id: request.body.session_id || request.fingerprint?.hash!,
+    path: request.body.path,
+    referrer: request.body.referrer,
+  };
+
   event.timestamp = new Date();
   event.user_agent = request.headers["User-Agent"] as string | null;
   event.language = request.headers["Accept-Language"] as string | null;
@@ -188,6 +194,8 @@ export function enrichEvent(event: WebEvent, request: Request): void {
     event.device = user_agent.device;
     event.user_agent_enriched = user_agent;
   }
+
+  return event;
 }
 
 function getIpFromRequest(req: Request) {
