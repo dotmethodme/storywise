@@ -1,14 +1,16 @@
 <script lang="ts" setup>
 import { getSessions } from "@/service/data";
+import { useGlobalStore } from "@/stores/counter";
 import * as echarts from "echarts";
 import { onMounted, ref } from "vue";
 
 const chart = ref<HTMLElement>();
+const store = useGlobalStore();
 
-onMounted(async () => {
+async function init(days: number | undefined) {
   if (!chart.value) return;
 
-  const data = await getSessions();
+  const data = await getSessions(days);
 
   const option: echarts.EChartsOption = {
     xAxis: {
@@ -43,6 +45,11 @@ onMounted(async () => {
 
   const myChart = echarts.init(chart.value);
   myChart.setOption(option);
+}
+
+onMounted(async () => init(store.selectedDays));
+store.$subscribe(async (_, { selectedDays }) => {
+  init(selectedDays);
 });
 </script>
 

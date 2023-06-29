@@ -86,6 +86,7 @@ export async function getHitsPerPage(numberOfDays = 7): Promise<Array<Record<str
     {
       $sort: {
         count: -1,
+        "_id.path": 1,
       },
     },
     {

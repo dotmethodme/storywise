@@ -1,9 +1,15 @@
 <script lang="ts" setup>
 import { getTopReferrers } from "@/service/data";
 import type { Referrer } from "@/service/types";
+import { useGlobalStore } from "@/stores/counter";
 import { onMounted, ref } from "vue";
 
 const referrers = ref<Referrer[]>([]);
+const store = useGlobalStore();
+
+store.$subscribe(async (_, { selectedDays }) => {
+  referrers.value = await getTopReferrers(selectedDays);
+});
 
 onMounted(async () => {
   referrers.value = await getTopReferrers();

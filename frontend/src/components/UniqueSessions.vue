@@ -1,19 +1,24 @@
 <script lang="ts" setup>
 import { getHitsPerPage, getUniqueSessionsPerPage } from "@/service/data";
 import type { HitsPerPage } from "@/service/types";
+import { useGlobalStore } from "@/stores/counter";
 import { onMounted, ref } from "vue";
 
 const sessions = ref<HitsPerPage[]>([]);
 const hits = ref<HitsPerPage[]>([]);
+const store = useGlobalStore();
 
-onMounted(async () => {
+async function fetchData() {
   const [sessionData, hitData] = await Promise.all([
     getUniqueSessionsPerPage(),
     getHitsPerPage(),
   ]);
   sessions.value = sessionData;
   hits.value = hitData;
-});
+}
+
+onMounted(fetchData);
+store.$subscribe(fetchData);
 </script>
 <template>
   <div class="columns-2 justify-between justify-items-center">
