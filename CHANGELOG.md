@@ -1,3 +1,13 @@
+# [0.5.0](https://github.com/dotmethodme/storywise/compare/0.4.1...0.5.0) (2023-06-29)
+
+
+### Features
+
+* added collection of screen size ([47943b8](https://github.com/dotmethodme/storywise/commit/47943b80854085e8be544f6bee63d0e3c82ff559))
+* better admin layout ([1143598](https://github.com/dotmethodme/storywise/commit/11435981dcef64e3a297a9abebf7fb6139f60bfe))
+
+
+
 ## [0.4.1](https://github.com/dotmethodme/storywise/compare/0.4.0...0.4.1) (2023-06-29)
 
 
@@ -31,15 +41,6 @@
 ### Features
 
 * improve the handling of incoming events ([9796f7e](https://github.com/dotmethodme/storywise/commit/9796f7e3223dd97c1afbf64a63c1ca9e81ceb150))
-
-
-
-# [0.2.0](https://github.com/dotmethodme/storywise/compare/0.1.0...0.2.0) (2023-06-29)
-
-
-### Features
-
-* start command for package.json ([fbc725f](https://github.com/dotmethodme/storywise/commit/fbc725fd0bd09cc3f1c42f41593523250388e7d9))
 
 
 
