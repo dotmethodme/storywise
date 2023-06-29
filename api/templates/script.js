@@ -11,6 +11,14 @@ function registerPageview() {
     session_id: sessionId,
     path: window.location.pathname,
     referrer: referrer,
+    screen: {
+      width: window.screen.width,
+      height: window.screen.height,
+    },
+    window: {
+      width: window.innerWidth,
+      height: window.innerHeight,
+    },
   };
 
   // send a POST request to the API endpoint with the request body as JSON

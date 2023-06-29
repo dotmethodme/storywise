@@ -6,9 +6,10 @@ import {
   getHitsPerPage,
   getSessionsPerDay,
   getTopReferrers,
+  getUniqueSessionsByCountry,
   getUniqueSessionsPerPage,
 } from "./service";
-import { EventCreateRequest, WebEvent } from "./types/models";
+import { EventCreateRequest } from "./types/models";
 
 export async function handleCreateEvent(req: Request<{}, {}, EventCreateRequest>, res: Response) {
   try {
@@ -56,6 +57,17 @@ export const getUniqueSessionsPerPageHandler = async (req: Request, res: Respons
   try {
     const { days } = req.query;
     const result = await getUniqueSessionsPerPage(Number(days) || 7);
+    res.json(result);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getUniqueSessionsByCountryHandler = async (req: Request, res: Response) => {
+  try {
+    const { days } = req.query;
+    const result = await getUniqueSessionsByCountry(Number(days) || 7);
     res.json(result);
   } catch (err) {
     console.error(err);

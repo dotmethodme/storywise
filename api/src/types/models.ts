@@ -12,6 +12,14 @@ export type WebEvent = {
   os?: Record<string, any> | null;
   device?: Record<string, any> | null;
   device_type?: string | null;
+  screen?: {
+    width: number;
+    height: number;
+  };
+  window?: {
+    width: number;
+    height: number;
+  };
 };
 
 export type EventCreateRequest = {

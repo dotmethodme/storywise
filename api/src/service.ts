@@ -8,6 +8,8 @@ import path from "path";
 const uri = process.env.MONGODB_URI!;
 const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:3000";
 
+const databaseName = "analytics";
+const collectionName = "events";
 const client = new MongoClient(uri);
 
 export async function connect() {
@@ -19,124 +21,133 @@ export async function disconnect() {
 }
 
 export async function createEvent(event: WebEvent): Promise<void> {
-  await client.db("analytics").collection("events").insertOne(event);
+  await client.db(databaseName).collection(collectionName).insertOne(event);
 }
 
 export async function getSessionsPerDay(numberOfDays = 7): Promise<Array<Record<string, unknown>>> {
   const startDate = new Date(new Date().getTime() - numberOfDays * 24 * 60 * 60 * 1000);
   const endDate = new Date();
-  const pipeline = [
-    {
-      $match: {
-        timestamp: { $gte: startDate, $lt: endDate },
-      },
-    },
-    {
-      $group: {
-        _id: {
-          year: { $year: "$timestamp" },
-          month: { $month: "$timestamp" },
-          day: { $dayOfMonth: "$timestamp" },
-          session_id: "$session_id",
+  const results = await client
+    .db(databaseName)
+    .collection(collectionName)
+    .aggregate([
+      {
+        $match: {
+          timestamp: { $gte: startDate, $lt: endDate },
         },
       },
-    },
-    {
-      $group: {
-        _id: { year: "$_id.year", month: "$_id.month", day: "$_id.day" },
-        count: { $sum: 1 },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$timestamp" },
+            month: { $month: "$timestamp" },
+            day: { $dayOfMonth: "$timestamp" },
+            session_id: "$session_id",
+          },
+        },
       },
-    },
-    {
-      $sort: {
-        "_id.year": 1,
-        "_id.month": 1,
-        "_id.day": 1,
+      {
+        $group: {
+          _id: { year: "$_id.year", month: "$_id.month", day: "$_id.day" },
+          count: { $sum: 1 },
+        },
       },
-    },
-    {
-      $project: {
-        _id: 0,
-        year: "$_id.year",
-        month: "$_id.month",
-        day: "$_id.day",
-        count: 1,
+      {
+        $sort: {
+          "_id.year": 1,
+          "_id.month": 1,
+          "_id.day": 1,
+        },
       },
-    },
-  ];
-  const results = await client.db("analytics").collection("events").aggregate(pipeline).toArray();
+      {
+        $project: {
+          _id: 0,
+          year: "$_id.year",
+          month: "$_id.month",
+          day: "$_id.day",
+          count: 1,
+        },
+      },
+    ])
+    .toArray();
   return results;
 }
 
 export async function getHitsPerPage(numberOfDays = 7): Promise<Array<Record<string, unknown>>> {
   const startDate = new Date(new Date().getTime() - numberOfDays * 24 * 60 * 60 * 1000);
   const endDate = new Date();
-  const pipeline = [
-    {
-      $match: {
-        timestamp: { $gte: startDate, $lt: endDate },
+  const results = await client
+    .db(databaseName)
+    .collection(collectionName)
+    .aggregate([
+      {
+        $match: {
+          timestamp: { $gte: startDate, $lt: endDate },
+        },
       },
-    },
-    {
-      $group: {
-        _id: { path: "$path" },
-        count: { $sum: 1 },
+      {
+        $group: {
+          _id: { path: "$path" },
+          count: { $sum: 1 },
+        },
       },
-    },
-    {
-      $sort: {
-        count: -1,
-        "_id.path": 1,
+      {
+        $sort: {
+          count: -1,
+          "_id.path": 1,
+        },
       },
-    },
-    {
-      $project: {
-        _id: 0,
-        path: "$_id.path",
-        count: 1,
+      {
+        $project: {
+          _id: 0,
+          path: "$_id.path",
+          count: 1,
+        },
       },
-    },
-  ];
-  const results = await client.db("analytics").collection("events").aggregate(pipeline).toArray();
+    ])
+    .toArray();
   return results;
 }
 
 export async function getUniqueSessionsPerPage(numberOfDays = 7): Promise<Array<Record<string, unknown>>> {
   const startDate = new Date(new Date().getTime() - numberOfDays * 24 * 60 * 60 * 1000);
   const endDate = new Date();
-  const pipeline = [
-    {
-      $match: {
-        timestamp: { $gte: startDate, $lt: endDate },
+  const results = await client
+    .db(databaseName)
+    .collection(collectionName)
+    .aggregate([
+      {
+        $match: {
+          timestamp: { $gte: startDate, $lt: endDate },
+        },
       },
-    },
-    {
-      $group: {
-        _id: { path: "$path", session_id: "$session_id" },
-        count: { $sum: 1 },
+      {
+        $group: {
+          _id: { path: "$path", session_id: "$session_id" },
+          count: { $sum: 1 },
+        },
       },
-    },
-    {
-      $group: {
-        _id: { path: "$_id.path" },
-        count: { $sum: 1 },
+      {
+        $group: {
+          _id: { path: "$_id.path" },
+          count: { $sum: 1 },
+        },
       },
-    },
-    {
-      $sort: {
-        count: -1,
-        "_id.path": 1,
+      {
+        $sort: {
+          count: -1,
+          "_id.path": 1,
+        },
       },
-    },
-    {
-      $project: {
-        _id: 0,
-        path: "$_id.path",
-        count: 1,
+      {
+        $project: {
+          _id: 0,
+          path: "$_id.path",
+          count: 1,
+        },
       },
-    },
-  ];
-  const results = await client.db("analytics").collection("events").aggregate(pipeline).toArray();
+    ])
+    .toArray();
   return results;
 }
 
@@ -144,32 +155,78 @@ export async function getTopReferrers(number_of_days: number = 7): Promise<any[]
   const startDate = new Date(new Date().getTime() - number_of_days * 24 * 60 * 60 * 1000);
   const endDate = new Date();
 
-  const pipeline = [
-    {
-      $match: {
-        timestamp: { $gte: startDate, $lt: endDate },
+  const results = await client
+    .db(databaseName)
+    .collection(collectionName)
+    .aggregate([
+      {
+        $match: {
+          timestamp: { $gte: startDate, $lt: endDate },
+        },
       },
-    },
-    {
-      $group: {
-        _id: { referrer: "$referrer" },
-        count: { $sum: 1 },
+      {
+        $group: {
+          _id: { referrer: "$referrer" },
+          count: { $sum: 1 },
+        },
       },
-    },
-    {
-      $sort: {
-        count: -1,
+      {
+        $sort: {
+          count: -1,
+          "_id.referrer": 1,
+        },
       },
-    },
-    {
-      $project: {
-        _id: 0,
-        referrer: "$_id.referrer",
-        count: 1,
+      {
+        $project: {
+          _id: 0,
+          referrer: "$_id.referrer",
+          count: 1,
+        },
       },
-    },
-  ];
-  const results = await client.db("analytics").collection("events").aggregate(pipeline).toArray();
+    ])
+    .toArray();
+  return results;
+}
+
+export async function getUniqueSessionsByCountry(number_of_days: number = 7): Promise<any[]> {
+  const startDate = new Date(new Date().getTime() - number_of_days * 24 * 60 * 60 * 1000);
+  const endDate = new Date();
+
+  const results = await client
+    .db(databaseName)
+    .collection(collectionName)
+    .aggregate([
+      {
+        $match: {
+          timestamp: { $gte: startDate, $lt: endDate },
+        },
+      },
+      {
+        $group: {
+          _id: { country: "$country", session_id: "$session_id" },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $group: {
+          _id: { country: "$_id.country" },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: {
+          count: -1,
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          country: "$_id.country",
+          count: 1,
+        },
+      },
+    ])
+    .toArray();
   return results;
 }
 
@@ -178,6 +235,8 @@ export function extractEvent(request: Request): WebEvent {
     session_id: request.body.session_id || request.fingerprint?.hash!,
     path: request.body.path,
     referrer: request.body.referrer,
+    screen: request.body.screen,
+    window: request.body.window,
   };
 
   event.timestamp = new Date();

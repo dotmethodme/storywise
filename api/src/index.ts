@@ -8,6 +8,7 @@ import {
   getJsFileHandler,
   getSessionsPerDayHandler,
   getTopReferrersHandler,
+  getUniqueSessionsByCountryHandler,
   getUniqueSessionsPerPageHandler,
   handleCreateEvent,
 } from "./handlers";
@@ -37,6 +38,7 @@ const allowedOrigin = process.env.ALLOWED_ORIGIN || "localhost:8080";
   app.get("/admin/api/hits_per_page", authMiddleware, getHitsPerPageHandler);
   app.get("/admin/api/unique_sessions_per_page", getUniqueSessionsPerPageHandler);
   app.get("/admin/api/top_referrers", authMiddleware, getTopReferrersHandler);
+  app.get("/admin/api/unique_sessions_by_country", authMiddleware, getUniqueSessionsByCountryHandler);
 
   if (isLocalEnv) {
     app.get("/admin", authMiddleware, proxy("localhost:5173"));
