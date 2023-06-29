@@ -181,9 +181,9 @@ export function extractEvent(request: Request): WebEvent {
   };
 
   event.timestamp = new Date();
-  event.user_agent = request.headers["User-Agent"] as string | null;
-  event.language = request.headers["Accept-Language"] as string | null;
-  event.country = request.headers["CF-IPCountry"] as string | null;
+  event.user_agent = request.headers["user-agent"] as string | null;
+  event.language = request.headers["accept-language"] as string | null;
+  event.country = request.headers["cf-ipcountry"] as string | null;
   event.ip = getIpFromRequest(request);
 
   if (event.user_agent) {
