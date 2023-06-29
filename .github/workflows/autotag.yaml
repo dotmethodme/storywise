@@ -3,7 +3,7 @@ name: Automated tagging
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   deploy:
