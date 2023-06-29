@@ -1,3 +1,12 @@
+# [0.3.0](https://github.com/dotmethodme/storywise/compare/0.2.0...0.3.0) (2023-06-29)
+
+
+### Features
+
+* improve the handling of incoming events ([9796f7e](https://github.com/dotmethodme/storywise/commit/9796f7e3223dd97c1afbf64a63c1ca9e81ceb150))
+
+
+
 # [0.2.0](https://github.com/dotmethodme/storywise/compare/0.1.0...0.2.0) (2023-06-29)
 
 
