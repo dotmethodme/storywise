@@ -2,6 +2,8 @@
 import Sessions from "@/components/UniqueSessions.vue";
 import SessionsOverTime from "@/components/SessionsOverTime.vue";
 import Referrers from "@/components/Referrers.vue";
+import Stats from "@/components/Stats.vue";
+
 import { useGlobalStore } from "@/stores/counter";
 
 const store = useGlobalStore();
@@ -30,8 +32,12 @@ const dayOptions = [7, 14, 30, 90];
         </button>
       </div>
     </div>
+
     <SessionsOverTime />
     <div class="mt-8"></div>
+    <Stats />
+    <div class="mt-4"></div>
+
     <Sessions />
     <div class="mt-4"></div>
     <Referrers />

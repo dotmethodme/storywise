@@ -230,6 +230,55 @@ export async function getUniqueSessionsByCountry(number_of_days: number = 7): Pr
   return results;
 }
 
+type Stats = {
+  uniqueVisitors: number;
+  totalPageviews: number;
+  viewsPerVisitor: number;
+};
+
+export async function getStats(number_of_days: number = 7): Promise<Stats[]> {
+  const startDate = new Date(new Date().getTime() - number_of_days * 24 * 60 * 60 * 1000);
+  const endDate = new Date();
+
+  const [uniqueVisitors, totalPageviews, viewsPerVisitor] = await Promise.all([
+    client
+      .db(databaseName)
+      .collection(collectionName)
+      .aggregate<Stats[]>([
+        { $match: { timestamp: { $gte: startDate, $lt: endDate } } },
+        { $group: { _id: "$session_id" } },
+        { $count: "uniqueVisitors" },
+        { $project: { _id: 0 } },
+      ])
+      .toArray(),
+    client
+      .db(databaseName)
+      .collection(collectionName)
+      .aggregate<Stats[]>([
+        { $match: { timestamp: { $gte: startDate, $lt: endDate } } },
+        { $count: "path" },
+        { $project: { _id: 0, totalPageviews: "$path" } },
+      ])
+      .toArray(),
+    client
+      .db(databaseName)
+      .collection(collectionName)
+      .aggregate<Stats>([
+        { $match: { timestamp: { $gte: startDate, $lt: endDate } } },
+        { $group: { _id: "$session_id", count: { $sum: 1 } } },
+        { $group: { _id: null, viewsPerVisitor: { $avg: "$count" } } },
+        { $project: { _id: 0 } },
+      ])
+      .toArray(),
+  ]);
+
+  return {
+    ...uniqueVisitors[0],
+    ...totalPageviews[0],
+    ...viewsPerVisitor[0],
+  };
+}
+
 export function extractEvent(request: Request): WebEvent {
   const event: WebEvent = {
     session_id: request.body.session_id || request.fingerprint?.hash!,

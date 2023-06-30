@@ -14,3 +14,9 @@ export type Referrer = {
   count: number;
   referrer: string;
 };
+
+export type Stats = {
+  uniqueVisitors: number;
+  totalPageviews: number;
+  viewsPerVisitor: number;
+};

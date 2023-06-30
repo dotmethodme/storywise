@@ -5,6 +5,7 @@ import {
   getAnalyticsCode,
   getHitsPerPage,
   getSessionsPerDay,
+  getStats,
   getTopReferrers,
   getUniqueSessionsByCountry,
   getUniqueSessionsPerPage,
@@ -35,6 +36,17 @@ export async function getSessionsPerDayHandler(req: Request, res: Response) {
   try {
     const { days } = req.query;
     const result = await getSessionsPerDay(Number(days) || 7);
+    res.json(result);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+export async function getStatsHandler(req: Request, res: Response) {
+  try {
+    const { days } = req.query;
+    const result = await getStats(Number(days) || 7);
     res.json(result);
   } catch (err) {
     console.error(err);
