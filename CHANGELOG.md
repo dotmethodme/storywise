@@ -1,3 +1,12 @@
+# [0.6.0](https://github.com/dotmethodme/storywise/compare/0.5.0...0.6.0) (2023-06-30)
+
+
+### Features
+
+* stats ([4f27cdd](https://github.com/dotmethodme/storywise/commit/4f27cdd13a282493e97d5ebb2aa0d0dca1a34593))
+
+
+
 # [0.5.0](https://github.com/dotmethodme/storywise/compare/0.4.1...0.5.0) (2023-06-29)
 
 
@@ -32,15 +41,6 @@
 ### Bug Fixes
 
 * duplicate base url ([0afa811](https://github.com/dotmethodme/storywise/commit/0afa811dfde0b26aaa758b4241d2b42e24cdbc8f))
-
-
-
-# [0.3.0](https://github.com/dotmethodme/storywise/compare/0.2.0...0.3.0) (2023-06-29)
-
-
-### Features
-
-* improve the handling of incoming events ([9796f7e](https://github.com/dotmethodme/storywise/commit/9796f7e3223dd97c1afbf64a63c1ca9e81ceb150))
 
 
 
