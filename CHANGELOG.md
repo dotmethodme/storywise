@@ -1,3 +1,12 @@
+# [0.7.0](https://github.com/dotmethodme/storywise/compare/0.6.1...0.7.0) (2023-07-01)
+
+
+### Features
+
+* view more modal for long lists ([1c7a381](https://github.com/dotmethodme/storywise/commit/1c7a3815b022cb01ebc24f1693bfb970e5b2fc36))
+
+
+
 ## [0.6.1](https://github.com/dotmethodme/storywise/compare/0.6.0...0.6.1) (2023-06-30)
 
 
@@ -27,15 +36,6 @@
 ### Bug Fixes
 
 * header extraction is supposed to be lowercase ([4ed37e8](https://github.com/dotmethodme/storywise/commit/4ed37e883972dc10393a976a6eec6441b6ba7848))
-
-
-
-# [0.4.0](https://github.com/dotmethodme/storywise/compare/0.3.1...0.4.0) (2023-06-29)
-
-
-### Features
-
-* time range selector ([f4b0c4c](https://github.com/dotmethodme/storywise/commit/f4b0c4c1d93419bc6c407af34bd6954a3c5545c2))
 
 
 
