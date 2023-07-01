@@ -17,7 +17,7 @@ onMounted(async () => {
 </script>
 <template>
   <div>
-    <div class="card bg-base-100 shadow-xl card-compact card-bordered">
+    <div class="card bg-base-100 shadow-lg card-compact">
       <div class="card-body">
         <table class="table table-compact">
           <tbody>

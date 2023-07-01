@@ -36,7 +36,7 @@ async function init(days: number | undefined) {
     },
     yAxis: {
       type: "value",
-      interval: 1,
+      minInterval: 1,
     },
     series: [
       {

@@ -2,7 +2,7 @@
 import { getHitsPerPage, getUniqueSessionsPerPage } from "@/service/data";
 import type { HitsPerPage } from "@/service/types";
 import { useGlobalStore } from "@/stores/counter";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 const sessions = ref<HitsPerPage[]>([]);
 const hits = ref<HitsPerPage[]>([]);
@@ -17,45 +17,124 @@ async function fetchData() {
   hits.value = hitData;
 }
 
+const viewLimit = 10;
+const visibleHits = computed(() => hits.value.slice(0, viewLimit));
+const visibleSessions = computed(() => sessions.value.slice(0, viewLimit));
+const viewMoreHits = computed(() => hits.value.length > viewLimit);
+const viewMoreHitsOn = ref(false);
+const viewMoreSessions = computed(() => sessions.value.length > viewLimit);
+const viewMoreSessionsOn = ref(false);
+
 onMounted(fetchData);
 store.$subscribe(fetchData);
 </script>
 <template>
-  <div class="columns-2 justify-between justify-items-center">
-    <div class="card bg-base-100 shadow-xl card-compact card-bordered">
-      <div class="card-body">
-        <table class="table table-compact">
-          <tbody>
-            <tr>
-              <th class="font-bold">Session count</th>
-              <th class="font-bold text-right"></th>
-            </tr>
-            <!-- row 1 -->
-            <tr v-for="session in sessions" :key="session.path">
-              <td>{{ session.path || "-" }}</td>
-              <td class="text-right">{{ session.count }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+  <div>
+    <div class="columns-2 justify-between justify-items-center">
+      <div class="card bg-base-100 shadow-lg card-compact">
+        <div class="card-body">
+          <table class="table table-compact w-full">
+            <tbody>
+              <tr>
+                <th class="font-bold">Top sessions by page</th>
+                <th class="font-bold text-right">
+                  <span
+                    class="link link-neutral"
+                    v-if="viewMoreSessions"
+                    @click="() => (viewMoreSessionsOn = !viewMoreSessionsOn)"
+                    >More
+                  </span>
+                </th>
+              </tr>
+              <!-- row 1 -->
+              <tr v-for="session in visibleSessions" :key="session.path">
+                <td>{{ session.path || "-" }}</td>
+                <td class="text-right">{{ session.count }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-    <div class="card bg-base-100 shadow-xl card-compact card-bordered">
-      <div class="card-body">
-        <table class="table table-compact">
-          <tbody>
-            <tr>
-              <th class="font-bold">Hit count</th>
-              <th class="font-bold text-right"></th>
-            </tr>
-            <!-- row 1 -->
-            <tr v-for="hit in hits" :key="hit.path">
-              <td>{{ hit.path || "-" }}</td>
-              <td class="text-right">{{ hit.count }}</td>
-            </tr>
-          </tbody>
-        </table>
+        <dialog
+          class="modal modal-bottom sm:modal-middle"
+          :class="viewMoreSessionsOn ? 'modal-open' : ''"
+        >
+          <form method="dialog" class="modal-box max-h-max m-auto">
+            <table class="table table-compact w-full">
+              <tbody>
+                <tr>
+                  <th class="font-bold">Top sessions by page</th>
+                  <th class="font-bold text-right"></th>
+                </tr>
+                <!-- row 1 -->
+                <tr v-for="session in sessions" :key="session.path">
+                  <td>{{ session.path || "-" }}</td>
+                  <td class="text-right">{{ session.count }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </form>
+          <form
+            method="dialog"
+            class="modal-backdrop"
+            @click="() => (viewMoreSessionsOn = false)"
+          ></form>
+        </dialog>
+      </div>
+
+      <div class="card bg-base-100 shadow-lg card-compact">
+        <div class="card-body">
+          <table class="table table-compact w-full">
+            <tbody>
+              <tr>
+                <th class="font-bold">Top hit count by page</th>
+                <th class="font-bold text-right">
+                  <span
+                    class="link link-neutral"
+                    v-if="viewMoreHits"
+                    @click="() => (viewMoreHitsOn = !viewMoreHitsOn)"
+                  >
+                    More
+                  </span>
+                </th>
+              </tr>
+              <!-- row 1 -->
+              <tr v-for="hit in visibleHits" :key="hit.path">
+                <td>{{ hit.path || "-" }}</td>
+                <td class="text-right">{{ hit.count }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <dialog
+          class="modal modal-bottom sm:modal-middle"
+          :class="viewMoreHitsOn ? 'modal-open' : ''"
+        >
+          <form method="dialog" class="modal-box max-h-max m-auto">
+            <table class="table table-compact w-full">
+              <tbody>
+                <tr>
+                  <th class="font-bold">Top hit count by page</th>
+                  <th class="font-bold text-right"></th>
+                </tr>
+                <!-- row 1 -->
+                <tr v-for="session in hits" :key="session.path">
+                  <td>{{ session.path || "-" }}</td>
+                  <td class="text-right">{{ session.count }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </form>
+          <form
+            method="dialog"
+            class="modal-backdrop"
+            @click="() => (viewMoreHitsOn = false)"
+          ></form>
+        </dialog>
       </div>
     </div>
   </div>
 </template>
+
+<style></style>
