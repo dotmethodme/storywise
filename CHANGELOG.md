@@ -1,3 +1,12 @@
+# [0.9.0](https://github.com/dotmethodme/storywise/compare/0.8.0...0.9.0) (2023-07-02)
+
+
+### Features
+
+* improve the pageview trigger to use the push state and pop state even listeners ([8abebfb](https://github.com/dotmethodme/storywise/commit/8abebfb3bafc5f7c2be3e5c21b14f5f57f705334))
+
+
+
 # [0.8.0](https://github.com/dotmethodme/storywise/compare/0.7.1...0.8.0) (2023-07-02)
 
 
@@ -21,15 +30,6 @@
 
 
 ## [0.6.1](https://github.com/dotmethodme/storywise/compare/0.6.0...0.6.1) (2023-06-30)
-
-
-
-# [0.6.0](https://github.com/dotmethodme/storywise/compare/0.5.0...0.6.0) (2023-06-30)
-
-
-### Features
-
-* stats ([4f27cdd](https://github.com/dotmethodme/storywise/commit/4f27cdd13a282493e97d5ebb2aa0d0dca1a34593))
 
 
 
