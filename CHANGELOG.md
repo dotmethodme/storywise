@@ -1,3 +1,7 @@
+## [0.7.1](https://github.com/dotmethodme/storywise/compare/0.7.0...0.7.1) (2023-07-02)
+
+
+
 # [0.7.0](https://github.com/dotmethodme/storywise/compare/0.6.1...0.7.0) (2023-07-01)
 
 
@@ -27,15 +31,6 @@
 
 * added collection of screen size ([47943b8](https://github.com/dotmethodme/storywise/commit/47943b80854085e8be544f6bee63d0e3c82ff559))
 * better admin layout ([1143598](https://github.com/dotmethodme/storywise/commit/11435981dcef64e3a297a9abebf7fb6139f60bfe))
-
-
-
-## [0.4.1](https://github.com/dotmethodme/storywise/compare/0.4.0...0.4.1) (2023-06-29)
-
-
-### Bug Fixes
-
-* header extraction is supposed to be lowercase ([4ed37e8](https://github.com/dotmethodme/storywise/commit/4ed37e883972dc10393a976a6eec6441b6ba7848))
 
 
 
