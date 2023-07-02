@@ -1,3 +1,12 @@
+# [0.8.0](https://github.com/dotmethodme/storywise/compare/0.7.1...0.8.0) (2023-07-02)
+
+
+### Features
+
+* database name should be configurable ([5d56836](https://github.com/dotmethodme/storywise/commit/5d56836e1df50bedcabc1c082c150ccd46ac0ceb))
+
+
+
 ## [0.7.1](https://github.com/dotmethodme/storywise/compare/0.7.0...0.7.1) (2023-07-02)
 
 
@@ -21,16 +30,6 @@
 ### Features
 
 * stats ([4f27cdd](https://github.com/dotmethodme/storywise/commit/4f27cdd13a282493e97d5ebb2aa0d0dca1a34593))
-
-
-
-# [0.5.0](https://github.com/dotmethodme/storywise/compare/0.4.1...0.5.0) (2023-06-29)
-
-
-### Features
-
-* added collection of screen size ([47943b8](https://github.com/dotmethodme/storywise/commit/47943b80854085e8be544f6bee63d0e3c82ff559))
-* better admin layout ([1143598](https://github.com/dotmethodme/storywise/commit/11435981dcef64e3a297a9abebf7fb6139f60bfe))
 
 
 
