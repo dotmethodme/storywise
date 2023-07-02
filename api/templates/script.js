@@ -1,7 +1,13 @@
+// @ts-check
 // track an event by sending a POST request to the /api/event endpoint
-function registerPageview() {
-  const base = "{{API_BASE_URL}}";
-  const url = `${base}/api/event`;
+var storywise = {
+  base: "{{API_BASE_URL}}",
+  pageview,
+  getSessionId,
+};
+
+function pageview() {
+  const url = `${storywise.base}/api/event`;
 
   const sessionId = getSessionId();
   const referrer = document.referrer;
@@ -21,7 +27,6 @@ function registerPageview() {
     },
   };
 
-  // send a POST request to the API endpoint with the request body as JSON
   fetch(url, {
     method: "POST",
     headers: {
@@ -40,10 +45,10 @@ function registerPageview() {
 }
 
 function getSessionId() {
-  let sessionId = localStorage.getItem("session_id");
+  let sessionId = localStorage.getItem("storywise_session_id");
   if (!sessionId) {
     sessionId = generateId();
-    localStorage.setItem("session_id", sessionId);
+    localStorage.setItem("storywise_session_id", sessionId);
   }
   return sessionId;
 }
@@ -53,7 +58,12 @@ function generateId() {
 }
 
 (() => {
-  setTimeout(() => {
-    registerPageview();
-  }, 100);
+  if (window.history.pushState) {
+    var originalPushState = window.history["pushState"];
+    window.history.pushState = function () {
+      originalPushState.apply(this, arguments);
+      pageview();
+    };
+    window.addEventListener("popstate", pageview);
+  }
 })();
