@@ -8,7 +8,7 @@ import path from "path";
 const uri = process.env.MONGODB_URI!;
 const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:3000";
 
-const databaseName = "analytics";
+const databaseName = process.env.DATABASE_NAME || "analytics";
 const collectionName = "events";
 const client = new MongoClient(uri);
 
