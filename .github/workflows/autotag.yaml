@@ -24,6 +24,8 @@ jobs:
           tag-prefix: ""
           skip-on-empty: "false"
           skip-version-file: true
+          output-file: false
+          skip-commit: true
 
       - name: Automated GitHub Release
         uses: actions/create-release@v1
