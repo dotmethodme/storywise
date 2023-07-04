@@ -1,6 +1,6 @@
-import { ref, computed } from "vue";
+import type { SiteConfig } from "@/service/types";
 import { defineStore } from "pinia";
-import { SiteConfig } from "@/service/types";
+import { ref } from "vue";
 
 export const useGlobalStore = defineStore("global", () => {
   const selectedDays = ref(30);
