@@ -1,3 +1,12 @@
+# [0.10.0](https://github.com/dotmethodme/storywise/compare/0.9.1...0.10.0) (2023-07-04)
+
+
+### Features
+
+* various user experience improvements for getting started ([5f5ff76](https://github.com/dotmethodme/storywise/commit/5f5ff76d1610d4e2b07395e8ce572cac3fbaa1df))
+
+
+
 ## [0.9.1](https://github.com/dotmethodme/storywise/compare/0.9.0...0.9.1) (2023-07-04)
 
 
@@ -21,15 +30,6 @@
 
 
 ## [0.7.1](https://github.com/dotmethodme/storywise/compare/0.7.0...0.7.1) (2023-07-02)
-
-
-
-# [0.7.0](https://github.com/dotmethodme/storywise/compare/0.6.1...0.7.0) (2023-07-01)
-
-
-### Features
-
-* view more modal for long lists ([1c7a381](https://github.com/dotmethodme/storywise/commit/1c7a3815b022cb01ebc24f1693bfb970e5b2fc36))
 
 
 
