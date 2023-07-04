@@ -4,7 +4,7 @@ import { WebEvent } from "../types/models";
 
 export function extractEvent(request: Request): WebEvent {
   const event: WebEvent = {
-    session_id: request.body.session_id || request.fingerprint?.hash!,
+    session_id: request.body.session_id,
     path: request.body.path,
     referrer: request.body.referrer,
     screen: request.body.screen,

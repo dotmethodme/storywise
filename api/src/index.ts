@@ -1,6 +1,5 @@
 require("dotenv").config();
 import express from "express";
-import Fingerprint from "express-fingerprint";
 import {
   getEventHandler,
   getHeadersHandler,
@@ -29,7 +28,6 @@ const isLocalEnv = process.env.NODE_ENV === "local";
   await connect();
 
   app.use(cors({ origin: config.ALLOWED_ORIGIN, credentials: true }));
-  app.use(Fingerprint());
 
   app.use(express.json());
 
