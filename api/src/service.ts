@@ -1,35 +1,20 @@
 import { Request } from "express";
-import { MongoClient } from "mongodb";
-import UAParser from "ua-parser-js";
-import { WebEvent } from "./types/models";
 import fs from "fs";
 import path from "path";
-
-const uri = process.env.MONGODB_URI!;
-const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:3000";
-
-const databaseName = process.env.DATABASE_NAME || "analytics";
-const collectionName = "events";
-const client = new MongoClient(uri);
-
-export async function connect() {
-  await client.connect();
-}
-
-export async function disconnect() {
-  await client.close();
-}
+import UAParser from "ua-parser-js";
+import { cols, databaseName, mongoClient } from "./database";
+import { WebEvent } from "./types/models";
 
 export async function createEvent(event: WebEvent): Promise<void> {
-  await client.db(databaseName).collection(collectionName).insertOne(event);
+  await mongoClient.db(databaseName).collection(cols.events).insertOne(event);
 }
 
 export async function getSessionsPerDay(numberOfDays = 7): Promise<Array<Record<string, unknown>>> {
   const startDate = new Date(new Date().getTime() - numberOfDays * 24 * 60 * 60 * 1000);
   const endDate = new Date();
-  const results = await client
+  const results = await mongoClient
     .db(databaseName)
-    .collection(collectionName)
+    .collection(cols.events)
     .aggregate([
       {
         $match: {
@@ -76,9 +61,9 @@ export async function getSessionsPerDay(numberOfDays = 7): Promise<Array<Record<
 export async function getHitsPerPage(numberOfDays = 7): Promise<Array<Record<string, unknown>>> {
   const startDate = new Date(new Date().getTime() - numberOfDays * 24 * 60 * 60 * 1000);
   const endDate = new Date();
-  const results = await client
+  const results = await mongoClient
     .db(databaseName)
-    .collection(collectionName)
+    .collection(cols.events)
     .aggregate([
       {
         $match: {
@@ -112,9 +97,9 @@ export async function getHitsPerPage(numberOfDays = 7): Promise<Array<Record<str
 export async function getUniqueSessionsPerPage(numberOfDays = 7): Promise<Array<Record<string, unknown>>> {
   const startDate = new Date(new Date().getTime() - numberOfDays * 24 * 60 * 60 * 1000);
   const endDate = new Date();
-  const results = await client
+  const results = await mongoClient
     .db(databaseName)
-    .collection(collectionName)
+    .collection(cols.events)
     .aggregate([
       {
         $match: {
@@ -155,9 +140,9 @@ export async function getTopReferrers(number_of_days: number = 7): Promise<any[]
   const startDate = new Date(new Date().getTime() - number_of_days * 24 * 60 * 60 * 1000);
   const endDate = new Date();
 
-  const results = await client
+  const results = await mongoClient
     .db(databaseName)
-    .collection(collectionName)
+    .collection(cols.events)
     .aggregate([
       {
         $match: {
@@ -192,9 +177,9 @@ export async function getUniqueSessionsByCountry(number_of_days: number = 7): Pr
   const startDate = new Date(new Date().getTime() - number_of_days * 24 * 60 * 60 * 1000);
   const endDate = new Date();
 
-  const results = await client
+  const results = await mongoClient
     .db(databaseName)
-    .collection(collectionName)
+    .collection(cols.events)
     .aggregate([
       {
         $match: {
@@ -241,9 +226,9 @@ export async function getStats(number_of_days: number = 7): Promise<Stats[]> {
   const endDate = new Date();
 
   const [uniqueVisitors, totalPageviews, viewsPerVisitor] = await Promise.all([
-    client
+    mongoClient
       .db(databaseName)
-      .collection(collectionName)
+      .collection(cols.events)
       .aggregate<Stats[]>([
         { $match: { timestamp: { $gte: startDate, $lt: endDate } } },
         { $group: { _id: "$session_id" } },
@@ -251,18 +236,18 @@ export async function getStats(number_of_days: number = 7): Promise<Stats[]> {
         { $project: { _id: 0 } },
       ])
       .toArray(),
-    client
+    mongoClient
       .db(databaseName)
-      .collection(collectionName)
+      .collection(cols.events)
       .aggregate<Stats[]>([
         { $match: { timestamp: { $gte: startDate, $lt: endDate } } },
         { $count: "path" },
         { $project: { _id: 0, totalPageviews: "$path" } },
       ])
       .toArray(),
-    client
+    mongoClient
       .db(databaseName)
-      .collection(collectionName)
+      .collection(cols.events)
       .aggregate<Stats>([
         { $match: { timestamp: { $gte: startDate, $lt: endDate } } },
         { $group: { _id: "$session_id", count: { $sum: 1 } } },
@@ -322,6 +307,8 @@ function getIpFromRequest(req: Request) {
 
 const jsFile = path.join(__dirname, "../templates/script.js");
 const jsFileContent = fs.readFileSync(jsFile, "utf8");
+
+export const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:3000";
 
 export async function getAnalyticsCode() {
   return jsFileContent.replace("{{API_BASE_URL}}", API_BASE_URL);

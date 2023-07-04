@@ -36,7 +36,7 @@ store.$subscribe(fetchData);
           <table class="table table-compact w-full">
             <tbody>
               <tr>
-                <th class="font-bold">Top sessions by page</th>
+                <th class="font-bold">Top unique visitors</th>
                 <th class="font-bold text-right">
                   <span
                     class="link link-neutral"
@@ -63,7 +63,7 @@ store.$subscribe(fetchData);
             <table class="table table-compact w-full">
               <tbody>
                 <tr>
-                  <th class="font-bold">Top sessions by page</th>
+                  <th class="font-bold">Top unique visitors</th>
                   <th class="font-bold text-right"></th>
                 </tr>
                 <!-- row 1 -->
@@ -87,7 +87,7 @@ store.$subscribe(fetchData);
           <table class="table table-compact w-full">
             <tbody>
               <tr>
-                <th class="font-bold">Top hit count by page</th>
+                <th class="font-bold">Top page views</th>
                 <th class="font-bold text-right">
                   <span
                     class="link link-neutral"
@@ -115,7 +115,7 @@ store.$subscribe(fetchData);
             <table class="table table-compact w-full">
               <tbody>
                 <tr>
-                  <th class="font-bold">Top hit count by page</th>
+                  <th class="font-bold">Top page views</th>
                   <th class="font-bold text-right"></th>
                 </tr>
                 <!-- row 1 -->

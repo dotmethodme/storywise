@@ -14,9 +14,9 @@ import {
   handleCreateEvent,
 } from "./handlers";
 import { authMiddleware } from "./middlewares/auth";
-import { connect } from "./service";
 import proxy from "express-http-proxy";
 import cors from "cors";
+import { connect } from "./database";
 
 const isLocalEnv = process.env.NODE_ENV === "local";
 const allowedOrigin = process.env.ALLOWED_ORIGIN || "localhost:8080";

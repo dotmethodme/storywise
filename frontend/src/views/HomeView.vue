@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Sessions from "@/components/UniqueSessions.vue";
 import SessionsOverTime from "@/components/SessionsOverTime.vue";
-import Referrers from "@/components/Referrers.vue";
+import ReferrersAndCountries from "@/components/ReferrersAndCountries.vue";
 import Stats from "@/components/Stats.vue";
 
 import { useGlobalStore } from "@/stores/counter";
@@ -19,7 +19,7 @@ const dayOptions = [7, 14, 30, 90];
 
     <div class="flex mb-4 mt-4 justify-between">
       <h2 class="text-xl font-normal tracking-tight text-gray-800 text-left">
-        Unique sessions
+        Unique visitors
       </h2>
       <div class="btn-group">
         <button
@@ -40,6 +40,6 @@ const dayOptions = [7, 14, 30, 90];
 
     <Sessions />
     <div class="mt-4"></div>
-    <Referrers />
+    <ReferrersAndCountries />
   </main>
 </template>
