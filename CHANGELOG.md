@@ -1,3 +1,7 @@
+## [0.9.1](https://github.com/dotmethodme/storywise/compare/0.9.0...0.9.1) (2023-07-04)
+
+
+
 # [0.9.0](https://github.com/dotmethodme/storywise/compare/0.8.0...0.9.0) (2023-07-02)
 
 
@@ -26,10 +30,6 @@
 ### Features
 
 * view more modal for long lists ([1c7a381](https://github.com/dotmethodme/storywise/commit/1c7a3815b022cb01ebc24f1693bfb970e5b2fc36))
-
-
-
-## [0.6.1](https://github.com/dotmethodme/storywise/compare/0.6.0...0.6.1) (2023-06-30)
 
 
 
