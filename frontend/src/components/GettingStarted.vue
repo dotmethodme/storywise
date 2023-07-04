@@ -16,6 +16,7 @@
           <a href="https://demo.joinstorywise.com/admin/" class="link">
             this link
           </a>
+          and use the following credentials: user=admin, password=123
         </p>
       </div>
     </div>
