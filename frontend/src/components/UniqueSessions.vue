@@ -8,10 +8,10 @@ const sessions = ref<HitsPerPage[]>([]);
 const hits = ref<HitsPerPage[]>([]);
 const store = useGlobalStore();
 
-async function fetchData() {
+async function fetchData(days: number) {
   const [sessionData, hitData] = await Promise.all([
-    getUniqueSessionsPerPage(),
-    getHitsPerPage(),
+    getUniqueSessionsPerPage(days),
+    getHitsPerPage(days),
   ]);
   sessions.value = sessionData;
   hits.value = hitData;
@@ -25,8 +25,8 @@ const viewMoreHitsOn = ref(false);
 const viewMoreSessions = computed(() => sessions.value.length > viewLimit);
 const viewMoreSessionsOn = ref(false);
 
-onMounted(fetchData);
-store.$subscribe(fetchData);
+onMounted(() => fetchData(store.selectedDays));
+store.$subscribe((_, { selectedDays }) => fetchData(selectedDays));
 </script>
 <template>
   <div>

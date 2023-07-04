@@ -12,14 +12,15 @@ import {
   getUniqueSessionsByCountryHandler,
   getUniqueSessionsPerPageHandler,
   handleCreateEvent,
+  siteConfig,
 } from "./routes";
 import { authMiddleware } from "./middlewares/auth";
 import proxy from "express-http-proxy";
 import cors from "cors";
 import { connect } from "./database";
+import { config } from "./utils/config";
 
 const isLocalEnv = process.env.NODE_ENV === "local";
-const allowedOrigin = process.env.ALLOWED_ORIGIN || "localhost:8080";
 
 (async () => {
   const frontendPath = "dist-frontend";
@@ -27,7 +28,7 @@ const allowedOrigin = process.env.ALLOWED_ORIGIN || "localhost:8080";
 
   await connect();
 
-  app.use(cors({ origin: allowedOrigin, credentials: true }));
+  app.use(cors({ origin: config.ALLOWED_ORIGIN, credentials: true }));
   app.use(Fingerprint());
 
   app.use(express.json());
@@ -41,6 +42,7 @@ const allowedOrigin = process.env.ALLOWED_ORIGIN || "localhost:8080";
   app.get("/admin/api/top_referrers", authMiddleware, getTopReferrersHandler);
   app.get("/admin/api/unique_sessions_by_country", authMiddleware, getUniqueSessionsByCountryHandler);
   app.get("/admin/api/stats", authMiddleware, getStatsHandler);
+  app.get("/admin/api/config", authMiddleware, siteConfig);
 
   if (isLocalEnv) {
     app.get("/admin", authMiddleware, proxy("localhost:5173"));

@@ -7,10 +7,12 @@ import {
   getTopReferrers,
   getUniqueSessionsByCountry,
   getUniqueSessionsPerPage,
+  hasAnyEvents,
 } from "./services/service";
 import { getAnalyticsCode } from "./utils/analyticScript";
 import { extractEvent } from "./utils/extractEvent";
 import { EventCreateRequest } from "./types/models";
+import { config } from "./utils/config";
 
 export async function handleCreateEvent(req: Request<{}, {}, EventCreateRequest>, res: Response) {
   try {
@@ -112,4 +114,19 @@ export async function getJsFileHandler(req: Request, res: Response) {
   const fileContent = await getAnalyticsCode();
   res.setHeader("Content-Type", "application/javascript");
   res.end(fileContent);
+}
+
+export async function siteConfig(req: Request, res: Response) {
+  try {
+    const hasEvents = await hasAnyEvents();
+
+    res.json({
+      hasEvents,
+      allowedOrigin: config.ALLOWED_ORIGIN,
+      apiBaseUrl: config.API_BASE_URL,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
 }

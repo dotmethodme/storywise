@@ -1,5 +1,11 @@
 import axios from "axios";
-import type { SessionItem, HitsPerPage, Referrer, Stats } from "./types";
+import type {
+  SessionItem,
+  HitsPerPage,
+  Referrer,
+  Stats,
+  SiteConfig,
+} from "./types";
 
 export async function getSessions(days = 30) {
   const res = await axios.get<SessionItem[]>(
@@ -29,5 +35,10 @@ export async function getTopReferrers(days = 30) {
 export async function getStats(days = 30) {
   const url = `/admin/api/stats?days=${days}`;
   const res = await axios.get<Stats>(url);
+  return res.data;
+}
+
+export async function getSiteConfig() {
+  const res = await axios.get<SiteConfig>(`/admin/api/config`);
   return res.data;
 }

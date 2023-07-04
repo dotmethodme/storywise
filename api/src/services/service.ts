@@ -263,3 +263,8 @@ export async function getStats(number_of_days: number = 7): Promise<Stats[]> {
 
   return result;
 }
+
+export async function hasAnyEvents() {
+  const result = await mongoClient.db(databaseName).collection(cols.events).findOne({});
+  return !!result;
+}

@@ -20,3 +20,9 @@ export type Stats = {
   totalPageviews: number;
   viewsPerVisitor: number;
 };
+
+export type SiteConfig = {
+  hasEvents: boolean;
+  allowedOrigin: string;
+  apiBaseUrl: string;
+};
