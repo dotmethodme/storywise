@@ -1,15 +1,15 @@
 import { Request, Response } from "express";
 import {
   createEvent,
-  extractEvent,
-  getAnalyticsCode,
   getHitsPerPage,
   getSessionsPerDay,
   getStats,
   getTopReferrers,
   getUniqueSessionsByCountry,
   getUniqueSessionsPerPage,
-} from "./service";
+} from "./services/service";
+import { getAnalyticsCode } from "./utils/analyticScript";
+import { extractEvent } from "./utils/extractEvent";
 import { EventCreateRequest } from "./types/models";
 
 export async function handleCreateEvent(req: Request<{}, {}, EventCreateRequest>, res: Response) {

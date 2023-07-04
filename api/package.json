@@ -7,7 +7,7 @@
     "dev": "LOCAL_ENV=true ts-node-dev --inspect --transpile-only --ignore-watch node_modules src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "seedDemo": "ts-node-dev --inspect --transpile-only --ignore-watch node_modules src/scripts/seedDemo.ts"
+    "seedDemo": "ts-node-dev --transpile-only --ignore-watch node_modules src/scripts/seedDemo.ts"
   },
   "keywords": [],
   "author": "",

@@ -12,7 +12,7 @@ import {
   getUniqueSessionsByCountryHandler,
   getUniqueSessionsPerPageHandler,
   handleCreateEvent,
-} from "./handlers";
+} from "./routes";
 import { authMiddleware } from "./middlewares/auth";
 import proxy from "express-http-proxy";
 import cors from "cors";
