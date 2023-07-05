@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: storywise-demo
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: storywise-demo
+  template:
+    metadata:
+      labels:
+        app: storywise-demo
+    spec:
+      containers:
+        - name: storywise-demo
+          image: mihainueleanu/storywise:latest
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "200Mi"
+          livenessProbe:
+            initialDelaySeconds: 5
+            httpGet:
+              path: /api/event
+              port: 3000
+          readinessProbe:
+            initialDelaySeconds: 5
+            httpGet:
+              path: /api/event
+              port: 3000
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: storywise-demo
+            - secretRef:
+                name: storywise-demo
+      imagePullSecrets:
+        - name: regcred
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: storywise-demo
+  namespace: default
+data:
+  API_BASE_URL: https://demo.joinstorywise.com
+  ALLOWED_ORIGIN: "*"
+  DATABASE_NAME: demo
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  namespace: default
+  name: storywise-demo
+type: Opaque
+stringData:
+  MONGODB_URI: "mongodb://mongo:27017"
+  USERNAME: "admin"
+  PASSWORD: "123"
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: default
+  name: storywise-demo
+  annotations:
+    cert-manager.io/issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+spec:
+  rules:
+    - host: demo.joinstorywise.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: storywise-demo
+                port:
+                  number: 3000
+  tls:
+    - hosts:
+        - demo.joinstorywise.com
+      secretName: storywise-demo-ingress-cert
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: storywise-demo
+  namespace: default
+spec:
+  selector:
+    app: storywise-demo
+  ports:
+    - port: 3000
+      targetPort: 3000
+      protocol: TCP
