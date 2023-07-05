@@ -36,3 +36,8 @@ You can choose from a whole host of options to deploy storywise. Some easy optio
 - [render.com](https://render.com/) - free tier which (called "Individual") which comes with enough resources to run various workloads for free
 - [railway.app](https://railway.app/) - similar to render.com, free tier which comes with enough resources to run various workloads for free
 - Container based - either docker or kubernetes
+
+
+# License
+
+Storywise is licensed under the GPL-3.0 License. See [LICENSE](LICENSE.md) for the full license text.
