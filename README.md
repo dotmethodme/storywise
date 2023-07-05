@@ -9,7 +9,7 @@ And the best thing is that you can get up and running with Storywise for **FREE*
 
 - [Website](https://joinstorywise.com)
 - [Documentation](https://joinstorywise.com/docs)
-- [Demo](https://demo.joinstorywise.com)
+- [Demo](https://demo.joinstorywise.com/admin)
 
 # Core design principles
 
