@@ -66,4 +66,5 @@ function generateId() {
     };
     window.addEventListener("popstate", pageview);
   }
+  pageview();
 })();
