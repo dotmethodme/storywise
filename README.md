@@ -1,7 +1,7 @@
 # Storywise
 
 
-Storywise is the simple app analytics tool you've ever seen. Simplicity is at the core of its existence. It's built to be easy to use and easy to host and it's built to be fast and reliable. 
+Storywise is the simplest analytics tool you've ever seen. Simplicity is at the core of its existence. It's built to be easy to use and easy to host and it's built to be fast and reliable. 
 
 And the best thing is that you can get up and running with Storywise for **FREE** by using the free tiers of your favourite hosting services.
 
