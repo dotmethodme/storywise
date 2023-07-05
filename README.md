@@ -5,6 +5,12 @@ Storywise is the simple app analytics tool you've ever seen. Simplicity is at th
 
 And the best thing is that you can get up and running with Storywise for **FREE** by using the free tiers of your favourite hosting services.
 
+# Resources
+
+- [Website](https://joinstorywise.com)
+- [Documentation](https://joinstorywise.com/docs)
+- [Demo](https://demo.joinstorywise.com)
+
 # Core design principles
 
 - ✅ **Simple**: It's easy to use and easy to host. It's built to be small, fast, and reliable.
