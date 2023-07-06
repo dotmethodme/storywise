@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  storywise-demo:
+    image: mihainueleanu/storywise:latest
+    ports:
+      - 3000:3000
+    environment:
+      - API_BASE_URL=https://demo.joinstorywise.com
+      - ALLOWED_ORIGIN=*
+      - DATABASE_NAME=demo
+      - MONGODB_URI=mongodb://mongo:27017
+      - USERNAME=admin
+      - PASSWORD=123
+    restart: unless-stopped
