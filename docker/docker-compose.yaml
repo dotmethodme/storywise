@@ -1,0 +1,42 @@
+---
+version: "3"
+services:
+  storywise:
+    image: mihainueleanu/storywise:latest
+    container_name: storywise
+    hostname: storywise
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+      - MONGODB_URI=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongodb:27017/
+      - DATABASE_NAME=storywise
+      - USERNAME=${USERNAME}
+      - PASSWORD=${PASSWORD}
+      - API_BASE_URL=${API_BASE_URL}
+    networks:
+      - storywise
+    depends_on:
+      - mongodb
+    ports:
+      - 9280:3000
+    restart: unless-stopped
+  mongodb:
+    image: mongo:4.4.18
+    networks:
+      - storywise
+    container_name: mongodb
+    hostname: mongodb
+    environment:
+      - TZ=Europe/Brussels
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${DATABASE_NAME}
+    ports:
+      - 27017:27017
+    volumes:
+      - /data/mongodb:/data/db
+    restart: unless-stopped
+networks:
+  storywise:
+    external: true
