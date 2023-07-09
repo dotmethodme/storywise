@@ -84,7 +84,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./website
-          file: ./website/Dockerfile
+          file: ./Dockerfile.website
           push: true
           tags: mihainueleanu/storywise-website:latest,mihainueleanu/storywise-website:${{ needs.tag.outputs.tag }}
           cache-from: type=registry,ref=mihainueleanu/storywise-website:latest
