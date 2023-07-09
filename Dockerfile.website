@@ -4,11 +4,11 @@ WORKDIR /app
 
 COPY package-lock.json .
 COPY package.json .
-COPY website/package.json website/
+COPY website/package.json /app/website/
 
 RUN npm install -w website
 
-COPY website website/
+COPY website /app/website/
 
 RUN npm run build:website
 
