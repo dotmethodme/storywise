@@ -1,0 +1,24 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@nuxt/devtools": "latest",
+    "@tailwindcss/typography": "^0.5.9",
+    "@types/node": "^18",
+    "daisyui": "^3.1.7",
+    "nuxt": "^3.6.1"
+  },
+  "dependencies": {
+    "@nuxtjs/google-fonts": "^3.0.1",
+    "@nuxtjs/tailwindcss": "^6.8.0",
+    "mongodb": "^5.6.0",
+    "zod": "^3.21.4"
+  }
+}

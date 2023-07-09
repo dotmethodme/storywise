@@ -8,11 +8,11 @@ COPY package-lock.json /app
 COPY api/package.json api/
 COPY frontend/package.json frontend/
 
+RUN npm i -w api -w frontend
 
 COPY api api/
 COPY frontend frontend/
 
-RUN npm ci
 RUN npm run build
 
 ENTRYPOINT ["npm", "start"]
