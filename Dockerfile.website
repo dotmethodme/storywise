@@ -8,7 +8,7 @@ COPY website/package.json website/
 
 RUN npm install -w website
 
-COPY website ./website
+COPY website website/
 
 RUN npm run build:website
 
