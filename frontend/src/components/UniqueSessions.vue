@@ -38,7 +38,7 @@ store.$subscribe((_, { selectedDays }) => fetchData(selectedDays));
               <tr>
                 <th class="font-bold text-ellipsis">Top unique visitors</th>
                 <th class="font-bold text-right">
-                  <span class="link link-neutral" v-if="viewMoreSessions"
+                  <span class="link text-accent-content" v-if="viewMoreSessions"
                     @click="() => (viewMoreSessionsOn = !viewMoreSessionsOn)">More
                   </span>
                 </th>
@@ -79,7 +79,8 @@ store.$subscribe((_, { selectedDays }) => fetchData(selectedDays));
               <tr>
                 <th class="font-bold">Top page views</th>
                 <th class="font-bold text-right">
-                  <span class="link link-neutral" v-if="viewMoreHits" @click="() => (viewMoreHitsOn = !viewMoreHitsOn)">
+                  <span class="link text-accent-content" v-if="viewMoreHits"
+                    @click="() => (viewMoreHitsOn = !viewMoreHitsOn)">
                     More
                   </span>
                 </th>
