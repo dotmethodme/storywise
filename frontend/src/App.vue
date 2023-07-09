@@ -13,16 +13,21 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="columns-2 w-full">
-    <div>
-      <h1 class="mb-10 text-2xl font-extrabold tracking-tight text-gray-900">
-        Storywise / <span class="text-gray-500">analytics made simple</span>
-      </h1>
-    </div>
-    <Menu></Menu>
-  </div>
+  <div class="bg-base-100 dark:bg-base-300 px-4 py-8 text-accent-content">
+    <div class="max-w-5xl m-auto">
+      <div class="flex flex-row w-full bg-base-100 dark:bg-base-300 justify-between">
+        <div class="flex flex-col md:flex-row justify-center md:items-center">
+          <div class="text-2xl font-extrabold tracking-tight text-accent-content mb-0">
+            Storywise <span class="md:mr-2 font-extrabold">/ </span>
+          </div>
+          <div class="text-gray-400 text-2xl tracking-tight">simple analytics</div>
+        </div>
+        <Menu></Menu>
+      </div>
 
-  <RouterView />
+      <RouterView />
+    </div>
+  </div>
 </template>
 
 <style scoped></style>
