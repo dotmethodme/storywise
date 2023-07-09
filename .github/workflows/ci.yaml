@@ -83,9 +83,9 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: ./website
+          context: .
           file: ./Dockerfile.website
           push: true
           tags: mihainueleanu/storywise-website:latest,mihainueleanu/storywise-website:${{ needs.tag.outputs.tag }}
-          # cache-from: type=registry,ref=mihainueleanu/storywise-website:latest
-          # cache-to: type=inline
+          cache-from: type=registry,ref=mihainueleanu/storywise-website:latest
+          cache-to: type=inline
