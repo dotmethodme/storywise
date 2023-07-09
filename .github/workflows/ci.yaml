@@ -87,5 +87,5 @@ jobs:
           file: ./Dockerfile.website
           push: true
           tags: mihainueleanu/storywise-website:latest,mihainueleanu/storywise-website:${{ needs.tag.outputs.tag }}
-          cache-from: type=registry,ref=mihainueleanu/storywise-website:latest
-          cache-to: type=inline
+          # cache-from: type=registry,ref=mihainueleanu/storywise-website:latest
+          # cache-to: type=inline
