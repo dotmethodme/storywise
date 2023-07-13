@@ -1,0 +1,16 @@
+body {
+  font-family: "Inter", sans-serif;
+}
+
+.sans {
+  font-family: "Inter", sans-serif;
+}
+
+.serif {
+  font-family: "Lora", serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 50px;
+}

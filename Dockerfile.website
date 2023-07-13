@@ -1,0 +1,20 @@
+FROM node:18-alpine3.16
+
+WORKDIR /app
+
+COPY package-lock.json .
+COPY package.json .
+COPY website/package.json /app/website/
+
+RUN npm install -w website
+
+COPY website /app/website/
+
+RUN npm run build:website
+
+EXPOSE 3000
+
+ENV NUXT_HOST=0.0.0.0
+ENV NUXT_PORT=3000
+
+ENTRYPOINT ["node", "website/.output/server/index.mjs"]

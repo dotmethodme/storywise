@@ -14,17 +14,13 @@ const dayOptions = [7, 14, 30, 90];
 <template>
   <main class="w-full">
     <div v-if="store.siteConfig?.hasEvents">
-      <div class="flex mb-4 mt-4 justify-between">
-        <h2 class="text-xl font-normal tracking-tight text-gray-800 text-left">
+      <div class="flex mb-4 mt-4 justify-between lg:flex-row flex-col gap-4">
+        <h2 class="text-xl font-normal tracking-tight text-left">
           Unique visitors
         </h2>
         <div class="btn-group">
-          <button
-            class="btn btn-sm btn-ghost"
-            v-for="day in dayOptions"
-            :class="{ 'btn-active': day === store.selectedDays }"
-            @click="store.selectedDays = day"
-          >
+          <button class="btn btn-sm btn-ghost" v-for="day in dayOptions"
+            :class="{ 'btn-active': day === store.selectedDays }" @click="store.selectedDays = day">
             {{ day }} days
           </button>
         </div>
