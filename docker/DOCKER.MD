@@ -13,3 +13,4 @@ In order to start the stack, you'll have to create a .env file and fille it with
  - API_BASE_URL=http://demo.example.com
  - MONGO_INITDB_ROOT_USERNAME=db_username
  - MONGO_INITDB_ROOT_PASSWORD=db_password
+ - STORY_WISEPORT=3000
