@@ -1,9 +1,9 @@
-## Docker compose
+# Docker compose
 Here you will find documentation about the setup of a full stack for storywise.
 
 The docker-compose.yml can be used to spin up a instance of storywise aswell as a mongodb database
 
-# Environment Variable
+## Environment Variable
 In order to start the stack, you'll have to create a .env file and fill it with the following environment variables:
 
  - TZ=Europe/Brussels
