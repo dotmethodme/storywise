@@ -32,8 +32,6 @@ const dayOptions = [7, 14, 30, 90];
       <div class="mt-4"></div>
 
       <Sessions />
-      <div class="mt-4"></div>
-      <ReferrersAndCountries />
     </div>
 
     <div v-else>

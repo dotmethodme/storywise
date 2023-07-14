@@ -15,6 +15,11 @@ export type Referrer = {
   referrer: string;
 };
 
+export type Country = {
+  count: number;
+  country: string;
+};
+
 export type Stats = {
   uniqueVisitors: number;
   totalPageviews: number;

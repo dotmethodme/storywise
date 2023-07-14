@@ -31,6 +31,8 @@ const isLocalEnv = process.env.NODE_ENV === "local";
 
   app.use(express.json());
 
+  app.get("/", (_, res) => res.redirect("/admin"));
+
   app.post("/api/event", handleCreateEvent);
   app.get("/api/event", getEventHandler);
 

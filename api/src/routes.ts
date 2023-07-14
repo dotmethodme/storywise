@@ -37,7 +37,7 @@ export async function getEventHandler(req: Request, res: Response) {
 export async function getSessionsPerDayHandler(req: Request, res: Response) {
   try {
     const { days } = req.query;
-    const result = await getSessionsPerDay(Number(days) || 7);
+    const result = await getSessionsPerDay(Number(days) || 30);
     res.json(result);
   } catch (err) {
     console.error(err);
@@ -48,7 +48,7 @@ export async function getSessionsPerDayHandler(req: Request, res: Response) {
 export async function getStatsHandler(req: Request, res: Response) {
   try {
     const { days } = req.query;
-    const result = await getStats(Number(days) || 7);
+    const result = await getStats(Number(days) || 30);
     res.json(result);
   } catch (err) {
     console.error(err);
@@ -59,7 +59,7 @@ export async function getStatsHandler(req: Request, res: Response) {
 export async function getHitsPerPageHandler(req: Request, res: Response) {
   try {
     const { days } = req.query;
-    const result = await getHitsPerPage(Number(days) || 7);
+    const result = await getHitsPerPage(Number(days) || 30);
     res.json(result);
   } catch (err) {
     console.error(err);
@@ -70,7 +70,7 @@ export async function getHitsPerPageHandler(req: Request, res: Response) {
 export const getUniqueSessionsPerPageHandler = async (req: Request, res: Response) => {
   try {
     const { days } = req.query;
-    const result = await getUniqueSessionsPerPage(Number(days) || 7);
+    const result = await getUniqueSessionsPerPage(Number(days) || 30);
     res.json(result);
   } catch (err) {
     console.error(err);
@@ -81,7 +81,7 @@ export const getUniqueSessionsPerPageHandler = async (req: Request, res: Respons
 export const getUniqueSessionsByCountryHandler = async (req: Request, res: Response) => {
   try {
     const { days } = req.query;
-    const result = await getUniqueSessionsByCountry(Number(days) || 7);
+    const result = await getUniqueSessionsByCountry(Number(days) || 30);
     res.json(result);
   } catch (err) {
     console.error(err);
@@ -92,7 +92,7 @@ export const getUniqueSessionsByCountryHandler = async (req: Request, res: Respo
 export async function getTopReferrersHandler(req: Request, res: Response) {
   try {
     const { days } = req.query;
-    const result = await getTopReferrers(Number(days) || 7);
+    const result = await getTopReferrers(Number(days) || 30);
     res.json(result);
   } catch (err) {
     console.error(err);

@@ -132,7 +132,7 @@ export async function getUniqueSessionsPerPage(numberOfDays = 7): Promise<Array<
   return results;
 }
 
-export async function getTopReferrers(number_of_days: number = 7): Promise<any[]> {
+export async function getTopReferrers(number_of_days: number = 30): Promise<any[]> {
   const startDate = new Date(new Date().getTime() - number_of_days * 24 * 60 * 60 * 1000);
   const endDate = new Date();
 
@@ -169,7 +169,7 @@ export async function getTopReferrers(number_of_days: number = 7): Promise<any[]
   return results;
 }
 
-export async function getUniqueSessionsByCountry(number_of_days: number = 7): Promise<any[]> {
+export async function getUniqueSessionsByCountry(number_of_days: number = 30): Promise<any[]> {
   const startDate = new Date(new Date().getTime() - number_of_days * 24 * 60 * 60 * 1000);
   const endDate = new Date();
 
@@ -217,7 +217,7 @@ type Stats = {
   viewsPerVisitor: number;
 };
 
-export async function getStats(number_of_days: number = 7): Promise<Stats[]> {
+export async function getStats(number_of_days: number = 30): Promise<Stats[]> {
   const startDate = new Date(new Date().getTime() - number_of_days * 24 * 60 * 60 * 1000);
   const endDate = new Date();
 

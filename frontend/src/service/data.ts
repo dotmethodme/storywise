@@ -5,6 +5,7 @@ import type {
   Referrer,
   Stats,
   SiteConfig,
+  Country,
 } from "./types";
 
 export async function getSessions(days = 30) {
@@ -29,6 +30,12 @@ export async function getHitsPerPage(days = 30) {
 export async function getTopReferrers(days = 30) {
   const url = `/admin/api/top_referrers?days=${days}`;
   const res = await axios.get<Referrer[]>(url);
+  return res.data;
+}
+
+export async function getUniqueVisitorsByCountry(days = 30) {
+  const url = `/admin/api/unique_sessions_by_country?days=${days}`;
+  const res = await axios.get<Country[]>(url);
   return res.data;
 }
 
