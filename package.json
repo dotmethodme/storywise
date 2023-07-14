@@ -8,7 +8,8 @@
     "copy:frontend": "cp -r frontend/dist api/dist-frontend",
     "start": "npm run start -w api",
     "dev:api": "npm run dev -w api",
-    "dev:frontend": "npm run dev -w frontend"
+    "dev:frontend": "npm run dev -w frontend",
+    "dev:website": "npm run dev -w website"
   },
   "workspaces": [
     "api",
