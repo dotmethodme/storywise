@@ -10,6 +10,8 @@ RUN npm install -w website
 
 COPY website /app/website/
 
+ARG NODE_ENV=ci
+
 RUN npm run build:website
 
 EXPOSE 3000
