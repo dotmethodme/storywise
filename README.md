@@ -24,7 +24,7 @@ And the best thing is that you can get up and running with Storywise for **FREE*
 - [x] Unique visitors per page (top 10 + more)
 - [x] Pageviews per page (top 10 + more)
 - [x] Top referrers (top 10 + more)
-- [ ] Top countries (top 10 + more)
+- [x] Top countries (top 10 + more)
 - [ ] Top devices - mobile, desktop, tablet
 - [ ] Top browsers - chrome, safari, firefox, edge, etc
 - [ ] Top OS - windows, mac, linux, ios, android, etc
