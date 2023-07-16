@@ -17,6 +17,7 @@ definePageMeta({
         <li><a href="#deploy-on-kubernetes">Deploy on Kubernetes</a></li>
         <li><a href="#embed">Embed</a></li>
         <li><a href="#contributions">Contributions</a></li>
+        <li><a href="#tech-stack">Tech stack</a></li>
       </ul>
     </template>
 

@@ -30,6 +30,14 @@
       <a class="link link-hover" href="https://github.com/dotmethodme/storywise" target="_blank">
         Github
       </a>
+
+      <a class="link link-hover" href="https://discord.gg/vuWTHEGB2y" target="_blank">
+        Discord
+      </a>
+
+      <a class="link link-hover" href="https://hub.docker.com/repository/docker/mihainueleanu/storywise" target="_blank">
+        Dockerhub
+      </a>
     </div>
     <div></div>
     <div></div>

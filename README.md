@@ -10,6 +10,7 @@ And the best thing is that you can get up and running with Storywise for **FREE*
 - [Website](https://joinstorywise.com)
 - [Documentation](https://joinstorywise.com/docs)
 - [Demo](https://demo.joinstorywise.com/admin) - user=admin, password=123
+- [Discord](https://discord.gg/vuWTHEGB2y)
 
 # Core design principles
 

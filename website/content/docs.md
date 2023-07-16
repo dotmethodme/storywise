@@ -125,8 +125,9 @@ However, generally speaking the tracking script is available at the following ad
 
 [https://your.address.example.com/js/script.js](https://your.address.example.com/api/script.js)
 
-## Contributions
+<div class="my-10"></div>
 
+# Contributions
 The project is going through active development, and obviously, as you might be able to judge by the questionable quality of this article, the documentation can also be improved.
 
 If you enjoy Storywise, and would like to help, please consider giving back to the project and contributing to either the documentation, or the core project itself.
@@ -134,3 +135,17 @@ If you enjoy Storywise, and would like to help, please consider giving back to t
 For any queries, please contact [hey@joinstorywise.com](mailto:hey@joinstorywise.com).
 
 Thank you!
+
+
+
+## Tech stack
+
+Storywise is built using the following very simple and accessible technologies:
+- MongoDB
+- Node.js, Express, Typescript
+- Vue.js and Nuxt (public website)
+- Tailwind and DaisyUI
+
+For hosting, I prefer to use Kubernetes, but you can use whatever you want. I've also included a docker-compose file, and a deployment template for Kubernetes. And I welcome any contributions for other hosting options.
+
+
