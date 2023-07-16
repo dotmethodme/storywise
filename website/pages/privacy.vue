@@ -2,6 +2,11 @@
   <article class="prose prose-stone py-16 max-w-2xl m-auto px-8">
     <h1>Privacy Policy</h1>
     <em>Last updated: Jul 4th, 2023</em>
+    <p>
+      Looking for our
+      <a href="/cookies">Cookie Policy</a>
+      ?
+    </p>
     <p>This Application collects some Personal Data from its Users.</p>
 
     <h2>Owner and Data Controller</h2>
@@ -557,13 +562,6 @@
 </template>
 
 <style scoped>
-h1,
-h2,
-h3,
-h4 {
-  font-family: "Lora", serif;
-}
-
 h4 {
   text-decoration: underline;
 }

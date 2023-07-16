@@ -5,4 +5,5 @@
   </div>
 
   <Footer />
+  <Cookies />
 </template>

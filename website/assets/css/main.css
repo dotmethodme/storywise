@@ -14,3 +14,9 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: 50px;
 }
+
+.prose h1,
+.prose h2,
+.prose h3 {
+  font-family: "Lora", serif;
+}
