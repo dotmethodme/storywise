@@ -9,7 +9,8 @@
     "start": "npm run start -w api",
     "dev:api": "npm run dev -w api",
     "dev:frontend": "npm run dev -w frontend",
-    "dev:website": "npm run dev -w website"
+    "dev:website": "npm run dev -w website",
+    "start:website": "npm run start -w website"
   },
   "workspaces": [
     "api",
