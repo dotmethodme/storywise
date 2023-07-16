@@ -12,7 +12,7 @@ const showModal = ref(false)
         <p class="py-6 text-xl max-w-xl">
           Simple, open-source, privacy-friendly analytics for your website and
           for your apps. Self host or use our upcoming cloud service. Built with
-          MongoDB, Typescript and ❤️
+          MongoDB, Vuejs and ❤️
         </p>
         <a class="btn btn-primary mr-2" href="#sign-up">
           <IconsHeart />
