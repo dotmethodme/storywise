@@ -29,11 +29,12 @@ And the best thing is that you can get up and running with Storywise for **FREE*
 - [ ] Top devices - mobile, desktop, tablet
 - [ ] Top browsers - chrome, safari, firefox, edge, etc
 - [ ] Top OS - windows, mac, linux, ios, android, etc
-- [ ] Frontend privacy levels - sever-side only, client-side fingerprint, client-side local storage (current default)
+- [ ] Privacy levels - sever-side only, client-side fingerprint, client-side local storage (current default)
 - [ ] Bounce rate
 - [ ] UTM tags
 - [ ] Custom events
-- [ ] Retention analysis
+- [ ] User retention analysis
+- [ ] Multi-database support. Currently only MongoDb, future - Postgres, TimescaleDB, Mysql etc
 
 
 # License
