@@ -7,11 +7,11 @@ const showModal = ref(false)
       <img src="/intro.png" class="lg:max-w-lg py-10 flex-1 hidden lg:block" />
       <div class="flex-1">
         <h1 class="text-5xl font-bold serif tracking-tight">
-          Analytics made simple
+          Simple analytics
         </h1>
         <p class="py-6 text-xl max-w-xl">
           Simple, open-source, privacy-friendly analytics for your website and
-          for your apps. Self host or use our upcoming cloud service. Built with
+          for your apps. Self-host or use our upcoming cloud service. Built with
           MongoDB, Vuejs and ❤️
         </p>
         <a class="btn btn-primary mr-2" href="#sign-up">
