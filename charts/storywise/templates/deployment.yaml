@@ -49,8 +49,8 @@ metadata:
   name: {{ .Release.Name }}-configmap
 data:
   API_BASE_URL: https://{{ .Values.host }}
-  ALLOWED_ORIGIN: {{ .Values.configMapData.ALLOWED_ORIGIN }}
-  DATABASE_NAME: {{ .Values.configMapData.DATABASE_NAME }}
+  ALLOWED_ORIGIN: {{ .Values.configMapData.ALLOWED_ORIGIN | quote }}
+  DATABASE_NAME: {{ .Values.configMapData.DATABASE_NAME | quote}}
 
 ---
 
@@ -60,9 +60,9 @@ metadata:
   name: {{ .Release.Name }}-secret
 type: Opaque
 stringData:
-  MONGODB_URI: {{ .Values.secretData.MONGODB_URI }}
-  USERNAME: {{ .Values.secretData.USERNAME }}
-  PASSWORD: {{ .Values.secretData.PASSWORD }}
+  MONGODB_URI: {{ .Values.secretData.MONGODB_URI | quote }}
+  USERNAME: {{ .Values.secretData.USERNAME | quote}}
+  PASSWORD: {{ .Values.secretData.PASSWORD | quote}}
 
 ---
 

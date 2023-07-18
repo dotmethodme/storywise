@@ -40,6 +40,9 @@ Password: `123`
 **Kubernetes deployment template:**  
 [/kubernetes/everything.yaml](https://github.com/dotmethodme/storywise/blob/main/kubernetes/everything.yaml)
 
+**Helm chart**
+[/charts](https://github.com/dotmethodme/storywise/blob/main/charts)
+
 **Docker-compose template:**  
 [/docker-compose.yaml](https://github.com/dotmethodme/storywise/blob/main/docker-compose.yaml)
 
@@ -81,8 +84,23 @@ Then run:
 docker-compose up
 ```
 
+## Deploy on Kubernetes (helm)
 
-## Deploy on Kubernetes
+You can deploy Storywise on Kubernetes using the following helm chart:
+
+```sh
+helm repo add storywise https://dotmethodme.github.io/storywise
+helm repo update
+
+helm install my-storywise storywise/storywise \
+  --set host=example.joinstorywise.com \
+  --set configMapData.DATABASE_NAME=demo \
+  --set secretData.MONGODB_URI="mongodb://example.com:27017/" \
+  --set secretData.USERNAME=admin \
+  --set secretData.PASSWORD=mysecretpassword
+```
+
+## Deploy on Kubernetes (yaml)
 
 You can deploy Storywise on Kubernetes using the following template:
 [storywise/blob/main/kubernetes/everything.yaml](https://github.com/dotmethodme/storywise/blob/main/kubernetes/everything.yaml)
