@@ -2,6 +2,14 @@ apiVersion: v1
 entries:
   storywise:
   - apiVersion: v2
+    created: "2023-07-18T20:59:31.104304617Z"
+    description: A Helm chart for deploying the storywise application.
+    digest: d80e60eaa6bdfd0528c5a194f4b587c777101ed51de002470b278c3b22cb3711
+    name: storywise
+    urls:
+    - https://github.com/dotmethodme/storywise/releases/download/storywise-0.3.0/storywise-0.3.0.tgz
+    version: 0.3.0
+  - apiVersion: v2
     created: "2023-07-18T20:40:33.712269518Z"
     description: A Helm chart for deploying the storywise application.
     digest: d6e1a5039516bfe2d80a20d1cfa7ff32c4087a448f565ba4f6472cfd58d06c53
@@ -9,4 +17,4 @@ entries:
     urls:
     - https://github.com/dotmethodme/storywise/releases/download/storywise-0.2.0/storywise-0.2.0.tgz
     version: 0.2.0
-generated: "2023-07-18T20:40:33.712274318Z"
+generated: "2023-07-18T20:59:31.104311318Z"
