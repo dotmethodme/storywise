@@ -1,0 +1,23 @@
+# The hostname of the Storywise to be deployed
+host: storywise.example.com
+
+# Basic config of storywise
+configMapData:
+  # The origins of the websites where the storywise script will be used
+  # Separated by comma
+  # Wildcard (*) can be used to allow all origins
+  ALLOWED_ORIGIN: "*"
+
+  # The name of the database to be used (if not included in the MONGODB_URI)
+  DATABASE_NAME: demo
+
+# Secrets of storywise
+secretData:
+  # The full connection string of the mongodb database
+  MONGODB_URI: ""
+
+  # The username to be used to access the storywise admin panel
+  USERNAME: "admin"
+
+  # The password to be used to access the storywise admin panel
+  PASSWORD: "123"

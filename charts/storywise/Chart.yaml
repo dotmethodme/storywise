@@ -1,0 +1,4 @@
+apiVersion: v2
+name: storywise
+version: 0.2.0
+description: A Helm chart for deploying the storywise application.

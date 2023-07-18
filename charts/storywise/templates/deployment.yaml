@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Release.Name }}
+          image: mihainueleanu/storywise:latest
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "200Mi"
+          livenessProbe:
+            initialDelaySeconds: 5
+            httpGet:
+              path: /api/event
+              port: 3000
+          readinessProbe:
+            initialDelaySeconds: 5
+            httpGet:
+              path: /api/event
+              port: 3000
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: {{ .Release.Name }}-configmap
+            - secretRef:
+                name: {{ .Release.Name }}-secret
+      imagePullSecrets:
+        - name: regcred
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-configmap
+data:
+  API_BASE_URL: https://{{ .Values.host }}
+  ALLOWED_ORIGIN: {{ .Values.configMapData.ALLOWED_ORIGIN }}
+  DATABASE_NAME: {{ .Values.configMapData.DATABASE_NAME }}
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Release.Name }}-secret
+type: Opaque
+stringData:
+  MONGODB_URI: {{ .Values.secretData.MONGODB_URI }}
+  USERNAME: {{ .Values.secretData.USERNAME }}
+  PASSWORD: {{ .Values.secretData.PASSWORD }}
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+spec:
+  rules:
+    - host: {{ .Values.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}
+                port:
+                  number: 3000
+  tls:
+    - hosts:
+        - {{ .Values.host }}
+      secretName: {{ .Release.Name }}-ingress-cert
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  selector:
+    app: {{ .Release.Name }}
+  ports:
+    - port: 3000
+      targetPort: 3000
+      protocol: TCP
