@@ -15,7 +15,7 @@ And the best thing is that you can get up and running with Storywise for **FREE*
 # Core design principles
 
 - ✅ **Simple**: It's easy to use and easy to host. It's built to be small, fast, and reliable.
-- 🚀 **Fast**: It's built to be fast and reliable.
+- 🚀 **Lightweight**: It's built to be small and nimble, while still good enough for most websites out there.
 - 🫴 **Open Source**: It's open source, free to use and free to self-host (for the most part).
 
 # Feature roadmap
