@@ -14,7 +14,8 @@ definePageMeta({
         <li><a href="#resources">Resources</a></li>
         <li><a href="#environment-variables">Environment variables</a></li>
         <li><a href="#deploy-on-docker-compose">Deploy on docker-compose</a></li>
-        <li><a href="#deploy-on-kubernetes">Deploy on Kubernetes</a></li>
+        <li><a href="#deploy-on-kubernetes-helm">Deploy on Kubernetes (helm)</a></li>
+        <li><a href="#deploy-on-kubernetes-yaml">Deploy on Kubernetes (yaml)</a></li>
         <li><a href="#embed">Embed</a></li>
         <li><a href="#contributions">Contributions</a></li>
         <li><a href="#tech-stack">Tech stack</a></li>
