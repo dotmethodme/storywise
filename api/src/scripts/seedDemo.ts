@@ -30,7 +30,6 @@ async function main() {
           screen: getRandomScreenSize(),
           window: getRandomScreenSize(),
           referrer: getRandomReferrer(),
-          user_agent_enriched: user.user_agent_enriched,
         };
         events.push(event);
       }

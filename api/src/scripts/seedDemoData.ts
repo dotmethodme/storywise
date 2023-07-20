@@ -1,18 +1,7 @@
-import UAParser from "ua-parser-js";
-import { WebEvent } from "../types/models";
+import DeviceDetector from "device-detector-js";
+import { uaParserToModel } from "../utils/extractEvent";
 
-// const data = {
-//   _id: { $oid: "649e010f6026effe55e14c7e" },
-//   session_id: "cng99odqw7uljhp72tg",
-//   path: "/posts/poetry-python-package-manager/",
-//   referrer: "https://www.google.com/",
-//   timestamp: { $date: { $numberLong: "1688076559189" } },
-//   user_agent:
-//     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
-//   language: "en-GB,en;q=0.7",
-//   country: "DK",
-//   ip: "5.186.127.27",
-// };
+const deviceDetector = new DeviceDetector();
 
 const countries = [
   "DK",
@@ -221,15 +210,14 @@ export function generateUsers(numberOfVirtualUsers = 200) {
   const users = [];
   for (let i = 0; i < numberOfVirtualUsers; i++) {
     const ua = generateRandomUserAgent();
-    const parser = new UAParser(ua);
-    const uaEnriched = parser.getResult();
+    const userAgentInfo = uaParserToModel(deviceDetector.parse(ua));
     const user = {
       country: generateRandomCountry(),
       user_agent: ua,
-      user_agent_enriched: uaEnriched,
       ip: generateRandomIP(),
       session_id: generateRandomSessionId(),
       language: generateRandomLanguage(),
+      ...userAgentInfo,
     };
     users.push(user);
   }
