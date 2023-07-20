@@ -19,6 +19,7 @@ import cors from "cors";
 import { connect } from "./database";
 import { config } from "./utils/config";
 import { migrate } from "./migrations/migrate";
+import morgan from "morgan";
 
 const isLocalEnv = process.env.NODE_ENV === "local";
 
@@ -29,8 +30,8 @@ const isLocalEnv = process.env.NODE_ENV === "local";
   await connect();
   await migrate();
 
+  app.use(morgan("dev"));
   app.use(cors({ origin: config.ALLOWED_ORIGIN, credentials: true }));
-
   app.use(express.json());
 
   app.get("/", (_, res) => res.redirect("/admin"));
@@ -59,6 +60,6 @@ const isLocalEnv = process.env.NODE_ENV === "local";
   const port = process.env.PORT || 3000;
 
   app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+    console.log(`🚀 Server running at http://localhost:${port}`);
   });
 })();

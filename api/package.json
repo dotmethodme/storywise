@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/morgan": "^1.9.4",
     "connect-mongodb-session": "^3.1.1",
     "cors": "^2.8.5",
     "device-detector-js": "^3.0.3",
@@ -23,6 +24,7 @@
     "express-session": "^1.17.3",
     "luxon": "^3.3.0",
     "mongodb": "^5.4.0",
+    "morgan": "^1.10.0",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.0.4",
     "ua-parser-js": "^1.0.35"
