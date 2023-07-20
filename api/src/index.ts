@@ -18,6 +18,7 @@ import proxy from "express-http-proxy";
 import cors from "cors";
 import { connect } from "./database";
 import { config } from "./utils/config";
+import { migrate } from "./migrations/migrate";
 
 const isLocalEnv = process.env.NODE_ENV === "local";
 
@@ -26,6 +27,7 @@ const isLocalEnv = process.env.NODE_ENV === "local";
   const app = express();
 
   await connect();
+  await migrate();
 
   app.use(cors({ origin: config.ALLOWED_ORIGIN, credentials: true }));
 
