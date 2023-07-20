@@ -10,8 +10,9 @@ async function main() {
   const users = generateUsers(100);
 
   const events: WebEvent[] = [];
+  const numberOfDays = 100;
 
-  for (var i = 0; i < 30; i++) {
+  for (var i = 0; i < numberOfDays; i++) {
     const date = new Date();
     date.setDate(date.getDate() - i);
 
