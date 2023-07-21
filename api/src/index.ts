@@ -16,10 +16,10 @@ import {
 import { authMiddleware } from "./middlewares/auth";
 import proxy from "express-http-proxy";
 import cors from "cors";
-import { connect } from "./database";
 import { config } from "./utils/config";
-import { migrate } from "./migrations/migrate";
+import { migrateMongo } from "./migrations/mongo";
 import morgan from "morgan";
+import { getDataRepo } from "./repository/repo";
 
 const isLocalEnv = process.env.NODE_ENV === "local";
 
@@ -27,8 +27,8 @@ const isLocalEnv = process.env.NODE_ENV === "local";
   const frontendPath = "dist-frontend";
   const app = express();
 
-  await connect();
-  await migrate();
+  await getDataRepo().connect();
+  await migrateMongo();
 
   app.use(morgan("dev"));
   app.use(cors({ origin: config.ALLOWED_ORIGIN, credentials: true }));

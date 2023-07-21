@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { getStats } from "@/service/data";
-import type { Stats } from "@/service/types";
 import { useGlobalStore } from "@/stores/counter";
+import type { Stats } from "@shared/types";
 import { onMounted, ref } from "vue";
 
 const stats = ref<Stats>();

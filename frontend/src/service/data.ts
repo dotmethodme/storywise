@@ -6,7 +6,7 @@ import type {
   Stats,
   SiteConfig,
   Country,
-} from "./types";
+} from "@shared/types";
 
 export async function getSessions(days = 30) {
   const res = await axios.get<SessionItem[]>(

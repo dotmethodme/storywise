@@ -1,4 +1,4 @@
-import type { SiteConfig } from "@/service/types";
+import type { SiteConfig } from "@shared/types";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 

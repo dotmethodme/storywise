@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { getHitsPerPage, getTopReferrers, getUniqueSessionsPerPage, getUniqueVisitorsByCountry } from "@/service/data";
-import type { HitsPerPage, Referrer, Country } from "@/service/types";
 import { useGlobalStore } from "@/stores/counter";
+import type { HitsPerPage, Referrer, Country } from "@shared/types";
 import { computed, onMounted, ref } from "vue";
 
 const sessions = ref<HitsPerPage[]>([]);
