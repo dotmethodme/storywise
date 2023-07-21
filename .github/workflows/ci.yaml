@@ -48,6 +48,8 @@ jobs:
   build-core:
     runs-on: ubuntu-latest
     needs: tag
+    outputs:
+      tag: ${{ needs.tag.outputs.tag }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -76,6 +78,13 @@ jobs:
           tags: mihainueleanu/storywise:latest,mihainueleanu/storywise:${{ needs.tag.outputs.tag }}
           cache-from: type=registry,ref=mihainueleanu/storywise:latest
           cache-to: type=inline
+
+  push-core:
+    needs: build-core
+    uses: ./github/workflows/push-to-k8s.yaml
+    with:
+      image-name: storywise
+      image-version: ${{ needs.build-core.outputs.tag }}
 
   build-website:
     runs-on: ubuntu-latest

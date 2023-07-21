@@ -1,0 +1,42 @@
+name: Automated tagging
+on:
+  workflow_call:
+    inputs:
+      image-name:
+        type: string
+        description: "Name of the image to tag"
+        required: true
+
+      image-tag:
+        type: string
+        description: "Tag to use for the image"
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
+
+      - name: Update repo
+        run: |
+          # VARIABLES
+          URL="git@github.com:dotmethodme/kubernetes.git"
+
+          # SETUP
+          git config --global user.email "robot@nueleanu.com"
+          git config --global user.name "Robot"
+          git clone $URL kubernetes
+          cd kubernetes
+
+          # CHANGES
+          find ./kubernetes/storywise -type f -name '*.yaml' -exec sed -i "s/${{inputs.image-name}}:.*$/${{inputs.image-name}}:${{ inputs.image-tag }}/" {} \;
+
+          # PUSH
+          git remote set-url origin $URL
+          git add .
+          git commit -m "Release storywise version ${{ inputs.image-tag }}"
+          git push
