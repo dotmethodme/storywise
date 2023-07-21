@@ -1,13 +1,15 @@
 import { IResult } from "ua-parser-js";
-import { cols, db } from "../../database";
 import DeviceDetector from "device-detector-js";
 import { ObjectId, UpdateOneModel } from "mongodb";
 import { uaParserToModel } from "../../utils/extractEvent";
+import { getMongoRepo } from "../../repository/repo";
+import { cols } from "../../repository/mongo";
 
 const deviceDetector = new DeviceDetector();
 
 async function migrate() {
-  const events = db()
+  const db = getMongoRepo().db();
+  const events = db
     .collection(cols.events)
     .find<{
       _id: ObjectId;
@@ -39,19 +41,17 @@ async function migrate() {
       batch.push({ updateOne: { filter: { _id: event._id }, update: { $set: data } } });
 
       if (batch.length >= 1000) {
-        await db().collection(cols.events).bulkWrite(batch);
+        await db.collection(cols.events).bulkWrite(batch);
         batch = [];
       }
     }
   }
 
   if (batch.length > 0) {
-    await db().collection(cols.events).bulkWrite(batch);
+    await db.collection(cols.events).bulkWrite(batch);
   }
 
-  await db()
-    .collection(cols.events)
-    .updateMany({}, { $unset: { user_agent_enriched: 1 } });
+  await db.collection(cols.events).updateMany({}, { $unset: { user_agent_enriched: 1 } });
 
   return true;
 }

@@ -9,4 +9,6 @@ export interface IDataRepo {
   getUniqueSessionsByCountry(numberOfDays?: number): Promise<any[]>;
   getStats(numberOfDays?: number): Promise<any[]>;
   hasAnyEvents(): Promise<boolean>;
+  connect(): Promise<void>;
+  disconnect(): Promise<void>;
 }

@@ -1,12 +1,16 @@
-import { cols, db, mongoClient } from "../database";
+import { Db } from "mongodb";
+import { cols } from "../repository/mongo";
+import { getMongoRepo } from "../repository/repo";
 import { Migration } from "../types/migrations";
 
 export async function migrate() {
   console.log("Trying to run database migrations:");
 
+  const db = getMongoRepo().db();
+
   let newMigrations = false;
 
-  const appliedMigrations = await db().collection(cols.migrations).find<Migration>({}).sort({ name: 1 }).toArray();
+  const appliedMigrations = await db.collection(cols.migrations).find<Migration>({}).sort({ name: 1 }).toArray();
 
   const migrations = await import("./mongodb");
 
@@ -23,9 +27,9 @@ export async function migrate() {
 
       try {
         await migration();
-        await acknowledgeMigration(key, "success");
+        await acknowledgeMigration(db, key, "success");
       } catch (error) {
-        await acknowledgeMigration(key, "failed");
+        await acknowledgeMigration(db, key, "failed");
       }
 
       console.timeEnd(`Migration ${key} took: `);
@@ -37,8 +41,8 @@ export async function migrate() {
   }
 }
 
-async function acknowledgeMigration(name: string, status: "success" | "failed") {
-  await db().collection<Migration>(cols.migrations).insertOne({
+async function acknowledgeMigration(db: Db, name: string, status: "success" | "failed") {
+  await db.collection<Migration>(cols.migrations).insertOne({
     name,
     status,
     timestamp: new Date(),
