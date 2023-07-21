@@ -37,8 +37,8 @@ jobs:
           # VARIABLES
 
           # SETUP
-          git config --global user.email "robot@nueleanu.com"
-          git config --global user.name "Robot"
+          git config --global user.email "hey@joinstorywise.com"
+          git config --global user.name "Storywise Robot"
           git clone ${{inputs.github-repository}} kubernetes
           cd kubernetes
 
