@@ -1,8 +1,9 @@
 import { mongoClient } from "./database";
 
 export default async () => {
+  const env = process.env.NODE_ENV as typeof process.env.NODE_ENV | "ci";
   try {
-    if (process.env.NODE_ENV === "ci") {
+    if (env === "ci") {
       await mongoClient.connect();
       console.log("DB connection established");
     }
