@@ -15,6 +15,9 @@ on:
       ssh-key:
         description: "SSH key to use for pushing to the repo"
         required: true
+      known-hosts:
+        description: "Known hosts to use for pushing to the repo"
+        required: true
 
 jobs:
   deploy:
@@ -24,6 +27,7 @@ jobs:
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.ssh-key }}
+          known_hosts: ${{ secrets.known-hosts }}
 
       - name: Update repo
         run: |

@@ -87,6 +87,7 @@ jobs:
       image-tag: ${{ needs.build-core.outputs.tag }}
     secrets:
       ssh-key: ${{ secrets.SSH_KEY }}
+      known-hosts: ${{ secrets.KNOWN_HOSTS }}
 
   build-website:
     runs-on: ubuntu-latest
