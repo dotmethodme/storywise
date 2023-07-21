@@ -83,6 +83,7 @@ jobs:
     needs: build-core
     uses: ./.github/workflows/push-to-k8s.yaml
     with:
+      github-repository: git@github.com:dotmethodme/kubernetes.git
       image-name: storywise
       image-tag: ${{ needs.build-core.outputs.tag }}
     secrets:
