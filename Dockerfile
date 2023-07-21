@@ -12,6 +12,7 @@ RUN npm i -w api -w frontend
 
 COPY api api/
 COPY frontend frontend/
+COPY shared shared/
 
 RUN npm run build
 
