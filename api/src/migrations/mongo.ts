@@ -3,7 +3,7 @@ import { cols } from "../repository/mongo";
 import { getMongoRepo } from "../repository/repo";
 import { Migration } from "../types/migrations";
 
-export async function migrate() {
+export async function migrateMongo() {
   console.log("Trying to run database migrations:");
 
   const db = getMongoRepo().db();

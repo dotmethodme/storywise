@@ -17,7 +17,7 @@ import { authMiddleware } from "./middlewares/auth";
 import proxy from "express-http-proxy";
 import cors from "cors";
 import { config } from "./utils/config";
-import { migrate } from "./migrations/mongo";
+import { migrateMongo } from "./migrations/mongo";
 import morgan from "morgan";
 import { getDataRepo } from "./repository/repo";
 
@@ -28,7 +28,7 @@ const isLocalEnv = process.env.NODE_ENV === "local";
   const app = express();
 
   await getDataRepo().connect();
-  await migrate();
+  await migrateMongo();
 
   app.use(morgan("dev"));
   app.use(cors({ origin: config.ALLOWED_ORIGIN, credentials: true }));

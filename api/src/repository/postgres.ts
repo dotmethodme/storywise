@@ -1,6 +1,10 @@
 import { WebEvent } from "../types/models";
 import { IDataRepo } from "./types";
 
+/**
+ * TODO: Implement the PostgresRepo class
+ * Happy to accept volunteer contributions for this one!
+ */
 export class PostgresRepo implements IDataRepo {
   connect(): Promise<void> {
     throw new Error("Method not implemented.");

@@ -1,11 +1,8 @@
+import { MONGODB_URI, POSTGRES_URI, SQLITE_URI } from "./dbConfig";
 import { MongoRepo } from "./mongo";
 import { PostgresRepo } from "./postgres";
 import { SqliteRepo } from "./sqlite";
 import { IDataRepo } from "./types";
-
-const MONGODB_URI = process.env.MONGODB_URI;
-const POSTGRES_URI = process.env.POSTGRES_URI;
-const SQLITE_URI = process.env.SQLITE_URI;
 
 let dataRepo: IDataRepo;
 
@@ -26,7 +23,6 @@ export function getDataRepo() {
 }
 
 export function getMongoRepo(): MongoRepo {
-  console.log("getMongoRepo");
   if (!!MONGODB_URI) {
     if (dataRepo) {
       return dataRepo as MongoRepo;
