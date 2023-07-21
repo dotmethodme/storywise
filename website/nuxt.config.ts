@@ -3,8 +3,8 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   runtimeConfig: {
     MONGODB_URL: process.env.MONGODB_URL,
-    NUXT_GITHUB_CLIENT_ID: process.env.NUXT_GITHUB_CLIENT_ID,
-    NUXT_GITHUB_CLIENT_SECRET: process.env.NUXT_GITHUB_CLIENT_SECRET,
+    GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
+    GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
     public: {
       // todo
     },
