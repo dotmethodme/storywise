@@ -11,6 +11,10 @@ on:
         type: string
         description: "Tag to use for the image"
         required: true
+    secrets:
+      ssh-key:
+        description: "SSH key to use for pushing to the repo"
+        required: true
 
 jobs:
   deploy:
@@ -19,7 +23,7 @@ jobs:
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
-          key: ${{ secrets.SSH_KEY }}
+          key: ${{ secrets.ssh-key }}
 
       - name: Update repo
         run: |

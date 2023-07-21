@@ -4,14 +4,14 @@ on:
   push:
     branches:
       - main
-    paths:
-      - "website/**"
-      - "api/**"
-      - "frontend/**"
-      - "Dockerfile"
-      - "Dockerfile.website"
-      - "package.json"
-      - "package-lock.json"
+    # paths:
+    #   - "website/**"
+    #   - "api/**"
+    #   - "frontend/**"
+    #   - "Dockerfile"
+    #   - "Dockerfile.website"
+    #   - "package.json"
+    #   - "package-lock.json"
 jobs:
   tag:
     runs-on: ubuntu-latest
@@ -81,10 +81,12 @@ jobs:
 
   push-core:
     needs: build-core
-    uses: ./github/workflows/push-to-k8s.yaml
+    uses: ./.github/workflows/push-to-k8s.yaml
     with:
       image-name: storywise
-      image-version: ${{ needs.build-core.outputs.tag }}
+      image-tag: ${{ needs.build-core.outputs.tag }}
+    secrets:
+      ssh-key: ${{ secrets.SSH_KEY }}
 
   build-website:
     runs-on: ubuntu-latest
