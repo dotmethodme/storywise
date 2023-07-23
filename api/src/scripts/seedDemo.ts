@@ -1,11 +1,14 @@
 require("dotenv").config();
-import { cols, connect, databaseName, mongoClient } from "../database";
-import { createEvent } from "../services/service";
+import { cols } from "../repository/mongo";
+import { getDataRepo, getMongoRepo } from "../repository/repo";
 import { WebEvent } from "../types/models";
 import { generateUsers, getRandomPath, getRandomReferrer, getRandomScreenSize } from "./seedDemoData";
 
 async function main() {
-  await connect();
+  const repo = getMongoRepo();
+  await repo.connect();
+
+  const db = repo.db();
 
   const users = generateUsers(100);
 
@@ -38,11 +41,11 @@ async function main() {
   }
 
   // empty the events collection
-  await mongoClient.db(databaseName).collection(cols.events).deleteMany({});
+  await db.collection(cols.events).deleteMany({});
 
   const batches = splitInBatches(events, 500);
   for (const batch of batches) {
-    await mongoClient.db(databaseName).collection(cols.events).insertMany(batch);
+    await db.collection(cols.events).insertMany(batch);
     console.log(`Inserted ${batch.length} events`);
   }
 

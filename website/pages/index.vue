@@ -7,7 +7,8 @@ const done = [
   "Pageviews per page (top 10 + more)",
   "Top referrers (top 10 + more)",
   "Top countries (top 10 + more)",
-  "Documentation website"
+  "Documentation website",
+  "Allow multiple database integrations (currently only MongoDb)",
 ]
 
 const todo = [

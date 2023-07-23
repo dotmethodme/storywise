@@ -26,6 +26,7 @@ And the best thing is that you can get up and running with Storywise for **FREE*
 - [x] Pageviews per page (top 10 + more)
 - [x] Top referrers (top 10 + more)
 - [x] Top countries (top 10 + more)
+- [x] Allow multiple database integrations (currently only MongoDb)
 - [ ] Top devices - mobile, desktop, tablet
 - [ ] Top browsers - chrome, safari, firefox, edge, etc
 - [ ] Top OS - windows, mac, linux, ios, android, etc

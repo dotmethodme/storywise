@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { getTopReferrers } from "@/service/data";
-import type { Referrer } from "@/service/types";
 import { useGlobalStore } from "@/stores/counter";
+import type { Referrer } from "@shared/types";
 import { onMounted, ref } from "vue";
 
 const referrers = ref<Referrer[]>([]);
