@@ -1,18 +1,22 @@
-<script lang="ts" setup>
-const { status, data, signIn, signOut } = useAuth()
-
-
-if (status.value !== "authenticated") {
-    await signIn();
-}
-
-</script>
-
 <template>
     <div>
-        <h1>HEY</h1>
-        <pre>
-            {{ data }}
-        </pre>
+        <p>Sign-In Options:</p>
+        <button class="btn btn-primary" @click="signIn('github')">Github</button>
     </div>
 </template>
+
+
+<script lang="ts" setup>
+definePageMeta({
+    auth: {
+        unauthenticatedOnly: true,
+        navigateAuthenticatedTo: '/',
+    }
+})
+
+const { signIn, data, status } = useAuth()
+
+if (status.value === 'authenticated') {
+    navigateTo('/admin')
+}
+</script>
