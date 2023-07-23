@@ -14,9 +14,9 @@ definePageMeta({
     }
 })
 
-const { signIn, data, status } = useAuth()
+const { signIn, data, status } = useAuth();
 
 if (status.value === 'authenticated') {
-    navigateTo('/admin')
+    navigateTo('/admin');
 }
 </script>

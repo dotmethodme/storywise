@@ -5,6 +5,7 @@ export default defineNuxtConfig({
     MONGODB_URL: process.env.MONGODB_URL,
     GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
     GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
+    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     public: {
       // todo
     },
