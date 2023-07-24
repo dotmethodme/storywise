@@ -35,3 +35,4 @@ store.$subscribe(fetchData);
     </div>
   </div>
 </template>
+@/stores/global

@@ -31,3 +31,4 @@ onMounted(async () => {
 </template>
 
 <style scoped></style>
+./stores/global

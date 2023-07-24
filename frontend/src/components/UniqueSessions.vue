@@ -225,3 +225,4 @@ store.$subscribe((_, { selectedDays }) => fetchData(selectedDays));
 </template>
 
 <style></style>
+@/stores/global
