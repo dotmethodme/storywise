@@ -4,7 +4,7 @@
     <em>Last updated: Jul 4th, 2023</em>
     <p>
       Looking for our
-      <a href="/cookies">Cookie Policy</a>
+      <NuxtLink href="/cookies">Cookie Policy</NuxtLink>
       ?
     </p>
     <p>This Application collects some Personal Data from its Users.</p>
@@ -224,7 +224,8 @@
     <p>Personal Data processed: email address; first name; last name.</p>
     <p>
       Place of processing: United States –
-      <a href="https://www.google.com/policies/privacy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
+      <NuxtLink href="https://www.google.com/policies/privacy/" target="_blank" rel="noopener noreferrer">Privacy Policy
+      </NuxtLink>.
     </p>
 
     <h3>Hosting and backend infrastructure</h3>
@@ -249,7 +250,8 @@
     </p>
     <p>
       Place of processing: Germany –
-      <a href="https://www.hetzner.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
+      <NuxtLink href="https://www.hetzner.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy
+        Policy</NuxtLink>.
     </p>
 
     <h4>MongoDB</h4>
@@ -260,7 +262,8 @@
     </p>
     <p>
       Place of processing: United States –
-      <a href="https://www.mongodb.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
+      <NuxtLink href="https://www.mongodb.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy
+        Policy</NuxtLink>.
     </p>
 
     <!-- 
@@ -338,7 +341,8 @@
 
     <p>
       Place of processing: United States –
-      <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
+      <NuxtLink href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer">Privacy Policy
+      </NuxtLink>.
     </p>
 
     <h2>The rights of Users</h2>
@@ -573,5 +577,4 @@ a {
 .prose :where(p):not(:where([class~="not-prose"] *)) {
   margin-bottom: 0.5em;
   margin-top: 0.5em;
-}
-</style>
+}</style>

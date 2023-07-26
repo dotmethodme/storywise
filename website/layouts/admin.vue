@@ -16,12 +16,20 @@
     <div class="drawer-side border-r">
       <label for="my-drawer-2" class="drawer-overlay"></label>
 
-      <a href="/admin" class="normal-case px-8 pt-8 pb-4 font-bold text-2xl serif text-center w-full flex">storywise.</a>
+      <NuxtLink href="/admin" class="normal-case px-8 pt-8 pb-4 font-bold text-2xl serif text-center w-full flex">
+        storywise.
+      </NuxtLink>
 
       <ul class="menu p-4 w-80 h-full bg-base-100 text-accent-content border-base-200">
-        <li><a href="/admin/">Overview</a></li>
-        <li><a href="/admin/settings">Settings</a></li>
-        <li><a href="/admin/billing">Billing</a></li>
+        <li>
+          <NuxtLink href="/admin/">Overview</NuxtLink>
+        </li>
+        <li>
+          <NuxtLink href="/admin/settings">Settings</NuxtLink>
+        </li>
+        <li>
+          <NuxtLink href="/admin/billing">Billing</NuxtLink>
+        </li>
 
       </ul>
 
