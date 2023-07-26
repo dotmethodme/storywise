@@ -22,7 +22,7 @@ const store = useGlobalStore();
     &lt;html lang="en"&gt;
         &lt;head&gt;
             ...
-            <code  class="text-green-300">&lt;script defer async src="{{url}}/js/script.js"&gt;&lt;/script&gt;</code>
+            <code  class="text-green-300">&lt;script defer async src="{{ url }}/js/script.js"&gt;&lt;/script&gt;</code>
         &lt;/head&gt;
         &lt;body&gt;
             ...
