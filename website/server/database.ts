@@ -6,7 +6,7 @@ export const mongoClient = new MongoClient(config.MONGODB_URL);
 
 export const cols = {
   waitlist: "waitlist",
-  users: "users",
+  profiles: "profiles",
 };
 
 export function db() {

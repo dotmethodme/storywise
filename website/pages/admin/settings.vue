@@ -1,5 +1,5 @@
 <template>
-    <h1 class="serif font-bold text-3xl mb-4">Billing</h1>
+    <h1 class="serif font-bold text-3xl mb-4">Settings</h1>
     <p>Hi {{ data }}</p>
 </template>
 

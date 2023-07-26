@@ -35,6 +35,7 @@ export default defineNuxtConfig({
         {
           async: true,
           defer: true,
+          "data-skip-localhost": true,
           src: "https://self.joinstorywise.com/js/script.js",
         },
       ],
@@ -45,5 +46,8 @@ export default defineNuxtConfig({
   },
   auth: {
     isEnabled: true,
+  },
+  pinia: {
+    autoImports: ["defineStore", ["defineStore", "definePiniaStore"]],
   },
 });

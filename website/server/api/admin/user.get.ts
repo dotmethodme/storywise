@@ -1,33 +1,40 @@
 import { getServerSession, getToken } from "#auth";
-import { cols, db, mongoClient } from "../../database";
+import { Profile, UserRespose } from "../../../types/types";
+import { cols, db } from "../../database";
 
 const config = useRuntimeConfig();
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler<UserRespose>(async (event) => {
   const session = await getServerSession(event);
   const token = await getToken({ event, secret: config.NEXTAUTH_SECRET });
+
+  if (!session) {
+    throw createError({ statusCode: 500, statusMessage: "Session is missing" });
+  }
 
   const email = session?.user?.email;
   const sub = token?.sub;
 
-  if (!email || !sub) return false;
+  if (!email || !sub) {
+    throw createError({ statusCode: 500, statusMessage: "Email or sub are missing" });
+  }
 
-  let user = await db().collection(cols.users).findOne({ externalId: sub });
+  let profile = await db().collection<Profile>(cols.profiles).findOne({ externalId: sub });
 
-  if (!user) {
-    await db().collection(cols.users).insertOne({
+  if (!profile) {
+    await db().collection(cols.profiles).insertOne({
       email,
       externalId: sub,
       onboarded: false,
       createdAt: new Date(),
     });
 
-    user = await db().collection(cols.users).findOne({ externalId: sub });
+    profile = await db().collection<Profile>(cols.profiles).findOne({ externalId: sub });
   }
 
-  if (!session) {
-    return { status: "unauthenticated!" };
+  if (!profile) {
+    throw createError({ statusCode: 500, statusMessage: "Profile is missing" });
   }
 
-  return { session, token, user };
+  return { session, token, profile };
 });
