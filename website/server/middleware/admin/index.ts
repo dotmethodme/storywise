@@ -8,6 +8,4 @@ export default eventHandler(async (event) => {
       throw createError({ statusMessage: "Unauthenticated", statusCode: 403 });
     }
   }
-
-  return;
 });

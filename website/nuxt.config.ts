@@ -11,6 +11,7 @@ export default defineNuxtConfig({
     },
   },
   modules: [
+    "nuxt-icon",
     "@pinia/nuxt",
     "@nuxt/content",
     "@sidebase/nuxt-auth",
@@ -48,6 +49,9 @@ export default defineNuxtConfig({
     isEnabled: true,
   },
   pinia: {
-    autoImports: ["defineStore", ["defineStore", "definePiniaStore"]],
+    autoImports: ["defineStore", ["defineStore", "definePiniaStore"], "storeToRefs"],
+  },
+  routeRules: {
+    "/admin/**": { ssr: false },
   },
 });

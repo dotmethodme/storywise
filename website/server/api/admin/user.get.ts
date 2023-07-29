@@ -6,9 +6,11 @@ const config = useRuntimeConfig();
 
 export default defineEventHandler<UserRespose>(async (event) => {
   const session = await getServerSession(event);
+
   const token = await getToken({ event, secret: config.NEXTAUTH_SECRET });
 
   if (!session) {
+    console.log("no session error");
     throw createError({ statusCode: 500, statusMessage: "Session is missing" });
   }
 
@@ -36,5 +38,10 @@ export default defineEventHandler<UserRespose>(async (event) => {
     throw createError({ statusCode: 500, statusMessage: "Profile is missing" });
   }
 
-  return { session, token, profile };
+  const result = {
+    session,
+    token,
+    profile,
+  };
+  return result;
 });
