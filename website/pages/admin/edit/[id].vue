@@ -12,7 +12,10 @@ const password = ref("");
 const isUserValid = computed(() => isUsernameValid(username.value));
 const isPasswordValid = computed(() => password.value.length === 0 || password.value.length > 8);
 
-const { pending, error } = useFetch(`/api/admin/app/${id}`, {
+const { data, pending, error } = useFetch(`/api/admin/app`, {
+  query: {
+    id,
+  },
   onResponse: async (ctx) => {
     username.value = ctx.response._data.username;
   },
@@ -23,9 +26,10 @@ async function updateApp() {
     return;
   }
 
-  useLazyFetch(`/api/admin/app/${id}`, {
+  useLazyFetch(`/api/admin/app/edit`, {
     method: "PATCH",
     body: {
+      _id: id,
       username: username.value,
       ...{ password: password.value.length > 0 ? password.value : undefined },
     },
@@ -41,8 +45,8 @@ async function updateApp() {
       {{ error }}
     </p>
   </div>
-  <div v-else>
-    <h1 class="serif font-bold text-3xl mb-8">Details / {{ id }}</h1>
+  <div v-else-if="!!data">
+    <h1 class="serif font-bold text-3xl mb-8">Details / {{ data?.name }}</h1>
 
     <div class="form-control w-full max-w-lg mb-4">
       <label class="label">

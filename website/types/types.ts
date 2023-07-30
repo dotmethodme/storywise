@@ -49,6 +49,7 @@ export type StorywiseAppCreate = {
 };
 
 export type StorywiseAppPatch = {
+  _id: string;
   username: string;
   password?: string;
 };
