@@ -1,5 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  typescript: {
+    strict: true,
+  },
   devtools: { enabled: true },
   runtimeConfig: {
     MONGODB_URL: process.env.MONGODB_URL,
@@ -47,6 +50,7 @@ export default defineNuxtConfig({
   },
   auth: {
     isEnabled: true,
+    origin: process.env.NODE_ENV === "production" ? "https://joinstorywise.com" : undefined,
   },
   pinia: {
     autoImports: ["defineStore", ["defineStore", "definePiniaStore"], "storeToRefs"],

@@ -1,3 +1,5 @@
+import { WithId } from "mongodb";
+
 type Session = {
   user?: {
     name?: string | null;
@@ -30,3 +32,25 @@ export type UserRespose = {
   token: JWT;
   profile: Profile;
 };
+
+export type StorywiseApp = {
+  name: string;
+  createdAt: string;
+  username: string;
+  hashedPassword: string;
+  ownerProfileId: string;
+};
+
+export type StorywiseAppCreate = {
+  name: string;
+  createdAt: string;
+  username: string;
+  password: string;
+};
+
+export type StorywiseAppPatch = {
+  username: string;
+  password?: string;
+};
+
+export type StorywiseAppWithId = WithId<StorywiseApp>;

@@ -1,24 +1,49 @@
 <script lang="ts" setup>
-import { useAdminStore } from "@/stores/admin";
-
 definePageMeta({
   layout: "admin",
 });
 
-const { data } = useAuth();
-const store = useAdminStore();
-const { user } = storeToRefs(store);
+const { data: list } = useFetch("/api/admin/app/list");
+
+const createMessage = computed(() => {
+  if (list.value?.length === 0) {
+    return "Start using storywise by creating a new app. Click here!";
+  }
+  return "If you want to track a new app, click here!";
+});
 </script>
 
 <template>
-  <h1 class="serif font-bold text-3xl mb-4">Overview</h1>
+  <h1 class="serif font-bold text-3xl mb-8">Overview</h1>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-    <div class="card bg-base-100 border">
-      <div class="card-body px-6 py-6">
-        <h2 class="card-title">Create a new app</h2>
-        <p>Start using storywise by creating a new app</p>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2-xl:grid-cols-4 select-none gap-4">
+    <NuxtLink :to="`/admin/edit/${item.name}`" v-for="item in list">
+      <div class="card bg-base-100 border cursor-pointer hover:shadow-lg h-full">
+        <div class="card-body px-6 py-6">
+          <h2 class="card-title">
+            <Icon size="30px" name="system-uicons:box" />
+            {{ item.name }}
+          </h2>
+        </div>
       </div>
-    </div>
+    </NuxtLink>
+
+    <NuxtLink to="/admin/create">
+      <div class="card bg-base-100 border cursor-pointer hover:shadow-lg h-full">
+        <div class="card-body px-6 py-6">
+          <h2 class="card-title">
+            <Icon size="30px" name="system-uicons:plus-circle" />
+            Create a new app
+          </h2>
+          <p>{{ createMessage }}</p>
+        </div>
+      </div>
+    </NuxtLink>
   </div>
 </template>
+
+<style scoped>
+div {
+  transition: all 0.2s ease-in-out;
+}
+</style>
