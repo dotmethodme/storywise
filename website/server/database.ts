@@ -1,5 +1,4 @@
 import { MongoClient } from "mongodb";
-import { Profile, StorywiseApp } from "@/types/types";
 
 const config = useRuntimeConfig();
 
