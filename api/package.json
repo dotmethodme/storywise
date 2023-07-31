@@ -15,6 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "@types/morgan": "^1.9.4",
+    "bcrypt": "^5.1.0",
     "connect-mongodb-session": "^3.1.1",
     "cors": "^2.8.5",
     "device-detector-js": "^3.0.3",

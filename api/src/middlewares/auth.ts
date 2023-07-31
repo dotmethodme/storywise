@@ -1,7 +1,9 @@
 import { NextFunction, Request, Response } from "express";
+import bcrypt from "bcrypt";
 
 const user = process.env.USERNAME || "admin";
 const pass = process.env.PASSWORD || "123";
+const passHash = process.env.PASSWORD_HASH;
 
 export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
   const { authorization } = req.headers;
@@ -13,6 +15,18 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
   }
 
   const [username, password] = Buffer.from(authorization.split(" ")[1], "base64").toString().split(":");
+
+  if (passHash) {
+    const match = await bcrypt.compare(password, passHash);
+
+    if (username === user && match) {
+      return next();
+    }
+
+    res.set("WWW-Authenticate", 'Basic realm="401"');
+    res.status(401).send("Authentication required.");
+    return;
+  }
 
   if (username === user && password === pass) {
     return next();
