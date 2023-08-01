@@ -14,6 +14,10 @@ on:
         type: string
         description: "Tag to use for the image"
         required: true
+      folder:
+        type: string
+        description: "Folder to look for the image in"
+        default: "./"
     secrets:
       ssh-key:
         description: "SSH key to use for pushing to the repo"
@@ -43,7 +47,7 @@ jobs:
           cd kubernetes
 
           # CHANGES
-          find ./${{inputs.image-name}} -type f -name '*.yaml' -exec sed -i "s/${{inputs.image-name}}:.*$/${{inputs.image-name}}:${{ inputs.image-tag }}/" {} \;
+          find ${{inputs.folder}} -type f -name '*.yaml' -exec sed -i "s/${{inputs.image-name}}:.*$/${{inputs.image-name}}:${{ inputs.image-tag }}/" {} \;
 
           # PUSH
           git remote set-url origin ${{inputs.github-repository}}
