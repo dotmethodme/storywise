@@ -33,4 +33,3 @@ onMounted(async () => {
     </div>
   </div>
 </template>
-@/stores/global

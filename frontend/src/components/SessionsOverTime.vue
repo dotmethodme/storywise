@@ -69,4 +69,3 @@ store.$subscribe(async (_, { selectedDays }) => {
   height: 300px;
 }
 </style>
-@/stores/global
