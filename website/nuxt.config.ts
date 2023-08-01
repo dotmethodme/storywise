@@ -1,14 +1,23 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  typescript: {
+    strict: true,
+  },
   devtools: { enabled: true },
   runtimeConfig: {
     MONGODB_URL: process.env.MONGODB_URL,
+    GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
+    GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
+    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     public: {
       // todo
     },
   },
   modules: [
+    "nuxt-icon",
+    "@pinia/nuxt",
     "@nuxt/content",
+    "@sidebase/nuxt-auth",
     "@nuxtjs/tailwindcss",
     [
       "@nuxtjs/google-fonts",
@@ -30,6 +39,7 @@ export default defineNuxtConfig({
         {
           async: true,
           defer: true,
+          "data-skip-localhost": true,
           src: "https://self.joinstorywise.com/js/script.js",
         },
       ],
@@ -37,5 +47,15 @@ export default defineNuxtConfig({
   },
   nitro: {
     plugins: ["~/server/index.ts"],
+  },
+  auth: {
+    isEnabled: true,
+    origin: process.env.NODE_ENV === "production" ? "https://joinstorywise.com" : undefined,
+  },
+  pinia: {
+    autoImports: ["defineStore", ["defineStore", "definePiniaStore"], "storeToRefs"],
+  },
+  routeRules: {
+    "/admin/**": { ssr: false },
   },
 });

@@ -1,6 +1,11 @@
 <script lang="ts" setup>
-import { getHitsPerPage, getTopReferrers, getUniqueSessionsPerPage, getUniqueVisitorsByCountry } from "@/service/data";
-import { useGlobalStore } from "@/stores/counter";
+import {
+  getHitsPerPage,
+  getTopReferrers,
+  getUniqueSessionsPerPage,
+  getUniqueVisitorsByCountry,
+} from "@/service/data";
+import { useGlobalStore } from "@/stores/global";
 import type { HitsPerPage, Referrer, Country } from "@shared/types";
 import { computed, onMounted, ref } from "vue";
 
@@ -40,14 +45,12 @@ const viewMoreReferrersOn = ref(false);
 const viewMoreCountries = computed(() => countries.value.length > viewLimit);
 const viewMoreCountriesOn = ref(false);
 
-
 onMounted(() => fetchData(store.selectedDays));
 store.$subscribe((_, { selectedDays }) => fetchData(selectedDays));
 </script>
 <template>
   <div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-
       <!-- Top unique visitors -->
       <div class="card bg-base-100 shadow-lg card-compact mb-4">
         <div class="card-body">
@@ -56,8 +59,11 @@ store.$subscribe((_, { selectedDays }) => fetchData(selectedDays));
               <tr>
                 <th class="font-bold text-ellipsis">Top unique visitors</th>
                 <th class="font-bold text-right">
-                  <span class="link text-accent-content" v-if="viewMoreSessions"
-                    @click="() => (viewMoreSessionsOn = !viewMoreSessionsOn)">More
+                  <span
+                    class="link text-accent-content"
+                    v-if="viewMoreSessions"
+                    @click="() => (viewMoreSessionsOn = !viewMoreSessionsOn)"
+                    >More
                   </span>
                 </th>
               </tr>
@@ -98,8 +104,11 @@ store.$subscribe((_, { selectedDays }) => fetchData(selectedDays));
               <tr>
                 <th class="font-bold">Top page views</th>
                 <th class="font-bold text-right">
-                  <span class="link text-accent-content" v-if="viewMoreHits"
-                    @click="() => (viewMoreHitsOn = !viewMoreHitsOn)">
+                  <span
+                    class="link text-accent-content"
+                    v-if="viewMoreHits"
+                    @click="() => (viewMoreHitsOn = !viewMoreHitsOn)"
+                  >
                     More
                   </span>
                 </th>
@@ -134,7 +143,6 @@ store.$subscribe((_, { selectedDays }) => fetchData(selectedDays));
       </div>
     </div>
 
-
     <!-- Top referrers -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
       <div class="card bg-base-100 shadow-lg card-compact">
@@ -144,8 +152,11 @@ store.$subscribe((_, { selectedDays }) => fetchData(selectedDays));
               <tr>
                 <th class="font-bold">Top referrers</th>
                 <th class="font-bold text-right">
-                  <span class="link text-accent-content" v-if="viewMoreReferrers"
-                    @click="() => (viewMoreReferrersOn = !viewMoreReferrersOn)">
+                  <span
+                    class="link text-accent-content"
+                    v-if="viewMoreReferrers"
+                    @click="() => (viewMoreReferrersOn = !viewMoreReferrersOn)"
+                  >
                     More
                   </span>
                 </th>
@@ -186,8 +197,11 @@ store.$subscribe((_, { selectedDays }) => fetchData(selectedDays));
               <tr>
                 <th class="font-bold">Top countries</th>
                 <th class="font-bold text-right">
-                  <span class="link text-accent-content" v-if="viewMoreCountries"
-                    @click="() => (viewMoreCountriesOn = !viewMoreCountriesOn)">
+                  <span
+                    class="link text-accent-content"
+                    v-if="viewMoreCountries"
+                    @click="() => (viewMoreCountriesOn = !viewMoreCountriesOn)"
+                  >
                     More
                   </span>
                 </th>
@@ -219,7 +233,6 @@ store.$subscribe((_, { selectedDays }) => fetchData(selectedDays));
         </form>
         <form method="dialog" class="modal-backdrop" @click="() => (viewMoreCountriesOn = false)"></form>
       </dialog>
-
     </div>
   </div>
 </template>

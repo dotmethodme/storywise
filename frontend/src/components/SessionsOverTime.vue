@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { getSessions } from "@/service/data";
-import { useGlobalStore } from "@/stores/counter";
+import { useGlobalStore } from "@/stores/global";
 import * as echarts from "echarts";
 import { onMounted, ref } from "vue";
 

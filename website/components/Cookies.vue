@@ -17,7 +17,7 @@ onMounted(() => {
 <template>
     <div class="w-100 p-2 container">
         <div v-if="showCookieBanner" class="rounded-md bg-base-100 text-base-content py-2 px-4 shadow-lg border">
-            By using this website, you agree to our <a class="link" href="/cookies">cookie policy</a>.
+            By using this website, you agree to our <NuxtLink class="link" href="/cookies">cookie policy</NuxtLink>.
             <button class="link" @click="hideCookieBanner">Got it!</button>
         </div>
     </div>

@@ -8,27 +8,42 @@
           </svg>
         </label>
         <ul tabindex="0" class="menu menu-lg dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-72">
-          <li><a href="/">Home</a></li>
-          <li><a href="/contact">Contact</a></li>
-          <li><a href="/docs">Docs</a></li>
-          <li><a href="/privacy">Privacy</a></li>
+          <li>
+            <NuxtLink href="/">Home</NuxtLink>
+          </li>
+          <li>
+            <NuxtLink href="/contact">Contact</NuxtLink>
+          </li>
+          <li>
+            <NuxtLink href="/docs">Docs</NuxtLink>
+          </li>
+          <li>
+            <NuxtLink href="/privacy">Privacy</NuxtLink>
+          </li>
         </ul>
       </div>
-      <a href="/" class="normal-case px-4 font-bold text-2xl serif">storywise.</a>
+      <NuxtLink href="/" class="normal-case px-4 font-bold text-2xl serif">storywise.</NuxtLink>
     </div>
     <div class="navbar-center hidden lg:flex">
       <ul class="menu menu-horizontal px-1">
-        <li><a href="/">Home</a></li>
-        <li><a href="/contact">Contact</a></li>
-        <li><a href="/docs">Docs</a></li>
-        <li><a href="/privacy">Privacy</a></li>
-      </ul>
-    </div>
-    <div class="navbar-end">
-      <a class="btn btn-ghost mr-2" href="https://github.com/dotmethodme/storywise" target="_blank">
-        <IconsGithub />
-        GitHub
-      </a>
-    </div>
+        <li>
+          <NuxtLink href="/">Home</NuxtLink>
+        </li>
+        <li>
+          <NuxtLink href="/contact">Contact</NuxtLink>
+        </li>
+        <li>
+          <NuxtLink href="/docs">Docs</NuxtLink>
+      </li>
+      <li>
+        <NuxtLink href="/privacy">Privacy</NuxtLink>
+      </li>
+    </ul>
   </div>
-</template>
+  <div class="navbar-end">
+    <a class="btn btn-ghost mr-2" href="https://github.com/dotmethodme/storywise" target="_blank">
+      <IconsGithub />
+      GitHub
+    </a>
+  </div>
+</div></template>
