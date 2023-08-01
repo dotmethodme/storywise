@@ -14,6 +14,8 @@ const path = computed(() => {
     return "settings";
   } else if (router.currentRoute.value.path == "/admin/billing") {
     return "billing";
+  } else if (router.currentRoute.value.path == "/admin/profile") {
+    return "profile";
   }
 });
 </script>
@@ -72,13 +74,13 @@ const path = computed(() => {
         <div>
           <ul class="menu p-4 w-80 h-full bg-base-100 text-accent-content border-base-200">
             <li>
-              <NuxtLink href="/admin/">
+              <NuxtLink :class="{ focus: path === 'profile' }" href="/admin/profile">
                 <div class="avatar" v-if="user?.session.user?.image">
                   <div class="w-8 rounded-full">
                     <img :src="user?.session.user?.image" />
                   </div>
                 </div>
-                Account
+                Profile
               </NuxtLink>
             </li>
           </ul>
