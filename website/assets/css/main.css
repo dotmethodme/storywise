@@ -20,3 +20,8 @@ html {
 .prose h3 {
   font-family: "Lora", serif;
 }
+
+.btn-xs span {
+  top: -4px;
+  position: relative;
+}

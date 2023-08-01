@@ -18,14 +18,7 @@ const createMessage = computed(() => {
 
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2-xl:grid-cols-4 select-none gap-4">
     <NuxtLink :to="`/admin/edit/${item._id}`" v-for="item in list">
-      <div class="card bg-base-100 border cursor-pointer hover:shadow-lg h-full">
-        <div class="card-body px-6 py-6">
-          <h2 class="card-title">
-            <Icon size="30px" name="system-uicons:box" />
-            {{ item.name }}
-          </h2>
-        </div>
-      </div>
+      <AdminAppLink :item="item" />
     </NuxtLink>
 
     <NuxtLink to="/admin/create">
