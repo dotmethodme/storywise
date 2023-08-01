@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useGlobalStore } from "@/stores/counter";
+import { useGlobalStore } from "@/stores/global";
 
 const url = window.location.origin;
 
@@ -7,13 +7,9 @@ const store = useGlobalStore();
 </script>
 
 <template>
-  <h2 class="mt-4 text-xl font-bold tracking-tight text-gray-800 text-left">
-    Embed
-  </h2>
+  <h2 class="mt-4 text-xl font-bold tracking-tight text-gray-800 text-left">Embed</h2>
 
-  <p class="mt-4 mb-4 text-lg">
-    Simply embed the following code in the head of your website:
-  </p>
+  <p class="mt-4 mb-4 text-lg">Simply embed the following code in the head of your website:</p>
 
   <div class="mockup-code">
     <pre>
@@ -31,9 +27,7 @@ const store = useGlobalStore();
     </pre>
   </div>
 
-  <h2 class="my-8 text-xl font-bold tracking-tight text-gray-800 text-left">
-    Site configuration
-  </h2>
+  <h2 class="my-8 text-xl font-bold tracking-tight text-gray-800 text-left">Site configuration</h2>
   <div class="w-full">
     <table class="table w-full">
       <!-- head -->

@@ -5,7 +5,7 @@ import {
   getUniqueSessionsPerPage,
   getUniqueVisitorsByCountry,
 } from "@/service/data";
-import { useGlobalStore } from "@/stores/counter";
+import { useGlobalStore } from "@/stores/global";
 import type { HitsPerPage, Referrer, Country } from "@shared/types";
 import { computed, onMounted, ref } from "vue";
 

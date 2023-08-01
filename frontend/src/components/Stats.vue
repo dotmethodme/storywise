@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { getStats } from "@/service/data";
-import { useGlobalStore } from "@/stores/counter";
+import { useGlobalStore } from "@/stores/global";
 import type { Stats } from "@shared/types";
 import { onMounted, ref } from "vue";
 
