@@ -38,6 +38,7 @@ const isLocalEnv = process.env.NODE_ENV === "local";
 
   app.post("/api/event", handleCreateEvent);
   app.get("/api/event", cors(), getEventHandler);
+  app.options("/api/event", cors());
 
   app.get("/admin/api/sessions_per_day", authMiddleware, getSessionsPerDayHandler);
   app.get("/admin/api/hits_per_page", authMiddleware, getHitsPerPageHandler);
