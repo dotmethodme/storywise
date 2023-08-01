@@ -2,8 +2,8 @@
 import Menu from "@/components/Menu.vue";
 import { onMounted } from "vue";
 import { RouterView } from "vue-router";
-import { getSiteConfig } from "./service/data";
-import { useGlobalStore } from "./stores/counter";
+import { getSiteConfig } from "@/service/data";
+import { useGlobalStore } from "@/stores/global";
 
 const store = useGlobalStore();
 
@@ -31,4 +31,3 @@ onMounted(async () => {
 </template>
 
 <style scoped></style>
-./stores/global
