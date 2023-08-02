@@ -25,7 +25,7 @@ export class PostgresRepo implements IDataRepo {
   getUniqueSessionsByCountry(numberOfDays?: number | undefined): Promise<Country[]> {
     throw new Error("Method not implemented.");
   }
-  getStats(numberOfDays?: number | undefined): Promise<Stats[]> {
+  getStats(numberOfDays?: number | undefined): Promise<Stats> {
     throw new Error("Method not implemented.");
   }
   hasAnyEvents(): Promise<boolean> {

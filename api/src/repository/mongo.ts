@@ -265,7 +265,7 @@ export class MongoRepo implements IDataRepo {
         .toArray(),
     ]);
 
-    const result = {
+    const result: Stats = {
       ...uniqueVisitors[0],
       ...totalPageviews[0],
       ...viewsPerVisitor[0],

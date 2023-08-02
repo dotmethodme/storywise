@@ -17,14 +17,10 @@ function pageview() {
     session_id: sessionId,
     path: window.location.pathname,
     referrer: referrer,
-    screen: {
-      width: window.screen.width,
-      height: window.screen.height,
-    },
-    window: {
-      width: window.innerWidth,
-      height: window.innerHeight,
-    },
+    screen_width: window.screen.width,
+    screen_height: window.screen.height,
+    window_width: window.innerWidth,
+    window_height: window.innerHeight,
   };
 
   fetch(url, {

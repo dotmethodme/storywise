@@ -12,7 +12,7 @@ export async function migrateMongo() {
 
   const appliedMigrations = await db.collection(cols.migrations).find<Migration>({}).sort({ name: 1 }).toArray();
 
-  const migrations = await import("./mongodb");
+  const migrations = await import("./mongodb/index");
 
   const keys = Object.keys(migrations) as (keyof typeof migrations)[];
 

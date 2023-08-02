@@ -9,11 +9,13 @@ export function extractEvent(request: Request): WebEvent {
     session_id: request.body.session_id,
     path: request.body.path,
     referrer: request.body.referrer,
-    screen: request.body.screen,
-    window: request.body.window,
+    screen_width: request.body.screen_width,
+    screen_height: request.body.screen_height,
+    window_width: request.body.window_width,
+    window_height: request.body.window_height,
+    timestamp: new Date(),
   };
 
-  event.timestamp = new Date();
   event.user_agent = request.headers["user-agent"] as string | null;
   event.language = request.headers["accept-language"] as string | null;
   event.country = request.headers["cf-ipcountry"] as string | null;

@@ -1,15 +1,12 @@
 require("dotenv").config();
+import { LIBSQL_URL, MONGODB_URI } from "../repository/dbConfig";
+import { LibsqlRepo } from "../repository/libsql";
 import { cols } from "../repository/mongo";
-import { getDataRepo, getMongoRepo } from "../repository/repo";
+import { getLibsqlRepo, getMongoRepo } from "../repository/repo";
 import { WebEvent } from "../types/models";
 import { generateUsers, getRandomPath, getRandomReferrer, getRandomScreenSize } from "./seedDemoData";
 
 async function main() {
-  const repo = getMongoRepo();
-  await repo.connect();
-
-  const db = repo.db();
-
   const users = generateUsers(100);
 
   const events: WebEvent[] = [];
@@ -27,29 +24,66 @@ async function main() {
       const numberOfEvents = Math.floor(Math.random() * 10);
 
       for (let j = 0; j < numberOfEvents; j++) {
-        const event: WebEvent = {
+        const event = {
           ...user,
           timestamp: date,
           path: getRandomPath(),
-          screen: getRandomScreenSize(),
+          screen_width: user.screen_size_temp.width,
+          screen_height: user.screen_size_temp.height,
+          window_width: user.screen_size_temp.width,
+          window_height: user.screen_size_temp.height,
           window: getRandomScreenSize(),
           referrer: getRandomReferrer(),
         };
+
+        // @ts-ignore
+        delete event.screen_size_temp;
+
         events.push(event);
       }
     }
   }
 
-  // empty the events collection
-  await db.collection(cols.events).deleteMany({});
-
-  const batches = splitInBatches(events, 500);
-  for (const batch of batches) {
-    await db.collection(cols.events).insertMany(batch);
-    console.log(`Inserted ${batch.length} events`);
-  }
+  await insertData(events);
 
   process.exit(0);
+}
+
+async function insertData(events: WebEvent[]) {
+  const batches = splitInBatches(events, 500);
+
+  if (!!MONGODB_URI) {
+    const repo = getMongoRepo();
+    await repo.connect();
+
+    const db = repo.db();
+
+    // empty the events collection
+    await db.collection(cols.events).deleteMany({});
+
+    for (const batch of batches) {
+      await db.collection(cols.events).insertMany(batch);
+      console.log(`Inserted ${batch.length} events`);
+    }
+  } else if (!!LIBSQL_URL) {
+    const repo = getLibsqlRepo();
+    const db = repo.db();
+    await db.execute("DELETE FROM events");
+
+    for (const batch of batches) {
+      await db.batch(
+        batch.map((event) => ({
+          sql: `
+            INSERT INTO events (${LibsqlRepo.allColumns})
+            VALUES (${LibsqlRepo.allColumnsValues})
+          `,
+          args: LibsqlRepo.eventToLibsqlFormat(event),
+        }))
+      );
+
+      console.log(`Inserted ${batch.length} events`);
+    }
+  }
 }
 
 function splitInBatches<T>(array: T[], batchSize: number): T[][] {

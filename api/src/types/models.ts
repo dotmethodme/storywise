@@ -1,35 +1,26 @@
 import { OperatingSystemResult } from "device-detector-js/dist/parsers/operating-system";
 import { GenericDeviceResult } from "device-detector-js/dist/typings/device";
 
-export type WebEvent = {
-  session_id: string;
-  path: string;
-  timestamp?: Date | null;
-  ip?: string | null;
-  user_agent?: string | null;
-
-  /**
-   * @deprecated
-   */
-  user_agent_enriched?: Record<string, any> | null;
-  referrer?: string | null;
-  language?: string | null;
-  country?: string | null;
-  screen?: {
-    width: number;
-    height: number;
-  };
-  window?: {
-    width: number;
-    height: number;
-  };
-} & EventClientDetails;
-
 export type EventCreateRequest = {
   path: string;
   referrer?: string;
   session_id?: string;
 };
+
+export type WebEvent = {
+  session_id: string;
+  path: string;
+  timestamp: Date;
+  ip?: string | null;
+  user_agent?: string | null;
+  referrer?: string | null;
+  language?: string | null;
+  country?: string | null;
+  screen_width?: number | undefined;
+  screen_height?: number | undefined;
+  window_width?: number | undefined;
+  window_height?: number | undefined;
+} & EventClientDetails;
 
 export type EventClientDetails = {
   bot_name?: string | undefined;

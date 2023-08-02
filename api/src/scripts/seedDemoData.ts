@@ -218,6 +218,7 @@ export function generateUsers(numberOfVirtualUsers = 200) {
       session_id: generateRandomSessionId(),
       language: generateRandomLanguage(),
       ...userAgentInfo,
+      screen_size_temp: getRandomScreenSize(),
     };
     users.push(user);
   }
