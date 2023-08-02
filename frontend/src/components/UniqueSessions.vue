@@ -57,7 +57,7 @@ store.$subscribe((_, { selectedDays }) => fetchData(selectedDays));
           <table class="table table-compact w-full">
             <tbody>
               <tr>
-                <th class="font-bold text-ellipsis">Top unique visitors</th>
+                <th class="font-bold text-ellipsis overflow-hidden">Top unique visitors</th>
                 <th class="font-bold text-right">
                   <span
                     class="link text-accent-content"
@@ -69,7 +69,9 @@ store.$subscribe((_, { selectedDays }) => fetchData(selectedDays));
               </tr>
 
               <tr v-for="session in visibleSessions" :key="session.path">
-                <td class="text-ellipsis">{{ session.path || "-" }}</td>
+                <td class="text-ellipsis overflow-hidden" :title="session.path">
+                  {{ session.path || "-" }}
+                </td>
                 <td class="text-right">{{ session.count }}</td>
               </tr>
             </tbody>
@@ -86,7 +88,9 @@ store.$subscribe((_, { selectedDays }) => fetchData(selectedDays));
                 </tr>
 
                 <tr v-for="session in sessions" :key="session.path">
-                  <td class="text-ellipsis">{{ session.path || "-" }}</td>
+                  <td class="text-ellipsis overflow-hidden" :title="session.path">
+                    {{ session.path || "-" }}
+                  </td>
                   <td class="text-right">{{ session.count }}</td>
                 </tr>
               </tbody>
@@ -115,7 +119,9 @@ store.$subscribe((_, { selectedDays }) => fetchData(selectedDays));
               </tr>
 
               <tr v-for="hit in visibleHits" :key="hit.path">
-                <td class="text-ellipsis">{{ hit.path || "-" }}</td>
+                <td class="text-ellipsis overflow-hidden" :title="hit.path">
+                  {{ hit.path || "-" }}
+                </td>
                 <td class="text-right">{{ hit.count }}</td>
               </tr>
             </tbody>
@@ -237,4 +243,18 @@ store.$subscribe((_, { selectedDays }) => fetchData(selectedDays));
   </div>
 </template>
 
-<style></style>
+<style scoped>
+.table {
+  table-layout: fixed;
+}
+
+th:first-child,
+td:first-child {
+  width: 90%;
+}
+
+th:last-child,
+td:last-child {
+  width: 10%;
+}
+</style>
