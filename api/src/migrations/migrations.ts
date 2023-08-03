@@ -1,4 +1,4 @@
-import { MONGODB_URI, POSTGRES_URI, SQLITE_URI } from "../repository/dbConfig";
+import { LIBSQL_URL, MONGODB_URI, POSTGRES_URI } from "../repository/dbConfig";
 
 export async function migrate() {
   if (!!MONGODB_URI) {
@@ -8,10 +8,7 @@ export async function migrate() {
      * TODO: Implement the PostgresRepo class
      * Happy to accept volunteer contributions for this one!
      */
-  } else if (!!SQLITE_URI) {
-    /**
-     * TODO: Implement the PostgresRepo class
-     * Happy to accept volunteer contributions for this one!
-     */
+  } else if (!!LIBSQL_URL) {
+    await (await import("./libsql")).migrateLibsql();
   }
 }

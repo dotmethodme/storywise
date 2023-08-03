@@ -1,5 +1,11 @@
 require("dotenv").config();
+import cors from "cors";
 import express from "express";
+import proxy from "express-http-proxy";
+import morgan from "morgan";
+import { authMiddleware } from "./middlewares/auth";
+import { migrate } from "./migrations/migrations";
+import { getDataRepo } from "./repository/repo";
 import {
   getEventHandler,
   getHeadersHandler,
@@ -13,13 +19,7 @@ import {
   handleCreateEvent,
   siteConfig,
 } from "./routes";
-import { authMiddleware } from "./middlewares/auth";
-import proxy from "express-http-proxy";
-import cors from "cors";
 import { config } from "./utils/config";
-import { migrateMongo } from "./migrations/mongo";
-import morgan from "morgan";
-import { getDataRepo } from "./repository/repo";
 
 const isLocalEnv = process.env.NODE_ENV === "local";
 
@@ -28,7 +28,7 @@ const isLocalEnv = process.env.NODE_ENV === "local";
   const app = express();
 
   await getDataRepo().connect();
-  await migrateMongo();
+  await migrate();
 
   app.use(morgan("dev"));
   app.use(cors({ origin: config.ALLOWED_ORIGIN, credentials: true }));

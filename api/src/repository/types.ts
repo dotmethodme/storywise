@@ -8,7 +8,7 @@ export interface IDataRepo {
   getUniqueSessionsPerPage(numberOfDays?: number): Promise<HitsPerPage[]>;
   getTopReferrers(numberOfDays?: number): Promise<Referrer[]>;
   getUniqueSessionsByCountry(numberOfDays?: number): Promise<Country[]>;
-  getStats(numberOfDays?: number): Promise<Stats[]>;
+  getStats(numberOfDays?: number): Promise<Stats>;
   hasAnyEvents(): Promise<boolean>;
   connect(): Promise<void>;
   disconnect(): Promise<void>;
