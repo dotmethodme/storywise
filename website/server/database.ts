@@ -1,8 +1,8 @@
-import { MongoClient } from "mongodb";
+import { Db, MongoClient } from "mongodb";
 
 const config = useRuntimeConfig();
 
-export const mongoClient = new MongoClient(config.MONGODB_URL);
+export let mongoClient: MongoClient;
 
 export const cols = {
   waitlist: "waitlist",
@@ -10,6 +10,14 @@ export const cols = {
   apps: "apps",
 };
 
-export function db() {
+export function db(): Db {
+  if ((process.env.NODE_ENV as string) === "ci") {
+    return {} as Db;
+  }
+
+  if (!mongoClient) {
+    mongoClient = new MongoClient(config.MONGODB_URL);
+  }
+
   return mongoClient.db();
 }
