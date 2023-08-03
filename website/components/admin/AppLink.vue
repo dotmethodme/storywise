@@ -13,7 +13,7 @@ const firstLoad = ref(false);
 const baseUrl = `https://${props.item.name}.joinstorywise.com`;
 
 const { pending, error, refresh } = await useFetch(`${baseUrl}/api/event`, {
-  method: "OPTIONS",
+  method: "GET",
   onResponse() {
     firstLoad.value = true;
   },
@@ -24,7 +24,7 @@ let interval: NodeJS.Timer;
 onMounted(() => {
   interval = setInterval(() => {
     refresh();
-  }, 5000);
+  }, 10000);
 });
 
 onUnmounted(() => {
@@ -42,23 +42,32 @@ onUnmounted(() => {
       </h2>
       <div class="flex justify-between">
         <div>
-          Status
-          <span v-if="pending && !firstLoad">
-            <span class="loading loading-spinner loading-xs"></span>
-          </span>
+          <template v-if="pending && !firstLoad">
+            Loading
+            <span>
+              <span class="loading loading-spinner loading-xs ml-1"></span>
+            </span>
+          </template>
 
-          <span v-else-if="error" class="relative inline-flex h-3 w-3">
-            <span
-              class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-500 opacity-75"
-            ></span>
-            <span class="relative inline-flex rounded-full h-3 w-3 bg-yellow-600"></span>
-          </span>
-          <span v-else class="relative inline-flex h-3 w-3">
-            <span
-              class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"
-            ></span>
-            <span class="relative inline-flex rounded-full h-3 w-3 bg-green-600"></span>
-          </span>
+          <template v-else-if="error">
+            Pending
+            <span class="relative inline-flex h-3 w-3 ml-1">
+              <span
+                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-500 opacity-75"
+              ></span>
+              <span class="relative inline-flex rounded-full h-3 w-3 bg-yellow-600"></span>
+            </span>
+          </template>
+
+          <template v-else>
+            Live
+            <span class="relative inline-flex h-3 w-3 ml-1">
+              <span
+                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"
+              ></span>
+              <span class="relative inline-flex rounded-full h-3 w-3 bg-green-600"></span>
+            </span>
+          </template>
         </div>
 
         <div
