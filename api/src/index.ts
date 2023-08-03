@@ -17,6 +17,7 @@ import {
   getUniqueSessionsByCountryHandler,
   getUniqueSessionsPerPageHandler,
   handleCreateEvent,
+  healthCheckHandler,
   siteConfig,
 } from "./routes";
 import { config } from "./utils/config";
@@ -35,6 +36,7 @@ const isLocalEnv = process.env.NODE_ENV === "local";
   app.use(express.json());
 
   app.get("/", (_, res) => res.redirect("/admin"));
+  app.get("/health", healthCheckHandler);
 
   app.post("/api/event", handleCreateEvent);
   app.get("/api/event", cors(), getEventHandler);

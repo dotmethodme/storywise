@@ -123,3 +123,13 @@ export async function siteConfig(req: Request, res: Response) {
     res.status(500).json({ message: "Internal server error" });
   }
 }
+
+export async function healthCheckHandler(req: Request, res: Response) {
+  try {
+    await repo.hasAnyEvents();
+    res.status(200).json({ healthy: true });
+  } catch (err) {
+    console.error(err);
+    res.status(503).json({ healthy: false });
+  }
+}
