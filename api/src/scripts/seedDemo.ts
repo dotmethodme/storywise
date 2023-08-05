@@ -2,8 +2,10 @@ require("dotenv").config();
 import { LIBSQL_URL, MONGODB_URI } from "../repository/dbConfig";
 import { LibsqlRepo } from "../repository/libsql";
 import { cols } from "../repository/mongo";
+import { PostgresRepo } from "../repository/postgres";
 import { getLibsqlRepo, getMongoRepo } from "../repository/repo";
 import { WebEvent } from "../types/models";
+import { webEventToSqlFormat } from "../utils/parsers";
 import { generateUsers, getRandomPath, getRandomReferrer, getRandomScreenSize } from "./seedDemoData";
 
 async function main() {
@@ -77,9 +79,24 @@ async function insertData(events: WebEvent[]) {
             INSERT INTO events (${LibsqlRepo.allColumns})
             VALUES (${LibsqlRepo.allColumnsValues})
           `,
-          args: LibsqlRepo.eventToLibsqlFormat(event),
+          args: webEventToSqlFormat(event),
         }))
       );
+
+      console.log(`Inserted ${batch.length} events`);
+    }
+  } else if (!!process.env.POSTGRES_URL) {
+    const repo = new PostgresRepo();
+    const db = repo.db();
+    await db`DELETE FROM events`;
+
+    for (const batch of batches) {
+      await db.begin(async (sql) => {
+        const events = batch.map((event) => webEventToSqlFormat(event));
+        await sql`
+          INSERT INTO events ${sql(events)}
+        `;
+      });
 
       console.log(`Inserted ${batch.length} events`);
     }
