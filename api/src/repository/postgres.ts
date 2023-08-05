@@ -1,12 +1,20 @@
 import { SessionItem, HitsPerPage, Referrer, Country, Stats } from "@shared/types";
 import { WebEvent } from "../types/models";
 import { IDataRepo } from "./types";
+import postgres from "postgres";
+import { POSTGRES_URL } from "./dbConfig";
 
-/**
- * TODO: Implement the PostgresRepo class
- * Happy to accept volunteer contributions for this one!
- */
 export class PostgresRepo implements IDataRepo {
+  public sql: postgres.Sql<{}>;
+
+  constructor() {
+    if (!POSTGRES_URL) {
+      throw new Error("POSTGRES_URL is not set");
+    }
+
+    this.sql = postgres(POSTGRES_URL);
+  }
+
   createEvent(event: WebEvent): Promise<void> {
     throw new Error("Method not implemented.");
   }
@@ -28,13 +36,18 @@ export class PostgresRepo implements IDataRepo {
   getStats(numberOfDays?: number | undefined): Promise<Stats> {
     throw new Error("Method not implemented.");
   }
-  hasAnyEvents(): Promise<boolean> {
-    throw new Error("Method not implemented.");
+  async hasAnyEvents() {
+    const result = await this.sql`select 1 from events limit 1`;
+    return result.length > 0;
   }
-  connect(): Promise<void> {
-    throw new Error("Method not implemented.");
+  async connect() {
+    // noop
   }
   disconnect(): Promise<void> {
     throw new Error("Method not implemented.");
+  }
+
+  db() {
+    return this.sql;
   }
 }
