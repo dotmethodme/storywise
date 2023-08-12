@@ -50,7 +50,9 @@ Password: `123`
 
 | Name           | Description                                                                                                                                                       |
 | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| MONGODB_URI    | The connection string to your MongoDB database. You can get this from your MongoDB Atlas dashboard.                                                               |
+| MONGODB_URI    | The connection string to your MongoDB database.                                                                                                                   |
+| POSTGRES_URL   | The connection string to your Postgres database.                                                                                                                  |
+| LIBSQL_URL     | The connection string to your Libsql database.                                                                                                                    |
 | DATABASE_NAME  | The name of the database you want to use. If it doesn't exist, it will be created for you.                                                                        |
 | USERNAME       | The username you want to use to log in to the admin panel.                                                                                                        |
 | PASSWORD       | The password you want to use to log in to the admin panel.                                                                                                        |
