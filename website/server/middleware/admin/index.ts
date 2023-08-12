@@ -13,14 +13,28 @@ export default eventHandler(async (event) => {
       throw createError({ statusMessage: "Unauthenticated", statusCode: 403 });
     }
 
-    const sub = token?.sub;
+  const email = session?.user?.email;
+  const sub = token?.sub;
 
     if (!sub) {
       throw createError({ statusCode: 500, statusMessage: "Email or sub are missing" });
     }
 
-    const profile = await db().collection<Profile>(cols.profiles).findOne({ externalId: sub });
 
+    let profile = await db().collection<Profile>(cols.profiles).findOne({ externalId: sub });
+
+    if (!profile) {
+      await db().collection(cols.profiles).insertOne({
+        email,
+        externalId: sub,
+        onboarded: false,
+        createdAt: new Date(),
+      });
+  
+      profile = await db().collection<Profile>(cols.profiles).findOne({ externalId: sub });
+    }
+  
+  
     if (!profile) {
       throw createError({ statusCode: 500, statusMessage: "Profile is missing" });
     }
