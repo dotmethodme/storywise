@@ -15,7 +15,7 @@ export class PostgresRepo implements IDataRepo {
 
     let url = POSTGRES_URL;
     if(!!process.env.SCHEMA_NAME) {
-      url += `?search_path=${process.env.SCHEMA_NAME}`;
+      url += `&search_path=${process.env.SCHEMA_NAME}`;
     }
 
     this.sql = postgres(url);
