@@ -27,6 +27,7 @@ export async function getEventHandler(req: Request, res: Response) {
     res.status(500).json({ message: "Internal server error" });
   }
 }
+
 export async function getSessionsPerDayHandler(req: Request, res: Response) {
   try {
     const { days } = req.query;

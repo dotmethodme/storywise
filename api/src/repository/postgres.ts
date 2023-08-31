@@ -13,7 +13,12 @@ export class PostgresRepo implements IDataRepo {
       throw new Error("POSTGRES_URL is not set");
     }
 
-    this.sql = postgres(POSTGRES_URL);
+    let url = POSTGRES_URL;
+    if(!!process.env.SCHEMA_NAME) {
+      url += `?search_path=${process.env.SCHEMA_NAME}`;
+    }
+
+    this.sql = postgres(url);
   }
 
   createEvent(event: WebEvent): Promise<void> {
