@@ -18,7 +18,11 @@ export class PostgresRepo implements IDataRepo {
       url += `&search_path=${process.env.SCHEMA_NAME}`;
     }
 
-    this.sql = postgres(url);
+    this.sql = postgres(url, {
+      ssl: {
+        rejectUnauthorized: false,
+      }
+    });
   }
 
   createEvent(event: WebEvent): Promise<void> {
