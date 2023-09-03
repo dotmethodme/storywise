@@ -1,6 +1,6 @@
 // extend the global Session interface
 import { DefaultSession } from "next-auth";
-import { Profile } from "@/types/types";
+import { ProfileWithOrganization } from "types/types";
 
 declare module "next-auth" {
   interface Session extends DefaultSession {
@@ -17,6 +17,6 @@ declare module "h3" {
   interface H3EventContext {
     params?: Record<string, string>;
     sessions?: Record<string, Session>;
-    profile: Profile;
+    profile: ProfileWithOrganization;
   }
 }

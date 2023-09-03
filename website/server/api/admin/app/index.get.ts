@@ -1,15 +1,24 @@
-import { cols, db } from "@/server/database";
-import { StorywiseAppWithId } from "@/types/types";
-import { ObjectId } from "mongodb";
+import { StorywiseApp } from "@/types/types";
+import { PrismaClient } from "@prisma/client";
 
-export default defineEventHandler<StorywiseAppWithId>(async (event) => {
+const prisma = new PrismaClient();
+
+export default defineEventHandler<StorywiseApp>(async (event) => {
   const { id } = getQuery(event);
 
   if (!id || typeof id != "string") throw createError({ status: 400, message: "Id is required" });
 
-  const item = await db()
-    .collection<StorywiseAppWithId>(cols.apps)
-    .findOne({ _id: new ObjectId(id) }, { projection: { hashedPassword: 0 } });
+  const item = await prisma.app.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      name: true,
+      organizationId: true,
+      username: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
 
   if (!item) {
     throw createError({ status: 404, message: "Not found" });

@@ -1,15 +1,18 @@
-import { cols, db } from "@/server/database";
-import { StorywiseApp, StorywiseAppCreate, StorywiseAppWithId } from "@/types/types";
+import { StorywiseApp, StorywiseAppCreate } from "@/types/types";
+import { PrismaClient } from "@prisma/client";
 import { hash } from "bcrypt";
 
-export default defineEventHandler<StorywiseAppWithId>(async (event) => {
+const prisma = new PrismaClient();
+
+export default defineEventHandler<StorywiseApp>(async (event) => {
   const body = await readBody<StorywiseAppCreate>(event);
 
   if (!body.name) {
     throw createError({ status: 400, statusMessage: "Name is required" });
   }
 
-  const existing = await db().collection<StorywiseApp>(cols.apps).findOne({ name: body.name });
+  const existing = await prisma.app.findUnique({ where: { name: body.name } });
+
   if (existing) {
     throw createError({
       status: 400,
@@ -19,15 +22,23 @@ export default defineEventHandler<StorywiseAppWithId>(async (event) => {
 
   const hashedPassword = await hash(body.password, 10);
 
-  const insert = await db().collection<StorywiseApp>(cols.apps).insertOne({
-    name: body.name,
-    username: body.username,
-    hashedPassword,
-    ownerProfileId: event.context.profile._id,
-    createdAt: new Date().toISOString(),
+  const item = await prisma.app.create({
+    data: {
+      name: body.name,
+      username: body.username,
+      hashedPassword,
+      organizationId: event.context.profile.organizationId,
+      createdAt: new Date(),
+    },
+    select: {
+      id: true,
+      name: true,
+      organizationId: true,
+      username: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   });
-
-  const item = await db().collection<StorywiseApp>(cols.apps).findOne({ _id: insert.insertedId });
 
   return item!;
 });

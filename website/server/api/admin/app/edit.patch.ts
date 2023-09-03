@@ -1,13 +1,13 @@
-import { cols, db } from "@/server/database";
-import { StorywiseAppPatch, StorywiseAppWithId } from "@/types/types";
+import { StorywiseApp, StorywiseAppPatch } from "@/types/types";
+import { PrismaClient } from "@prisma/client";
 import { hash } from "bcrypt";
-import { ObjectId } from "mongodb";
 
-export default defineEventHandler<StorywiseAppWithId>(async (event) => {
+const prisma = new PrismaClient();
+
+export default defineEventHandler<StorywiseApp>(async (event) => {
   const body = await readBody<StorywiseAppPatch>(event);
-  const _id = new ObjectId(body._id);
 
-  const item = await db().collection<StorywiseAppWithId>(cols.apps).findOne({ _id });
+  const item = await prisma.app.findUnique({ where: { id: body.id } });
 
   if (!item) throw createError({ status: 404, message: "Not found" });
 
@@ -17,10 +17,18 @@ export default defineEventHandler<StorywiseAppWithId>(async (event) => {
     update.hashedPassword = await hash(body.password, 10);
   }
 
-  await db().collection(cols.apps).updateOne({ _id }, { $set: update });
+  const newItem = await prisma.app.update({
+    where: { id: body.id },
+    data: update,
+    select: {
+      id: true,
+      name: true,
+      organizationId: true,
+      username: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
 
-  const newItem = await db()
-    .collection<StorywiseAppWithId>(cols.apps)
-    .findOne({ _id }, { projection: { hashedPassword: 0 } });
-  return newItem!;
+  return newItem;
 });

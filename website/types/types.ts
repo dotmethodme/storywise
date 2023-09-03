@@ -1,3 +1,4 @@
+import { Organization, Profile } from "@prisma/client";
 import { WithId } from "mongodb";
 
 type Session = {
@@ -19,13 +20,7 @@ type JWT = {
   // jti: string;
 };
 
-export type Profile = {
-  _id: string;
-  email: string;
-  externalId: string;
-  onboarded: boolean;
-  createdAt: string;
-};
+export type ProfileWithOrganization = Profile & { organization: Organization };
 
 export type UserRespose = {
   session: Session;
@@ -34,11 +29,12 @@ export type UserRespose = {
 };
 
 export type StorywiseApp = {
+  id: string;
   name: string;
-  createdAt: string;
   username: string;
-  hashedPassword: string;
-  ownerProfileId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  organizationId: string;
 };
 
 export type StorywiseAppCreate = {
@@ -49,9 +45,7 @@ export type StorywiseAppCreate = {
 };
 
 export type StorywiseAppPatch = {
-  _id: string;
+  id: string;
   username: string;
   password?: string;
 };
-
-export type StorywiseAppWithId = WithId<StorywiseApp>;

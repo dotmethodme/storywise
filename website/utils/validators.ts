@@ -13,6 +13,8 @@ export function isAppNameValid(text: string): boolean {
     "community",
     "contact",
     "dashboard",
+    "prisma",
+    "supreme",
   ];
   const maxLength = 15;
   const minLength = 3;
