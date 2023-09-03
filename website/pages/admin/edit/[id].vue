@@ -15,9 +15,7 @@ const isUserValid = computed(() => isUsernameValid(username.value));
 const isPasswordValid = computed(() => password.value.length === 0 || password.value.length > 8);
 
 const { data, pending, error } = useFetch<StorywiseApp>(`/api/admin/app`, {
-  query: {
-    id,
-  },
+  query: { id },
   onResponse: async (ctx) => {
     username.value = ctx.response._data.username;
   },
