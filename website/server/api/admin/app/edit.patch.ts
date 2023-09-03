@@ -4,8 +4,11 @@ import { hash } from "bcrypt";
 
 const prisma = new PrismaClient();
 
-export default defineEventHandler<StorywiseApp>(async (event) => {
-  const body = await readBody<StorywiseAppPatch>(event);
+type Request = { body: StorywiseAppPatch };
+type Response = Promise<StorywiseApp>;
+
+export default defineEventHandler<Request, Response>(async (event) => {
+  const body = await readBody(event);
 
   const item = await prisma.app.findUnique({ where: { id: body.id } });
 

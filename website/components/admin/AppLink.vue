@@ -1,9 +1,7 @@
 <script lang="ts" setup>
-import { StorywiseAppWithId } from "@/types/types";
-
 const props = defineProps<{
   item: {
-    _id: string;
+    id: string;
     name: string;
   };
 }>();

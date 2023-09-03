@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { StorywiseApp } from "~/types/types";
+
 definePageMeta({
   layout: "admin",
 });
@@ -12,7 +14,7 @@ const password = ref("");
 const isUserValid = computed(() => isUsernameValid(username.value));
 const isPasswordValid = computed(() => password.value.length === 0 || password.value.length > 8);
 
-const { data, pending, error } = useFetch(`/api/admin/app`, {
+const { data, pending, error } = useFetch<StorywiseApp>(`/api/admin/app`, {
   query: {
     id,
   },
@@ -29,7 +31,7 @@ async function updateApp() {
   useLazyFetch(`/api/admin/app/edit`, {
     method: "PATCH",
     body: {
-      _id: id,
+      id: id,
       username: username.value,
       ...{ password: password.value.length > 0 ? password.value : undefined },
     },

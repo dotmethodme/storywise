@@ -3,7 +3,10 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export default defineEventHandler<StorywiseApp>(async (event) => {
+type Request = unknown;
+type Response = Promise<StorywiseApp>;
+
+export default defineEventHandler<Request, Response>(async (event) => {
   const { id } = getQuery(event);
 
   if (!id || typeof id != "string") throw createError({ status: 400, message: "Id is required" });

@@ -4,8 +4,11 @@ import { hash } from "bcrypt";
 
 const prisma = new PrismaClient();
 
-export default defineEventHandler<StorywiseApp>(async (event) => {
-  const body = await readBody<StorywiseAppCreate>(event);
+type Request = { body: StorywiseAppCreate };
+type Response = Promise<StorywiseApp>;
+
+export default eventHandler<Request, Response>(async (event) => {
+  const body = await readBody(event);
 
   if (!body.name) {
     throw createError({ status: 400, statusMessage: "Name is required" });
@@ -40,5 +43,5 @@ export default defineEventHandler<StorywiseApp>(async (event) => {
     },
   });
 
-  return item!;
+  return item;
 });

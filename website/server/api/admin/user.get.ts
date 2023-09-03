@@ -1,13 +1,14 @@
 import { getServerSession, getToken } from "#auth";
 import { PrismaClient } from "@prisma/client";
 import { UserRespose } from "../../../types/types";
-// import { cols, db } from "../../database";
 
 const config = useRuntimeConfig();
-
 const prisma = new PrismaClient();
 
-export default defineEventHandler<UserRespose>(async (event) => {
+type Request = unknown;
+type Response = Promise<UserRespose>;
+
+export default defineEventHandler<Request, Response>(async (event) => {
   const session = await getServerSession(event);
 
   const token = await getToken({ event, secret: config.NEXTAUTH_SECRET });
