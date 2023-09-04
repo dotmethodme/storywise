@@ -1,10 +1,14 @@
 import { getServerSession, getToken } from "#auth";
-import { Profile, UserRespose } from "../../../types/types";
-import { cols, db } from "../../database";
+import { PrismaClient } from "@prisma/client";
+import { UserRespose } from "../../../types/types";
 
 const config = useRuntimeConfig();
+const prisma = new PrismaClient();
 
-export default defineEventHandler<UserRespose>(async (event) => {
+type Request = unknown;
+type Response = Promise<UserRespose>;
+
+export default defineEventHandler<Request, Response>(async (event) => {
   const session = await getServerSession(event);
 
   const token = await getToken({ event, secret: config.NEXTAUTH_SECRET });
@@ -16,26 +20,39 @@ export default defineEventHandler<UserRespose>(async (event) => {
 
   const email = session?.user?.email;
   const sub = token?.sub;
+  const name = session?.user?.name;
 
-  if (!email || !sub) {
-    throw createError({ statusCode: 500, statusMessage: "Email or sub are missing" });
+  if (!email || !sub || !name) {
+    throw createError({ statusCode: 500, statusMessage: "email, sub or name are missing" });
   }
 
-  let profile = await db().collection<Profile>(cols.profiles).findOne({ externalId: sub });
+  let profile = await prisma.profile.findUnique({
+    where: { externalId: sub },
+    include: { organization: true },
+  });
 
   if (!profile) {
-    await db().collection(cols.profiles).insertOne({
-      email,
-      externalId: sub,
-      onboarded: false,
-      createdAt: new Date(),
+    profile = await prisma.profile.create({
+      data: {
+        email,
+        externalId: sub,
+        onboarded: false,
+        createdAt: new Date(),
+        organization: {
+          create: {
+            name: name,
+          },
+        },
+      },
+      include: { organization: true },
     });
-
-    profile = await db().collection<Profile>(cols.profiles).findOne({ externalId: sub });
   }
 
   if (!profile) {
-    throw createError({ statusCode: 500, statusMessage: "Profile is missing" });
+    throw createError({
+      statusCode: 500,
+      statusMessage: "Fatal error: profile and organization is missing",
+    });
   }
 
   const result = {

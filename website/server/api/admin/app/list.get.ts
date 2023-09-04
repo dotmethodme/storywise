@@ -1,11 +1,23 @@
-import { cols, db } from "@/server/database";
-import { StorywiseAppWithId } from "@/types/types";
+import { StorywiseApp } from "@/types/types";
+import { PrismaClient } from "@prisma/client";
 
-export default defineEventHandler<StorywiseAppWithId[]>(async (event) => {
-  const list = await db()
-    .collection<StorywiseAppWithId>(cols.apps)
-    .find({ ownerProfileId: event.context.profile._id }, { projection: { hashedPassword: 0 } })
-    .toArray();
+const prisma = new PrismaClient();
+
+type Request = unknown;
+type Response = Promise<StorywiseApp[]>;
+
+export default eventHandler<Request, Response>(async (event) => {
+  const list = await prisma.app.findMany({
+    where: { organizationId: event.context.profile.organizationId },
+    select: {
+      id: true,
+      name: true,
+      organizationId: true,
+      username: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
 
   return list;
 });

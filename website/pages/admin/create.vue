@@ -37,7 +37,7 @@ async function createApp() {
   });
 
   if (createdApp) {
-    router.push(`/admin/edit/${createdApp.data.value?._id}`);
+    router.push(`/admin/edit/${createdApp.data.value?.id}`);
   }
 }
 </script>

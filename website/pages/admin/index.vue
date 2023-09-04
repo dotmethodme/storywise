@@ -1,12 +1,20 @@
 <script lang="ts" setup>
+import { StorywiseApp } from "~/types/types";
+
 definePageMeta({
   layout: "admin",
 });
 
-const { data: list } = useFetch("/api/admin/app/list");
+const result = useFetch<StorywiseApp[]>("/api/admin/app/list");
+
+const list = computed(() => {
+  if (!result.data.value) return;
+  return result.data.value;
+});
 
 const createMessage = computed(() => {
-  if (list.value?.length === 0) {
+  if (!result.data.value) return;
+  if (result.data.value.length === 0) {
     return "Start using storywise by creating a new app. Click here!";
   }
   return "If you want to track a new app, click here!";
@@ -17,7 +25,7 @@ const createMessage = computed(() => {
   <h1 class="serif font-bold text-3xl mb-8">Overview</h1>
 
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2-xl:grid-cols-4 select-none gap-4">
-    <NuxtLink :to="`/admin/edit/${item._id}`" v-for="item in list">
+    <NuxtLink :to="`/admin/edit/${item.id}`" v-for="item in list">
       <AdminAppLink :item="item" />
     </NuxtLink>
 

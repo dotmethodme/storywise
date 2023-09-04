@@ -2,7 +2,7 @@ import { SessionItem, HitsPerPage, Referrer, Country, Stats } from "@shared/type
 import { WebEvent } from "../types/models";
 import { IDataRepo } from "./types";
 import postgres from "postgres";
-import { POSTGRES_URL } from "./dbConfig";
+import { DATABASE_NAME, POSTGRES_URL } from "./dbConfig";
 import { getDaysAgo } from "../utils/date";
 
 export class PostgresRepo implements IDataRepo {
@@ -13,20 +13,24 @@ export class PostgresRepo implements IDataRepo {
       throw new Error("POSTGRES_URL is not set");
     }
 
-    let url = POSTGRES_URL;
-    if(!!process.env.SCHEMA_NAME) {
-      url += `&search_path=${process.env.SCHEMA_NAME}`;
-    }
-
-    this.sql = postgres(url, {
+    const url = POSTGRES_URL;
+    let options: postgres.Options<{}> = {
       ssl: {
         rejectUnauthorized: false,
-      }
-    });
+      },
+    };
+
+    if (DATABASE_NAME) {
+      options.database = DATABASE_NAME;
+    }
+
+    this.sql = postgres(url, options);
   }
 
-  createEvent(event: WebEvent): Promise<void> {
-    throw new Error("Method not implemented.");
+  async createEvent(event: WebEvent) {
+    await this.sql`
+      INSERT INTO events ${this.sql(event)}
+    `;
   }
 
   getSessionsPerDay(numberOfDays = 30) {
