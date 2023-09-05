@@ -9,7 +9,5 @@ export default defineNuxtRouteMiddleware((to, from) => {
     return;
   }
 
-  return signIn(undefined, { callbackUrl: to.path }) as ReturnType<
-    typeof navigateTo
-  >;
+  return signIn(undefined, { callbackUrl: to.path }) as ReturnType<typeof navigateTo>;
 });
