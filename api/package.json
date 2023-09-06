@@ -8,14 +8,17 @@
     "build": "tsc && npm run copy",
     "copy": "cp -r dist/api/src dist_temp && rm -rf dist && mv dist_temp dist",
     "start": "node dist/index.js",
-    "seedDemo": "ts-node-dev --transpile-only --ignore-watch node_modules src/scripts/seedDemo.ts"
+    "seedDemo": "ts-node-dev --transpile-only --ignore-watch node_modules src/scripts/seedDemo.ts",
+    "issueJwt": "ts-node-dev --transpile-only --ignore-watch node_modules src/scripts/issueJwt.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@libsql/client": "^0.3.1",
+    "@types/cookie-parser": "^1.4.4",
     "bcrypt": "^5.1.0",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "device-detector-js": "^3.0.3",
     "dotenv": "^16.0.3",
@@ -23,6 +26,7 @@
     "express-fingerprint": "^1.2.2",
     "express-http-proxy": "^1.6.3",
     "express-session": "^1.17.3",
+    "jsonwebtoken": "^9.0.2",
     "luxon": "^3.3.0",
     "mongodb": "^6.0.0",
     "morgan": "^1.10.0",
@@ -37,6 +41,7 @@
     "@types/express": "^4.17.17",
     "@types/express-http-proxy": "^1.6.3",
     "@types/express-session": "^1.17.7",
+    "@types/jsonwebtoken": "^9.0.2",
     "@types/morgan": "^1.9.4",
     "@types/node": "^20.3.2",
     "@types/ua-parser-js": "^0.7.36"

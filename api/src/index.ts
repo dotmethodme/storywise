@@ -1,9 +1,11 @@
 require("dotenv").config();
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
 import proxy from "express-http-proxy";
 import morgan from "morgan";
 import { authMiddleware } from "./middlewares/auth";
+import { jwtAuthMiddleware } from "./middlewares/jwtAuth";
 import { migrate } from "./migrations/migrations";
 import { getDataRepo } from "./repository/repo";
 import {
@@ -31,6 +33,7 @@ const isLocalEnv = process.env.NODE_ENV === "local";
   await getDataRepo().connect();
   await migrate();
 
+  app.use(cookieParser());
   app.use(morgan("dev"));
   app.use(cors({ origin: config.ALLOWED_ORIGIN, credentials: true }));
   app.use(express.json());
@@ -49,6 +52,7 @@ const isLocalEnv = process.env.NODE_ENV === "local";
   app.get("/admin/api/unique_sessions_by_country", authMiddleware, getUniqueSessionsByCountryHandler);
   app.get("/admin/api/stats", authMiddleware, getStatsHandler);
   app.get("/admin/api/config", authMiddleware, siteConfig);
+  app.get("/login/:token", jwtAuthMiddleware);
 
   if (isLocalEnv) {
     app.get("/admin", authMiddleware, proxy("localhost:5173"));
