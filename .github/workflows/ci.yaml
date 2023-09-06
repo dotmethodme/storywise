@@ -1,7 +1,7 @@
 name: CI Pipeline
 
 on:
-  workflow_dispatch: 
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -142,7 +142,7 @@ jobs:
         run: |
           docker buildx imagetools create -t ${{ env.REGISTRY_IMAGE }}:${{ needs.build-core.outputs.tag }} -t ${{ env.REGISTRY_IMAGE }}:latest \
             $(printf '${{ env.REGISTRY_IMAGE }}@sha256:%s ' *)
-            
+
       - name: Inspect image
         run: |
           docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ needs.build-core.outputs.tag }}
@@ -155,6 +155,7 @@ jobs:
       github-repository: git@github.com:dotmethodme/kubernetes.git
       image-name: storywise
       image-tag: ${{ needs.merge-core.outputs.tag }}
+      folder: ./storywise
     secrets:
       ssh-key: ${{ secrets.SSH_KEY }}
       known-hosts: ${{ secrets.KNOWN_HOSTS }}
