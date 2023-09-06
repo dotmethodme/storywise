@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcrypt";
 
-const user = process.env.USERNAME || "admin";
-const pass = process.env.PASSWORD || "123";
-const passHash = process.env.PASSWORD_HASH;
+const user = process.env.STORYWISE_USERNAME || process.env.USERNAME || "admin";
+const pass = process.env.STORYWISE_PASSWORD || process.env.PASSWORD || "123";
+const passHash = process.env.STORYWISE_PASSWORD_HASH || process.env.PASSWORD_HASH;
 
 export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
   const { authorization } = req.headers;
