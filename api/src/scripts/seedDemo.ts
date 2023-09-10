@@ -1,5 +1,3 @@
-require("dotenv").config();
-import { LIBSQL_URL, MONGODB_URI } from "../repository/dbConfig";
 import { LibsqlRepo } from "../repository/libsql";
 import { cols } from "../repository/mongo";
 import { PostgresRepo } from "../repository/postgres";
@@ -8,7 +6,7 @@ import { WebEvent } from "../types/models";
 import { webEventToSqlFormat } from "../utils/parsers";
 import { generateUsers, getRandomPath, getRandomReferrer, getRandomScreenSize } from "./seedDemoData";
 
-async function main() {
+export async function seedDemo(logs = true) {
   const users = generateUsers(100);
 
   const events: WebEvent[] = [];
@@ -46,15 +44,15 @@ async function main() {
     }
   }
 
-  await insertData(events);
-
-  process.exit(0);
+  await insertData(events, logs);
 }
 
-async function insertData(events: WebEvent[]) {
+async function insertData(events: WebEvent[], logs: boolean) {
+  const logger = logs ? console.log : () => {};
+
   const batches = splitInBatches(events, 500);
 
-  if (!!MONGODB_URI) {
+  if (!!process.env.MONGODB_URI) {
     const repo = getMongoRepo();
     await repo.connect();
 
@@ -65,9 +63,9 @@ async function insertData(events: WebEvent[]) {
 
     for (const batch of batches) {
       await db.collection(cols.events).insertMany(batch);
-      console.log(`Inserted ${batch.length} events`);
+      logger(`Inserted ${batch.length} events`);
     }
-  } else if (!!LIBSQL_URL) {
+  } else if (!!process.env.LIBSQL_URL) {
     const repo = getLibsqlRepo();
     const db = repo.db();
     await db.execute("DELETE FROM events");
@@ -83,7 +81,7 @@ async function insertData(events: WebEvent[]) {
         }))
       );
 
-      console.log(`Inserted ${batch.length} events`);
+      logger(`Inserted ${batch.length} events`);
     }
   } else if (!!process.env.POSTGRES_URL) {
     const repo = new PostgresRepo();
@@ -98,7 +96,7 @@ async function insertData(events: WebEvent[]) {
         `;
       });
 
-      console.log(`Inserted ${batch.length} events`);
+      logger(`Inserted ${batch.length} events`);
     }
   }
 }
@@ -110,5 +108,3 @@ function splitInBatches<T>(array: T[], batchSize: number): T[][] {
   }
   return batches;
 }
-
-main();
