@@ -3,10 +3,8 @@ import supertest from "supertest";
 import { getApp } from "../app";
 import { PostgresRepo } from "../repository/postgres";
 import { getPostgresRepo } from "../repository/repo";
-import { postgresUrlMock } from "./helpers/constants";
-import { migrate } from "../migrations/migrations";
 import { seedDemo } from "../scripts/seedDemo";
-import exp from "constants";
+import { postgresUrlMock } from "./helpers/constants";
 
 const user = "admin";
 const pass = "123";
