@@ -8,9 +8,28 @@
       "name": "Attach",
       "port": 9229,
       "request": "attach",
-      "skipFiles": ["<node_internals>/**"],
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
       "type": "node",
       "restart": true
+    },
+    {
+      "type": "node",
+      "name": "vscode-jest-tests.v2",
+      "request": "launch",
+      "args": [
+        "--runInBand",
+        "--watchAll=false",
+        "--testNamePattern",
+        "${jest.testNamePattern}",
+        "--runTestsByPath",
+        "${jest.testFile}"
+      ],
+      "cwd": "/home/dotmethod/workspace/dotmethodme/storywise/api",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "program": "/home/dotmethod/workspace/dotmethodme/storywise/node_modules/.bin/jest"
     }
   ]
 }

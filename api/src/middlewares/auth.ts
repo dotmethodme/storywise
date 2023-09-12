@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcrypt";
 
-const user = process.env.STORYWISE_USERNAME || process.env.USERNAME || "admin";
-const pass = process.env.STORYWISE_PASSWORD || process.env.PASSWORD || "123";
-const passHash = process.env.STORYWISE_PASSWORD_HASH || process.env.PASSWORD_HASH;
-
 export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
+  const expectedUser = process.env.STORYWISE_USERNAME ?? process.env.USERNAME ?? "admin";
+  const expectedPass = process.env.STORYWISE_PASSWORD ?? process.env.PASSWORD ?? "123";
+  const expectedPassHash = process.env.STORYWISE_PASSWORD_HASH ?? process.env.PASSWORD_HASH;
+
   const { authorization } = req.headers;
 
   if (!authorization) {
@@ -14,12 +14,12 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
     return;
   }
 
-  const [username, password] = Buffer.from(authorization.split(" ")[1], "base64").toString().split(":");
+  const { incomingUser, incomingPass } = extractCredentialsFromBasicAuthHeader(authorization);
 
-  if (passHash) {
-    const match = await bcrypt.compare(password, passHash);
+  if (expectedPassHash) {
+    const match = await bcrypt.compare(incomingPass, expectedPassHash);
 
-    if (username === user && match) {
+    if (incomingUser === expectedUser && match) {
       return next();
     }
 
@@ -28,10 +28,14 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
     return;
   }
 
-  if (username === user && password === pass) {
+  if (incomingUser === expectedUser && incomingPass === expectedPass) {
     return next();
   }
 
   res.set("WWW-Authenticate", 'Basic realm="401"');
   res.status(401).send("Authentication required.");
+}
+function extractCredentialsFromBasicAuthHeader(authorization: string) {
+  const [incomingUser, incomingPass] = Buffer.from(authorization.split(" ")[1], "base64").toString().split(":");
+  return { incomingUser, incomingPass };
 }

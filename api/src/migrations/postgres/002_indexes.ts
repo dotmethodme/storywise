@@ -3,7 +3,7 @@ import { getPostgresRepo } from "../../repository/repo";
 async function migrate(): Promise<boolean> {
   const sql = getPostgresRepo().db();
 
-  sql`
+  await sql`
     CREATE INDEX IF NOT EXISTS idx_events_timestamp ON events (timestamp);
     CREATE INDEX IF NOT EXISTS idx_events_timestamp_path ON events (timestamp, path);
     CREATE INDEX IF NOT EXISTS idx_events_timestamp_path_unique_sessions ON events (timestamp, path, session_id);

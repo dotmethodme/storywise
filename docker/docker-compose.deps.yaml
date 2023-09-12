@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_PASSWORD: testing
+    ports:
+      - "5444:5432"
+
+  mongodb:
+    image: mongo:6
+    container_name: mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: testing
+    ports:
+      - "27077:27017"
+
+  libsql:
+    image: ghcr.io/libsql/sqld:latest
+    container_name: libsql
+    environment:
+      LIBSQL_PASSWORD: testing
+    ports:
+      - "8880:8080"

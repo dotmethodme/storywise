@@ -1,24 +1,23 @@
-import { MONGODB_URI, POSTGRES_URL, LIBSQL_URL } from "./dbConfig";
 import { MongoRepo } from "./mongo";
 import { PostgresRepo } from "./postgres";
 import { LibsqlRepo } from "./libsql";
 import { IDataRepo } from "./types";
-import e from "cors";
 
 let dataRepo: IDataRepo;
 
 export function getDataRepo() {
+  console.log("POSTGRES_URL in getDataRepo", process.env.POSTGRES_URL);
   if (dataRepo) {
     return dataRepo;
   }
 
-  if (!!MONGODB_URI) {
+  if (!!process.env.MONGODB_URI) {
     console.log("Using MongoDb");
     dataRepo = new MongoRepo();
-  } else if (!!POSTGRES_URL) {
+  } else if (!!process.env.POSTGRES_URL) {
     console.log("Using Postgres");
     dataRepo = new PostgresRepo();
-  } else if (!!LIBSQL_URL) {
+  } else if (!!process.env.LIBSQL_URL) {
     console.log("Using Libsql");
     dataRepo = new LibsqlRepo();
   } else {
@@ -30,7 +29,7 @@ export function getDataRepo() {
 }
 
 export function getMongoRepo(): MongoRepo {
-  if (!!MONGODB_URI) {
+  if (!!process.env.MONGODB_URI) {
     if (dataRepo) {
       return dataRepo as MongoRepo;
     }
@@ -43,7 +42,7 @@ export function getMongoRepo(): MongoRepo {
 }
 
 export function getLibsqlRepo(): LibsqlRepo {
-  if (!!LIBSQL_URL) {
+  if (!!process.env.LIBSQL_URL) {
     if (dataRepo) {
       return dataRepo as LibsqlRepo;
     }
@@ -56,7 +55,7 @@ export function getLibsqlRepo(): LibsqlRepo {
 }
 
 export function getPostgresRepo(): PostgresRepo {
-  if (!!POSTGRES_URL) {
+  if (!!process.env.POSTGRES_URL) {
     if (dataRepo) {
       return dataRepo as PostgresRepo;
     }
