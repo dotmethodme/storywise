@@ -11,14 +11,14 @@ export default eventHandler<Request, Response>(async (event) => {
   const body = await readBody(event);
 
   if (!body.name) {
-    throw createError({ status: 400, statusMessage: "Name is required" });
+    throw createError({ statusCode: 400, statusMessage: "Name is required" });
   }
 
   const existing = await prisma.app.findUnique({ where: { name: body.name } });
 
   if (existing) {
     throw createError({
-      status: 400,
+      statusCode: 400,
       statusMessage: "Unfortunately, the app name is already taken. Please try another",
     });
   }
