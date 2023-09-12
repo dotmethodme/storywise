@@ -6,13 +6,13 @@ import {
   getUniqueVisitorsByCountry,
 } from "@/service/data";
 import { useGlobalStore } from "@/stores/global";
-import type { HitsPerPage, Referrer, Country } from "@shared/types";
+import type { CountByCountry, CountByReferrer, CountHitsPerPage } from "@shared/types";
 import { computed, onMounted, ref } from "vue";
 
-const sessions = ref<HitsPerPage[]>([]);
-const hits = ref<HitsPerPage[]>([]);
-const referrers = ref<Referrer[]>([]);
-const countries = ref<Country[]>([]);
+const sessions = ref<CountHitsPerPage[]>([]);
+const hits = ref<CountHitsPerPage[]>([]);
+const referrers = ref<CountByReferrer[]>([]);
+const countries = ref<CountByCountry[]>([]);
 
 const store = useGlobalStore();
 

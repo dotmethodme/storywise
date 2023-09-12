@@ -29,6 +29,19 @@ onUnmounted(() => {
   firstLoad.value = false;
   clearInterval(interval);
 });
+
+async function handleOpen(e: MouseEvent) {
+  e.stopPropagation();
+  e.preventDefault();
+  const response = await useFetch<{ token: string }>("/api/admin/app/token", {
+    method: "get",
+  });
+
+  const token = response.data.value?.token;
+  if (!token) return;
+
+  window.open(baseUrl + "/login/" + token, "_blank");
+}
 </script>
 
 <template>
@@ -68,14 +81,8 @@ onUnmounted(() => {
           </template>
         </div>
 
-        <div
-          @click="
-            (e) => {
-              e.stopPropagation();
-            }
-          "
-        >
-          <a class="btn btn-xs p-4" :href="baseUrl" target="_blank"> <span>Open</span> </a>
+        <div @click="handleOpen">
+          <button class="btn btn-xs p-4" target="_blank"><span>Open</span></button>
         </div>
       </div>
     </div>

@@ -10,7 +10,8 @@
     "dev:api": "npm run dev -w api",
     "dev:frontend": "npm run dev -w frontend",
     "dev:website": "npm run dev -w website",
-    "start:website": "npm run start -w website"
+    "start:website": "npm run start -w website",
+    "typecheck": "npm run typecheck -w api && npm run typecheck -w frontend && npm run typecheck -w website"
   },
   "workspaces": [
     "api",

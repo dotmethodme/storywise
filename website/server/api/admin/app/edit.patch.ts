@@ -12,7 +12,7 @@ export default defineEventHandler<Request, Response>(async (event) => {
 
   const item = await prisma.app.findUnique({ where: { id: body.id } });
 
-  if (!item) throw createError({ status: 404, message: "Not found" });
+  if (!item) throw createError({ statusCode: 404, statusMessage: "Not found" });
 
   const update: { username: string; hashedPassword?: string } = { username: body.username };
 

@@ -1,10 +1,10 @@
-import { UserRespose } from "types/types";
+import { UserRespose } from "@/types/types";
 
 export const useAdminStore = defineStore("admin", () => {
   const user = ref<UserRespose>();
 
   const fetchUser = async () => {
-    const res = await useFetch("/api/admin/user", { method: "GET" });
+    const res = await useFetch<UserRespose>("/api/admin/user", { method: "GET" });
     if (res.data.value) {
       user.value = res.data.value;
     }

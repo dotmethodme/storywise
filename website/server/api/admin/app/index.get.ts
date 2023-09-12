@@ -9,7 +9,7 @@ type Response = Promise<StorywiseApp>;
 export default defineEventHandler<Request, Response>(async (event) => {
   const { id } = getQuery(event);
 
-  if (!id || typeof id != "string") throw createError({ status: 400, message: "Id is required" });
+  if (!id || typeof id != "string") throw createError({ statusCode: 400, statusMessage: "Id is required" });
 
   const item = await prisma.app.findUnique({
     where: { id },
@@ -24,7 +24,7 @@ export default defineEventHandler<Request, Response>(async (event) => {
   });
 
   if (!item) {
-    throw createError({ status: 404, message: "Not found" });
+    throw createError({ statusCode: 404, statusMessage: "Not found" });
   }
 
   return item;

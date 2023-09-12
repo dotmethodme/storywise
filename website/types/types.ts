@@ -1,5 +1,4 @@
 import { Organization, Profile } from "@prisma/client";
-import { WithId } from "mongodb";
 
 type Session = {
   user?: {
