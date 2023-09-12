@@ -1,25 +1,24 @@
 import DeviceDetector, { DeviceDetectorResult } from "device-detector-js";
 import { Request } from "express";
 import { EventClientDetails, WebEvent } from "../types/models";
+import { createHash } from "crypto";
 
 const deviceDetector = new DeviceDetector();
 
 export function extractEvent(request: Request): WebEvent {
   let event: WebEvent = {
-    session_id: request.body.session_id,
+    session_id: extractSessionId(request),
     path: request.body.path,
     referrer: request.body.referrer,
     screen_width: request.body.screen_width,
     screen_height: request.body.screen_height,
     window_width: request.body.window_width,
     window_height: request.body.window_height,
+    user_agent: request.headers["user-agent"] as string | null,
+    language: request.headers["accept-language"] as string | null,
+    country: request.headers["cf-ipcountry"] as string | null,
     timestamp: new Date(),
   };
-
-  event.user_agent = request.headers["user-agent"] as string | null;
-  event.language = request.headers["accept-language"] as string | null;
-  event.country = request.headers["cf-ipcountry"] as string | null;
-  event.ip = getIpFromRequest(request);
 
   if (event.user_agent) {
     const uaResult = deviceDetector.parse(event.user_agent);
@@ -95,4 +94,11 @@ export function uaParserToModel(uaResult: DeviceDetectorResult): EventClientDeta
   }
 
   return result;
+}
+
+function extractSessionId(request: Request): string {
+  const ip = getIpFromRequest(request);
+  const userAgent = request.headers["user-agent"] as string | null;
+  const data = `${ip}${userAgent}`;
+  return createHash("sha1").update(data).digest("base64");
 }
