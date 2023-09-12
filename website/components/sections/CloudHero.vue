@@ -27,7 +27,7 @@
     </div>
 
     <div class="max-w-lg dark:invert">
-      <img src="/assets/images/cloud-3.png" alt="Architecture of storywise cloud" />
+      <img src="~/assets/images/cloud-3.png" alt="Architecture of storywise cloud" />
     </div>
   </div>
 </template>
