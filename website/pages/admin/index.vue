@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { useAdminStore } from "~/stores/admin";
 import { StorywiseApp } from "~/types/types";
 
 definePageMeta({
@@ -18,6 +19,25 @@ const createMessage = computed(() => {
     return "Start using storywise by creating a new app. Click here!";
   }
   return "If you want to track a new app, click here!";
+});
+
+const route = useRoute();
+
+const adminStore = useAdminStore();
+const { user } = storeToRefs(adminStore);
+
+onMounted(() => {
+  if (!user.value) return;
+  const variantId = route.query.variantId;
+  if (!variantId || typeof variantId !== "string") return;
+
+  const email = user.value.profile.email;
+
+  const url = generateUrlByVariantId(variantId);
+  if (!url) return;
+
+  url.searchParams.set("checkout[email]", email);
+  window.location.replace(url.toString());
 });
 </script>
 

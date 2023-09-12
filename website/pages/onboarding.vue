@@ -9,6 +9,7 @@ defineAppConfig({
 const router = useRouter();
 const route = useRoute();
 const variantId = ref(route.query.variantId as string);
+const { signIn, data, status } = useAuth();
 
 const plan = computed(() => {
   if (!variantId.value) return null;
@@ -20,6 +21,10 @@ onMounted(() => {
     router.push("/cloud");
   }
 });
+
+function startRegistration() {
+  signIn("github", { callbackUrl: "/admin?variantId=" + variantId.value });
+}
 </script>
 <template>
   <div class="flex justify-center items-center flex-col max-w-md m-auto mt-20">
@@ -40,6 +45,6 @@ onMounted(() => {
       </label>
     </div>
 
-    <button class="btn btn-primary mt-4">Register with GitHub</button>
+    <button class="btn btn-primary mt-4" @click="startRegistration">Register with GitHub</button>
   </div>
 </template>
