@@ -1,4 +1,13 @@
-import { Country, HitsPerPage, Referrer, SessionItem, Stats } from "@shared/types";
+import {
+  CountByCountry,
+  CountHitsPerPage,
+  CountByReferrer,
+  SessionItem,
+  Stats,
+  CountByBrowser,
+  CountByDevice,
+  CountByOs,
+} from "@shared/types";
 import { WebEvent } from "../types/models";
 import { IDataRepo } from "./types";
 import { MongoClient } from "mongodb";
@@ -17,6 +26,15 @@ export class MongoRepo implements IDataRepo {
       throw new Error("MONGODB_URI is not set");
     }
     this.client = new MongoClient(process.env.MONGODB_URI);
+  }
+  getUniqueSessionsByDevice(numberOfDays?: number | undefined): Promise<CountByDevice[]> {
+    throw new Error("Method not implemented.");
+  }
+  getUniqueSessionsByOs(numberOfDays?: number | undefined): Promise<CountByOs[]> {
+    throw new Error("Method not implemented.");
+  }
+  getUniqueSessionsByBrowser(numberOfDays?: number | undefined): Promise<CountByBrowser[]> {
+    throw new Error("Method not implemented.");
   }
 
   async createEvent(event: WebEvent) {
@@ -78,7 +96,7 @@ export class MongoRepo implements IDataRepo {
     const results = await this.client
       .db(databaseName)
       .collection(cols.events)
-      .aggregate<HitsPerPage>([
+      .aggregate<CountHitsPerPage>([
         {
           $match: {
             timestamp: { $gte: startDate, $lt: endDate },
@@ -114,7 +132,7 @@ export class MongoRepo implements IDataRepo {
     const results = await this.client
       .db(databaseName)
       .collection(cols.events)
-      .aggregate<HitsPerPage>([
+      .aggregate<CountHitsPerPage>([
         {
           $match: {
             timestamp: { $gte: startDate, $lt: endDate },
@@ -157,7 +175,7 @@ export class MongoRepo implements IDataRepo {
     const results = await this.client
       .db(databaseName)
       .collection(cols.events)
-      .aggregate<Referrer>([
+      .aggregate<CountByReferrer>([
         {
           $match: {
             timestamp: { $gte: startDate, $lt: endDate },
@@ -194,7 +212,7 @@ export class MongoRepo implements IDataRepo {
     const results = await this.client
       .db(databaseName)
       .collection(cols.events)
-      .aggregate<Country>([
+      .aggregate<CountByCountry>([
         {
           $match: {
             timestamp: { $gte: startDate, $lt: endDate },

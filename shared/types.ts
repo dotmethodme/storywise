@@ -5,19 +5,34 @@ export type SessionItem = {
   day: number;
 };
 
-export type HitsPerPage = {
+export type CountHitsPerPage = {
   count: number;
   path: string;
 };
 
-export type Referrer = {
+export type CountByReferrer = {
   count: number;
   referrer: string;
 };
 
-export type Country = {
+export type CountByCountry = {
   count: number;
   country: string;
+};
+
+export type CountByDevice = {
+  count: number;
+  device: string;
+};
+
+export type CountByOs = {
+  count: number;
+  os: string;
+};
+
+export type CountByBrowser = {
+  count: number;
+  browser: string;
 };
 
 export type Stats = {

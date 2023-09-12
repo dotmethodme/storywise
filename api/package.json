@@ -8,8 +8,9 @@
     "build": "tsc && npm run copy",
     "copy": "cp -r dist/api/src dist_temp && rm -rf dist && mv dist_temp dist",
     "start": "node dist/index.js",
-    "seedDemo": "ts-node-dev --transpile-only --ignore-watch node_modules src/scripts/seedDemo.ts",
-    "issueJwt": "ts-node-dev --transpile-only --ignore-watch node_modules src/scripts/issueJwt.ts"
+    "issueJwt": "ts-node-dev --transpile-only --ignore-watch node_modules src/scripts/issueJwt.ts",
+    "seedDemo": "ts-node-dev --transpile-only --ignore-watch node_modules src/scripts/seedDemoRun.ts",
+    "test": "jest --verbose --detectOpenHandles --forceExit"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +28,7 @@
     "express-http-proxy": "^1.6.3",
     "express-session": "^1.17.3",
     "jsonwebtoken": "^9.0.2",
+    "jest": "^29.6.4",
     "luxon": "^3.3.0",
     "mongodb": "^6.0.0",
     "morgan": "^1.10.0",
@@ -42,8 +44,12 @@
     "@types/express-http-proxy": "^1.6.3",
     "@types/express-session": "^1.17.7",
     "@types/jsonwebtoken": "^9.0.2",
+    "@types/jest": "^29.5.4",
     "@types/morgan": "^1.9.4",
     "@types/node": "^20.3.2",
-    "@types/ua-parser-js": "^0.7.36"
+    "@types/supertest": "^2.0.12",
+    "@types/ua-parser-js": "^0.7.36",
+    "supertest": "^6.3.3",
+    "ts-jest": "^29.1.1"
   }
 }

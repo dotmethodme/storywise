@@ -1,30 +1,60 @@
-import { SessionItem, HitsPerPage, Referrer, Country, Stats } from "@shared/types";
-import { WebEvent } from "../types/models";
-import { IDataRepo } from "./types";
+import {
+  CountByBrowser,
+  CountByCountry,
+  CountByDevice,
+  CountByOs,
+  CountByReferrer,
+  CountHitsPerPage,
+  SessionItem,
+  Stats,
+} from "@shared/types";
 import postgres from "postgres";
-import { DATABASE_NAME, POSTGRES_URL } from "./dbConfig";
+import { WebEvent } from "../types/models";
 import { getDaysAgo } from "../utils/date";
+import { IDataRepo } from "./types";
 
 export class PostgresRepo implements IDataRepo {
   public sql: postgres.Sql;
 
   constructor() {
-    if (!POSTGRES_URL) {
+    if (!process.env.POSTGRES_URL) {
       throw new Error("POSTGRES_URL is not set");
     }
 
-    const url = POSTGRES_URL;
+    const url = process.env.POSTGRES_URL;
     let options: postgres.Options<{}> = {
       ssl: {
         rejectUnauthorized: false,
       },
     };
 
-    if (DATABASE_NAME) {
-      options.database = DATABASE_NAME;
+    if (url.includes("sslmode=disable")) {
+      options.ssl = false;
+    }
+
+    if (process.env.DATABASE_NAME) {
+      options.database = process.env.DATABASE_NAME;
     }
 
     this.sql = postgres(url, options);
+  }
+
+  getUniqueSessionsByDevice(numberOfDays = 30): Promise<CountByDevice[]> {
+    return this.sql<CountByDevice[]>`
+      SELECT device_type as device, COUNT(DISTINCT session_id) as count
+      FROM events
+      WHERE timestamp >= ${getDaysAgo(numberOfDays).toISOString()}
+      GROUP BY device_type
+      ORDER BY count DESC, device ASC
+    `;
+  }
+
+  getUniqueSessionsByOs(numberOfDays?: number | undefined): Promise<CountByOs[]> {
+    throw new Error("Method not implemented.");
+  }
+
+  getUniqueSessionsByBrowser(numberOfDays?: number | undefined): Promise<CountByBrowser[]> {
+    throw new Error("Method not implemented.");
   }
 
   async createEvent(event: WebEvent) {
@@ -49,10 +79,11 @@ export class PostgresRepo implements IDataRepo {
       ORDER BY year, month, day;
     `;
   }
+
   getHitsPerPage(numberOfDays = 30) {
     const startDate = getDaysAgo(numberOfDays);
     const endDate = new Date();
-    return this.sql<HitsPerPage[]>`
+    return this.sql<CountHitsPerPage[]>`
       SELECT path, COUNT(*) as count
       FROM events
       WHERE timestamp >= ${startDate.toISOString()} 
@@ -61,10 +92,11 @@ export class PostgresRepo implements IDataRepo {
       ORDER BY count DESC, path ASC
     `;
   }
+
   getUniqueSessionsPerPage(numberOfDays = 30) {
     const startDate = getDaysAgo(numberOfDays);
     const endDate = new Date();
-    return this.sql<HitsPerPage[]>`
+    return this.sql<CountHitsPerPage[]>`
       SELECT path, COUNT(DISTINCT session_id) as count
       FROM events
       WHERE timestamp >= ${startDate.toISOString()}
@@ -73,10 +105,11 @@ export class PostgresRepo implements IDataRepo {
       ORDER BY count DESC, path ASC
     `;
   }
+
   getTopReferrers(numberOfDays = 30) {
     const startDate = getDaysAgo(numberOfDays);
     const endDate = new Date();
-    return this.sql<Referrer[]>`
+    return this.sql<CountByReferrer[]>`
       SELECT referrer, COUNT(*) as count
       FROM events
       WHERE timestamp >= ${startDate.toISOString()}
@@ -85,10 +118,11 @@ export class PostgresRepo implements IDataRepo {
       ORDER BY count DESC, referrer ASC
     `;
   }
+
   getUniqueSessionsByCountry(numberOfDays = 30) {
     const startDate = getDaysAgo(numberOfDays);
     const endDate = new Date();
-    return this.sql<Country[]>`
+    return this.sql<CountByCountry[]>`
       SELECT country, COUNT(DISTINCT session_id) as count
       FROM events
       WHERE timestamp >= ${startDate.toISOString()}
@@ -131,11 +165,13 @@ export class PostgresRepo implements IDataRepo {
     const result = await this.sql`select 1 from events limit 1`;
     return result.length > 0;
   }
+
   async connect() {
     // noop
   }
-  disconnect(): Promise<void> {
-    throw new Error("Method not implemented.");
+
+  async disconnect() {
+    await this.sql.end();
   }
 
   db() {

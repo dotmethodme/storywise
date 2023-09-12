@@ -1,5 +1,14 @@
 import { Client as LibsqlClient, createClient } from "@libsql/client";
-import { Country, HitsPerPage, Referrer, SessionItem, Stats } from "@shared/types";
+import {
+  CountByCountry,
+  CountHitsPerPage,
+  CountByReferrer,
+  SessionItem,
+  Stats,
+  CountByBrowser,
+  CountByDevice,
+  CountByOs,
+} from "@shared/types";
 import { WebEvent } from "../types/models";
 import { webEventToSqlFormat } from "../utils/parsers";
 import { IDataRepo } from "./types";
@@ -20,6 +29,15 @@ export class LibsqlRepo implements IDataRepo {
       url: process.env.LIBSQL_URL,
       authToken: process.env.LIBSQL_TOKEN,
     });
+  }
+  getUniqueSessionsByDevice(numberOfDays?: number | undefined): Promise<CountByDevice[]> {
+    throw new Error("Method not implemented.");
+  }
+  getUniqueSessionsByOs(numberOfDays?: number | undefined): Promise<CountByOs[]> {
+    throw new Error("Method not implemented.");
+  }
+  getUniqueSessionsByBrowser(numberOfDays?: number | undefined): Promise<CountByBrowser[]> {
+    throw new Error("Method not implemented.");
   }
 
   async createEvent(event: WebEvent) {
@@ -73,7 +91,7 @@ export class LibsqlRepo implements IDataRepo {
       },
     });
 
-    return result.rows as unknown as HitsPerPage[];
+    return result.rows as unknown as CountHitsPerPage[];
   }
 
   async getUniqueSessionsPerPage(numberOfDays = 30) {
@@ -95,7 +113,7 @@ export class LibsqlRepo implements IDataRepo {
       },
     });
 
-    return result.rows as unknown as HitsPerPage[];
+    return result.rows as unknown as CountHitsPerPage[];
   }
 
   async getTopReferrers(numberOfDays = 30) {
@@ -117,7 +135,7 @@ export class LibsqlRepo implements IDataRepo {
       },
     });
 
-    return result.rows as unknown as Referrer[];
+    return result.rows as unknown as CountByReferrer[];
   }
 
   async getUniqueSessionsByCountry(numberOfDays = 30) {
@@ -139,7 +157,7 @@ export class LibsqlRepo implements IDataRepo {
       },
     });
 
-    return result.rows as unknown as Country[];
+    return result.rows as unknown as CountByCountry[];
   }
 
   async getStats(numberOfDays = 30) {

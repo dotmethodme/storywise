@@ -5,12 +5,10 @@ import { EventCreateRequest } from "./types/models";
 import { config } from "./utils/config";
 import { getDataRepo } from "./repository/repo";
 
-const repo = getDataRepo();
-
 export async function handleCreateEvent(req: Request<{}, {}, EventCreateRequest>, res: Response) {
   try {
     const event = extractEvent(req);
-    await repo.createEvent(event);
+    await getDataRepo().createEvent(event);
     res.json({ message: "Success" });
   } catch (err) {
     console.error(err);
@@ -31,7 +29,7 @@ export async function getEventHandler(req: Request, res: Response) {
 export async function getSessionsPerDayHandler(req: Request, res: Response) {
   try {
     const { days } = req.query;
-    const result = await repo.getSessionsPerDay(Number(days) || 30);
+    const result = await getDataRepo().getSessionsPerDay(Number(days) || 30);
     res.json(result);
   } catch (err) {
     console.error(err);
@@ -42,7 +40,7 @@ export async function getSessionsPerDayHandler(req: Request, res: Response) {
 export async function getStatsHandler(req: Request, res: Response) {
   try {
     const { days } = req.query;
-    const result = await repo.getStats(Number(days) || 30);
+    const result = await getDataRepo().getStats(Number(days) || 30);
     res.json(result);
   } catch (err) {
     console.error(err);
@@ -53,7 +51,7 @@ export async function getStatsHandler(req: Request, res: Response) {
 export async function getHitsPerPageHandler(req: Request, res: Response) {
   try {
     const { days } = req.query;
-    const result = await repo.getHitsPerPage(Number(days) || 30);
+    const result = await getDataRepo().getHitsPerPage(Number(days) || 30);
     res.json(result);
   } catch (err) {
     console.error(err);
@@ -64,7 +62,7 @@ export async function getHitsPerPageHandler(req: Request, res: Response) {
 export const getUniqueSessionsPerPageHandler = async (req: Request, res: Response) => {
   try {
     const { days } = req.query;
-    const result = await repo.getUniqueSessionsPerPage(Number(days) || 30);
+    const result = await getDataRepo().getUniqueSessionsPerPage(Number(days) || 30);
     res.json(result);
   } catch (err) {
     console.error(err);
@@ -75,7 +73,7 @@ export const getUniqueSessionsPerPageHandler = async (req: Request, res: Respons
 export const getUniqueSessionsByCountryHandler = async (req: Request, res: Response) => {
   try {
     const { days } = req.query;
-    const result = await repo.getUniqueSessionsByCountry(Number(days) || 30);
+    const result = await getDataRepo().getUniqueSessionsByCountry(Number(days) || 30);
     res.json(result);
   } catch (err) {
     console.error(err);
@@ -86,7 +84,7 @@ export const getUniqueSessionsByCountryHandler = async (req: Request, res: Respo
 export async function getTopReferrersHandler(req: Request, res: Response) {
   try {
     const { days } = req.query;
-    const result = await repo.getTopReferrers(Number(days) || 30);
+    const result = await getDataRepo().getTopReferrers(Number(days) || 30);
     res.json(result);
   } catch (err) {
     console.error(err);
@@ -112,7 +110,7 @@ export async function getJsFileHandler(req: Request, res: Response) {
 
 export async function siteConfig(req: Request, res: Response) {
   try {
-    const hasEvents = await repo.hasAnyEvents();
+    const hasEvents = await getDataRepo().hasAnyEvents();
 
     res.json({
       hasEvents,
@@ -127,7 +125,7 @@ export async function siteConfig(req: Request, res: Response) {
 
 export async function healthCheckHandler(req: Request, res: Response) {
   try {
-    await repo.hasAnyEvents();
+    await getDataRepo().hasAnyEvents();
     res.status(200).json({ healthy: true });
   } catch (err) {
     console.error(err);
