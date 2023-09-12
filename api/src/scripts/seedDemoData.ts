@@ -214,7 +214,6 @@ export function generateUsers(numberOfVirtualUsers = 200) {
     const user = {
       country: generateRandomCountry(),
       user_agent: ua,
-      ip: generateRandomIP(),
       session_id: generateRandomSessionId(),
       language: generateRandomLanguage(),
       ...userAgentInfo,

@@ -11,6 +11,9 @@ export type WebEvent = {
   session_id: string;
   path: string;
   timestamp: Date;
+  /**
+   * @deprecated not used anymore
+   */
   ip?: string | null;
   user_agent?: string | null;
   referrer?: string | null;
