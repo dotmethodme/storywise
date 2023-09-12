@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { getTopReferrers } from "@/service/data";
 import { useGlobalStore } from "@/stores/global";
-import type { Referrer } from "@shared/types";
+import type { CountByReferrer } from "@shared/types";
 import { onMounted, ref } from "vue";
 
-const referrers = ref<Referrer[]>([]);
+const referrers = ref<CountByReferrer[]>([]);
 const store = useGlobalStore();
 
 store.$subscribe(async (_, { selectedDays }) => {
