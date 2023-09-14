@@ -4,7 +4,11 @@ import crypto from "node:crypto";
 const config = useRuntimeConfig();
 const prisma = new PrismaClient();
 
-type Request = { body: WebhookPayload<any> };
+type Request = {
+  body: WebhookPayload<{
+    user_id: string;
+  }>;
+};
 type Response = Promise<{ success: boolean }>;
 
 export default defineEventHandler<Request, Response>(async (event) => {
@@ -15,7 +19,7 @@ export default defineEventHandler<Request, Response>(async (event) => {
   const body = await readBody(event);
 
   if (!bodyRaw || !body || !expectedSignatureHeader) {
-    throw createError({ statusCode: 400, statusMessage: "Bad Request" });
+    throw createError({ statusCode: 400, statusMessage: "Bad Request. Missing body or signature header." });
   }
 
   const hmac = crypto.createHmac("sha256", signingSecret);
@@ -23,11 +27,15 @@ export default defineEventHandler<Request, Response>(async (event) => {
   const expectedSignature = Buffer.from(expectedSignatureHeader, "utf8");
 
   if (!crypto.timingSafeEqual(digest, expectedSignature)) {
-    throw createError({ statusCode: 401, statusMessage: "Unauthorized" });
+    throw createError({ statusCode: 401, statusMessage: "Failed to verify webhook signature" });
   }
 
   const eventName = body.meta.event_name;
   const customData = body.meta.custom_data;
+
+  if (customData?.user_id) {
+    // todo - fetch user from db, and load the subscription from lemonsqueezy
+  }
 
   return { success: true };
 });

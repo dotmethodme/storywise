@@ -42,12 +42,11 @@ onMounted(() => {
   if (!url) return;
 
   url.searchParams.set("checkout[email]", email);
-  url.searchParams.set("custom[user_id]", user.value.profile.id);
+  url.searchParams.set("checkout[custom][user_id]", user.value.profile.id);
   url.searchParams.set("redirect_url", window.location.origin + "/admin");
   window.location.replace(url.toString());
 
   // window.createLemonSqueezy();
-
   // LemonSqueezy.Url.Open(url);
 });
 </script>
