@@ -26,6 +26,11 @@ const route = useRoute();
 const adminStore = useAdminStore();
 const { user } = storeToRefs(adminStore);
 
+const isLoading = computed(() => {
+  if (!user.value) return false;
+  return route.query.variantId && typeof route.query.variantId === "string";
+});
+
 onMounted(() => {
   if (!user.value) return;
   const variantId = route.query.variantId;
@@ -37,7 +42,13 @@ onMounted(() => {
   if (!url) return;
 
   url.searchParams.set("checkout[email]", email);
+  url.searchParams.set("custom[user_id]", user.value.profile.id);
+  url.searchParams.set("redirect_url", window.location.origin + "/admin");
   window.location.replace(url.toString());
+
+  // window.createLemonSqueezy();
+
+  // LemonSqueezy.Url.Open(url);
 });
 </script>
 
@@ -60,6 +71,18 @@ onMounted(() => {
         </div>
       </div>
     </NuxtLink>
+  </div>
+
+  <div
+    v-if="isLoading"
+    class="fixed left-0 top-0 z-50 w-full h-full bg-base-100 flex justify-center items-center flex-col"
+  >
+    <div class="flex flex-row">
+      <div href="/" class="normal-case px-4 font-bold text-4xl serif select-none">storywise</div>
+      <span class="loading loading-ball loading-md -ml-4 -mb-1"></span>
+    </div>
+
+    <p class="mt-4 mb-10">You're being redirected to the payment portal...</p>
   </div>
 </template>
 
