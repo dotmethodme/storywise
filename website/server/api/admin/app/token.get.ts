@@ -13,7 +13,6 @@ export default defineEventHandler<Request, Response>(async (event) => {
 });
 
 export function issueJwt() {
-  console.log(config);
   const privateKey = config.JWT_PRIVATE_KEY;
 
   if (privateKey === undefined) {

@@ -1,6 +1,6 @@
 // extend the global Session interface
 import { DefaultSession } from "next-auth";
-import { ProfileWithOrganization } from "types/types";
+import { ProfileWithOrganization } from "@/types/types";
 
 declare module "next-auth" {
   interface Session extends DefaultSession {

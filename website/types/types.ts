@@ -24,7 +24,7 @@ export type ProfileWithOrganization = Profile & { organization: Organization };
 export type UserRespose = {
   session: Session;
   token: JWT;
-  profile: Profile;
+  profile: ProfileWithOrganization;
 };
 
 export type StorywiseApp = {

@@ -13,7 +13,7 @@ const features = [
   {
     title: "Multi-database",
     description:
-      "We support multiple databases, including MongoDB, and SQLite (LibSql). Depending on what you're comfortable with, you can use the database of your choice.",
+      "We support multiple databases, including Postgres, MongoDB, and SQLite (LibSql). Depending on what you're comfortable with, you can use the database of your choice.",
   },
   {
     title: "Export & import your data",

@@ -8,7 +8,9 @@ const done = [
   "Top referrers (top 10 + more)",
   "Top countries (top 10 + more)",
   "Documentation website",
-  "Allow multiple database integrations: mongodb + libsql (sqlite fork)",
+  "MongoDB support",
+  "Postgres support",
+  "SQLite support (libsql)",
 ];
 
 const todo = [

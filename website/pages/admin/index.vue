@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { useAdminStore } from "~/stores/admin";
 import { StorywiseApp } from "~/types/types";
 
 definePageMeta({
@@ -18,6 +19,38 @@ const createMessage = computed(() => {
     return "Start using storywise by creating a new app. Click here!";
   }
   return "If you want to track a new app, click here!";
+});
+
+const route = useRoute();
+
+const adminStore = useAdminStore();
+const { user, subscriptionLoading, subscription } = storeToRefs(adminStore);
+
+const isLoading = computed(() => {
+  if (!user.value) return false;
+  return route.query.variantId && typeof route.query.variantId === "string";
+});
+
+onMounted(() => {
+  if (!user.value) return;
+  const variantId = route.query.variantId;
+  if (!variantId || typeof variantId !== "string") return;
+
+  const { email, id } = user.value.profile;
+
+  const url = generateUrlByVariantId(variantId, email, id);
+  if (!url) return;
+
+  window.location.replace(url);
+
+  // window.createLemonSqueezy();
+  // LemonSqueezy.Url.Open(url);
+});
+
+const showPricing = computed(() => {
+  if (subscriptionLoading.value) return false;
+  if (subscription.value && subscription.value.attributes.status === "active") return false;
+  return true;
 });
 </script>
 
@@ -40,6 +73,22 @@ const createMessage = computed(() => {
         </div>
       </div>
     </NuxtLink>
+  </div>
+
+  <div v-if="showPricing" class="border rounded-lg mt-4 py-8">
+    <PricingSimple />
+  </div>
+
+  <div
+    v-if="isLoading"
+    class="fixed left-0 top-0 z-50 w-full h-full bg-base-100 flex justify-center items-center flex-col"
+  >
+    <div class="flex flex-row">
+      <div href="/" class="normal-case px-4 font-bold text-4xl serif select-none">storywise</div>
+      <span class="loading loading-ball loading-md -ml-4 -mb-1"></span>
+    </div>
+
+    <p class="mt-4 mb-10">You're being redirected to the payment portal...</p>
   </div>
 </template>
 

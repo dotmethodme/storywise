@@ -1,94 +1,10 @@
 <script lang="ts" setup>
-const plans = [
-  {
-    size: "0.5GB storage",
-    price: "$10",
-    events: "(819,200 events, approx.)",
-  },
-  {
-    size: "1GB storage",
-    price: "$19",
-    events: "(1,638,400 events, approx.)",
-  },
-  {
-    size: "2GB storage",
-    price: "$36",
-    events: "(3,276,800 events, approx.)",
-  },
-  {
-    size: "3GB storage",
-    price: "$54",
-    events: "(4,915,200 events, approx.)",
-  },
-  {
-    size: "4GB storage",
-    price: "$70.4",
-    events: "(6,553,600 events, approx.)",
-  },
-  {
-    size: "5GB storage",
-    price: "$85",
-    events: "(8,192,000 events, approx.)",
-  },
-  {
-    size: "6GB storage",
-    price: "$102",
-    events: "(9,830,400 events, approx.)",
-  },
-  {
-    size: "Contact us",
-    price: "Let's find out",
-    events: "Super duper pro",
-  },
-];
-
-const plansYearlyWithDiscount = [
-  {
-    size: "0.5GB storage",
-    price: "$108",
-    events: "(819,200 events, approx.)",
-  },
-  {
-    size: "1GB storage",
-    price: "$205.2",
-    events: "(1,638,400 events, approx.)",
-  },
-  {
-    size: "2GB storage",
-    price: "$367.2",
-    events: "(3,276,800 events, approx.)",
-  },
-  {
-    size: "3GB storage",
-    price: "$550.8",
-    events: "(4,915,200 events, approx.)",
-  },
-  {
-    size: "4GB storage",
-    price: "$718.08",
-    events: "(6,553,600 events, approx.)",
-  },
-  {
-    size: "5GB storage",
-    price: "$867",
-    events: "(8,192,000 events, approx.)",
-  },
-  {
-    size: "6GB storage",
-    price: "$1040.4",
-    events: "(9,830,400 events, approx.)",
-  },
-  {
-    size: "Contact us",
-    price: "Let's find out",
-    events: "Super duper pro",
-  },
-];
+import { annualPlans, monthlyPlans } from "~/utils/products";
 
 const slider = ref(0);
 const yearly = ref(false);
 
-const plan = computed(() => (yearly.value ? plansYearlyWithDiscount[slider.value] : plans[slider.value]));
+const plan = computed(() => (yearly.value ? annualPlans[slider.value] : monthlyPlans[slider.value]));
 </script>
 
 <template>
@@ -160,11 +76,16 @@ const plan = computed(() => (yearly.value ? plansYearlyWithDiscount[slider.value
           </div>
         </div>
 
-        <div class="flex justify-center mt-10">
+        <div class="flex justify-center mt-10" v-if="plan.variantId">
           <a class="btn btn-primary m-auto" href="#sign-up">
             Join now
             <Icon name="charm:rocket" class="" size="1.4em" />
           </a>
+        </div>
+
+        <div class="flex justify-center mt-10" v-else>
+          <span class="mr-2">Drop us a message at</span>
+          <a href="mailto:hey@joinstorywise.com" class="link"> hey@joinstorywise.com</a>
         </div>
       </div>
     </div>

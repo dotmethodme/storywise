@@ -14,7 +14,6 @@ export default defineEventHandler<Request, Response>(async (event) => {
   const token = await getToken({ event, secret: config.NEXTAUTH_SECRET });
 
   if (!session) {
-    console.log("no session error");
     throw createError({ statusCode: 500, statusMessage: "Session is missing" });
   }
 
@@ -28,7 +27,13 @@ export default defineEventHandler<Request, Response>(async (event) => {
 
   let profile = await prisma.profile.findUnique({
     where: { externalId: sub },
-    include: { organization: true },
+    select: {
+      email: true,
+      externalId: true,
+      id: true,
+      organizationId: true,
+      organization: { select: { id: true, name: true } },
+    },
   });
 
   if (!profile) {
