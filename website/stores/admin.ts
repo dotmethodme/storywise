@@ -1,21 +1,32 @@
 import { UserRespose } from "@/types/types";
+import { Subscription } from "~/types/lemonsqueezy";
 
 export const useAdminStore = defineStore("admin", () => {
   const user = ref<UserRespose>();
+  const subscription = ref<Subscription>();
+  const subscriptionLoading = ref(false);
 
-  const fetchUser = async () => {
-    const res = await useFetch<UserRespose>("/api/admin/user", { method: "GET" });
+  async function fetchUser() {
+    const res = await useFetch<UserRespose>("/api/admin/user");
     if (res.data.value) {
       user.value = res.data.value;
     }
-  };
-  const setUser = (newUser: UserRespose) => {
-    user.value = newUser;
-  };
+  }
+
+  async function fetchSubscription() {
+    subscriptionLoading.value = true;
+    const res = await useFetch<Subscription>("/api/admin/subscription");
+    if (res.data.value) {
+      subscription.value = res.data.value;
+    }
+    subscriptionLoading.value = false;
+  }
 
   return {
     user,
     fetchUser,
-    setUser,
+    subscription,
+    subscriptionLoading,
+    fetchSubscription,
   };
 });

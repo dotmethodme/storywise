@@ -19,6 +19,7 @@ const { user } = useAdminStore();
     <div>
       <h1 class="text-2xl serif">{{ user.session.user?.name }}</h1>
       <p class="opacity-60">{{ user.profile.email }}</p>
+      <p class="opacity-60">Organization: {{ user.profile.organization.name }}</p>
     </div>
   </div>
 </template>

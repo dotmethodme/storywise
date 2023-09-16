@@ -36,15 +36,12 @@ onMounted(() => {
   const variantId = route.query.variantId;
   if (!variantId || typeof variantId !== "string") return;
 
-  const email = user.value.profile.email;
+  const { email, id } = user.value.profile;
 
-  const url = generateUrlByVariantId(variantId);
+  const url = generateUrlByVariantId(variantId, email, id);
   if (!url) return;
 
-  url.searchParams.set("checkout[email]", email);
-  url.searchParams.set("checkout[custom][user_id]", user.value.profile.id);
-  url.searchParams.set("redirect_url", window.location.origin + "/admin");
-  window.location.replace(url.toString());
+  window.location.replace(url);
 
   // window.createLemonSqueezy();
   // LemonSqueezy.Url.Open(url);

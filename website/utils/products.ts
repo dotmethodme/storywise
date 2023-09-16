@@ -133,16 +133,23 @@ export function getPlanById(id: string) {
   return allPlans.find((plan) => plan.variantId === id);
 }
 
-export function generateUrlByVariantId(id: string) {
-  const plan = getPlanById(id);
+export function generateUrlByVariantId(
+  variantId: string,
+  email: string,
+  profileId: string
+): string | undefined {
+  const plan = getPlanById(variantId);
   if (!plan) return;
 
   const otherVariants = allPlans
-    .filter((p) => p.variantId !== id)
+    .filter((p) => p.variantId !== variantId)
     .map((x) => x.variantId)
     .join(",");
   const url = new URL(`https://storywise.lemonsqueezy.com/checkout/buy/${plan.slug}`);
   url.searchParams.append("disabled", otherVariants);
+  url.searchParams.set("checkout[email]", email);
+  url.searchParams.set("checkout[custom][user_id]", profileId);
+  url.searchParams.set("redirect_url", window.location.origin + "/admin");
 
-  return url;
+  return url.toString();
 }

@@ -33,8 +33,18 @@ export default defineEventHandler<Request, Response>(async (event) => {
   const eventName = body.meta.event_name;
   const customData = body.meta.custom_data;
 
-  if (customData?.user_id) {
-    // todo - fetch user from db, and load the subscription from lemonsqueezy
+  if (eventName === "subscription_created" && customData?.user_id) {
+    const user = await prisma.profile.findUnique({
+      where: { id: customData.user_id },
+      select: { organization: true },
+    });
+
+    if (!user?.organization) return { success: false };
+
+    await prisma.organization.update({
+      where: { id: user.organization.id },
+      data: { subscriptionId: body.data.id },
+    });
   }
 
   return { success: true };

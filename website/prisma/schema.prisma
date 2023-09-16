@@ -28,12 +28,13 @@ model App {
 }
 
 model Organization {
-  id        String    @id @default(uuid())
-  name      String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  profiles  Profile[]
-  apps      App[]
+  id             String    @id @default(uuid())
+  name           String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  profiles       Profile[]
+  apps           App[]
+  subscriptionId String?
 }
 
 model Profile {

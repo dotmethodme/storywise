@@ -11,6 +11,7 @@ export default defineNuxtConfig({
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     JWT_PRIVATE_KEY: process.env.JWT_PRIVATE_KEY,
     LEMONSQUEEZY_WEBHOOK_SECRET: process.env.LEMONSQUEEZY_WEBHOOK_SECRET,
+    LEMONSQUEEZY_API_KEY: process.env.LEMONSQUEEZY_API_KEY,
     public: {
       // todo
     },

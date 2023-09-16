@@ -5,15 +5,18 @@ const store = useAdminStore();
 const { user } = storeToRefs(store);
 const router = useRouter();
 
-await store.fetchUser();
+onMounted(async () => {
+  await store.fetchUser();
+  await store.fetchSubscription();
+});
 
 const path = computed(() => {
   if (router.currentRoute.value.path == "/admin") {
     return "overview";
-  } else if (router.currentRoute.value.path == "/admin/settings") {
-    return "settings";
-  } else if (router.currentRoute.value.path == "/admin/billing") {
-    return "billing";
+  } else if (router.currentRoute.value.path == "/admin/subscription") {
+    return "subscription";
+  } else if (router.currentRoute.value.path == "/admin/organization") {
+    return "organization";
   } else if (router.currentRoute.value.path == "/admin/profile") {
     return "profile";
   }
@@ -57,15 +60,15 @@ const path = computed(() => {
               </NuxtLink>
             </li>
             <li>
-              <NuxtLink :class="{ focus: path === 'settings' }" href="/admin/settings">
+              <NuxtLink :class="{ focus: path === 'subscription' }" href="/admin/subscription">
                 <Icon size="24px" name="system-uicons:settings" />
-                Settings
+                Subscription
               </NuxtLink>
             </li>
             <li>
-              <NuxtLink :class="{ focus: path === 'billing' }" href="/admin/billing">
-                <Icon size="24px" name="system-uicons:credit-card" />
-                Billing
+              <NuxtLink :class="{ focus: path === 'organization' }" href="/admin/organization">
+                <Icon size="24px" name="octicon:organization-24" />
+                Organization
               </NuxtLink>
             </li>
           </ul>
