@@ -4,7 +4,7 @@ import { Subscription } from "~/types/lemonsqueezy";
 export const useAdminStore = defineStore("admin", () => {
   const user = ref<UserRespose>();
   const subscription = ref<Subscription>();
-  const subscriptionLoading = ref(false);
+  const subscriptionLoading = ref(true);
 
   async function fetchUser() {
     const res = await useFetch<UserRespose>("/api/admin/user");

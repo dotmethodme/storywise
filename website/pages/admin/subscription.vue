@@ -28,6 +28,11 @@ const payment = computed(
 );
 
 async function cancelSubscription() {
+  const data = prompt(
+    "Are you sure you want to cancel your subscription? Type 'cancel' in the input box to confirm."
+  );
+  if (data !== "cancel") return;
+
   await useFetch(`/api/admin/subscription`, {
     method: "delete",
   });
@@ -60,7 +65,7 @@ const showPricing = computed(() => {
     <div class="mb-1">Price - {{ product?.price }} (excluding tax)</div>
 
     <button
-      class="btn btn-primary mt-4"
+      class="btn btn-md btn-outline mt-4 mr-2"
       @click="cancelSubscription"
       v-if="subscription.attributes.status === 'active'"
     >
@@ -68,7 +73,7 @@ const showPricing = computed(() => {
     </button>
 
     <a
-      class="btn btn-primary mt-4"
+      class="btn btn-md btn-outline mt-4 mr-2"
       :href="subscription.attributes.urls.update_payment_method"
       target="_blank"
       v-if="subscription.attributes.status === 'active'"

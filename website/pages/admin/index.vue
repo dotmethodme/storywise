@@ -24,7 +24,7 @@ const createMessage = computed(() => {
 const route = useRoute();
 
 const adminStore = useAdminStore();
-const { user } = storeToRefs(adminStore);
+const { user, subscriptionLoading, subscription } = storeToRefs(adminStore);
 
 const isLoading = computed(() => {
   if (!user.value) return false;
@@ -45,6 +45,12 @@ onMounted(() => {
 
   // window.createLemonSqueezy();
   // LemonSqueezy.Url.Open(url);
+});
+
+const showPricing = computed(() => {
+  if (subscriptionLoading.value) return false;
+  if (subscription.value && subscription.value.attributes.status === "active") return false;
+  return true;
 });
 </script>
 
@@ -67,6 +73,10 @@ onMounted(() => {
         </div>
       </div>
     </NuxtLink>
+  </div>
+
+  <div v-if="showPricing" class="border rounded-lg mt-4 py-8">
+    <PricingSimple />
   </div>
 
   <div
