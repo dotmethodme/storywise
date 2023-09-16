@@ -60,5 +60,9 @@ const url = computed(() => {
         <Icon name="charm:rocket" class="" size="1.4em" />
       </a>
     </div>
+    <div class="flex justify-center mt-10" v-else>
+      <span class="mr-2">Drop us a message at</span>
+      <a href="mailto:hey@joinstorywise.com" class="link"> hey@joinstorywise.com</a>
+    </div>
   </div>
 </template>

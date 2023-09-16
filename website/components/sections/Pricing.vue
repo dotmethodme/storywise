@@ -76,11 +76,16 @@ const plan = computed(() => (yearly.value ? annualPlans[slider.value] : monthlyP
           </div>
         </div>
 
-        <div class="flex justify-center mt-10">
+        <div class="flex justify-center mt-10" v-if="plan.variantId">
           <a class="btn btn-primary m-auto" href="#sign-up">
             Join now
             <Icon name="charm:rocket" class="" size="1.4em" />
           </a>
+        </div>
+
+        <div class="flex justify-center mt-10" v-else>
+          <span class="mr-2">Drop us a message at</span>
+          <a href="mailto:hey@joinstorywise.com" class="link"> hey@joinstorywise.com</a>
         </div>
       </div>
     </div>
