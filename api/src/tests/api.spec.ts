@@ -151,4 +151,59 @@ async function apiSmokeTests() {
   expect(stats.body.uniqueVisitors).toBeDefined();
   expect(stats.body.totalPageviews).toBeDefined();
   expect(stats.body.viewsPerVisitor).toBeDefined();
+
+  const countByUserAgentClientType = await supertest(app)
+    .get("/admin/api/count_sessions_by_user_agent?key=client_type")
+    .auth(user, pass)
+    .expect(200);
+  for (const item of countByUserAgentClientType.body) {
+    expect(item.count).toBeDefined();
+    expect(item.value).toBeDefined();
+    expect(item.key).toBeDefined();
+    expect(item.key).toEqual("client_type");
+  }
+
+  const countByUserAgentClientName = await supertest(app)
+    .get("/admin/api/count_sessions_by_user_agent?key=client_name")
+    .auth(user, pass)
+    .expect(200);
+  for (const item of countByUserAgentClientName.body) {
+    expect(item.count).toBeDefined();
+    expect(item.value).toBeDefined();
+    expect(item.key).toBeDefined();
+    expect(item.key).toEqual("client_name");
+  }
+
+  const countByUserAgentDeviceType = await supertest(app)
+    .get("/admin/api/count_sessions_by_user_agent?key=device_type")
+    .auth(user, pass)
+    .expect(200);
+  for (const item of countByUserAgentDeviceType.body) {
+    expect(item.count).toBeDefined();
+    expect(item.value).toBeDefined();
+    expect(item.key).toBeDefined();
+    expect(item.key).toEqual("device_type");
+  }
+
+  const countByUserAgentDeviceBrand = await supertest(app)
+    .get("/admin/api/count_sessions_by_user_agent?key=device_brand")
+    .auth(user, pass)
+    .expect(200);
+  for (const item of countByUserAgentDeviceBrand.body) {
+    expect(item.count).toBeDefined();
+    expect(item.value).toBeDefined();
+    expect(item.key).toBeDefined();
+    expect(item.key).toEqual("device_brand");
+  }
+
+  const countByUserAgentOsName = await supertest(app)
+    .get("/admin/api/count_sessions_by_user_agent?key=os_name")
+    .auth(user, pass)
+    .expect(200);
+  for (const item of countByUserAgentOsName.body) {
+    expect(item.count).toBeDefined();
+    expect(item.value).toBeDefined();
+    expect(item.key).toBeDefined();
+    expect(item.key).toEqual("os_name");
+  }
 }

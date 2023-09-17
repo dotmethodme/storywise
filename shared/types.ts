@@ -20,19 +20,10 @@ export type CountByCountry = {
   country: string;
 };
 
-export type CountByDevice = {
+export type CountByKeyValue = {
   count: number;
-  device: string;
-};
-
-export type CountByOs = {
-  count: number;
-  os: string;
-};
-
-export type CountByBrowser = {
-  count: number;
-  browser: string;
+  key: string;
+  value: string;
 };
 
 export type Stats = {
@@ -46,3 +37,5 @@ export type SiteConfig = {
   allowedOrigin: string;
   apiBaseUrl: string;
 };
+
+export type UserAgentQueryKeys = "client_type" | "client_name" | "device_type" | "device_brand" | "os_name";

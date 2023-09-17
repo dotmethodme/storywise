@@ -1,16 +1,15 @@
 import {
   CountByCountry,
-  CountHitsPerPage,
+  CountByKeyValue,
   CountByReferrer,
+  CountHitsPerPage,
   SessionItem,
   Stats,
-  CountByBrowser,
-  CountByDevice,
-  CountByOs,
+  UserAgentQueryKeys,
 } from "@shared/types";
+import { MongoClient } from "mongodb";
 import { WebEvent } from "../types/models";
 import { IDataRepo } from "./types";
-import { MongoClient } from "mongodb";
 
 export const databaseName = process.env.DATABASE_NAME || "analytics";
 export const cols = {
@@ -27,13 +26,8 @@ export class MongoRepo implements IDataRepo {
     }
     this.client = new MongoClient(process.env.MONGODB_URI);
   }
-  getUniqueSessionsByDevice(numberOfDays?: number | undefined): Promise<CountByDevice[]> {
-    throw new Error("Method not implemented.");
-  }
-  getUniqueSessionsByOs(numberOfDays?: number | undefined): Promise<CountByOs[]> {
-    throw new Error("Method not implemented.");
-  }
-  getUniqueSessionsByBrowser(numberOfDays?: number | undefined): Promise<CountByBrowser[]> {
+
+  getSessionCountByUserAgent(key: UserAgentQueryKeys, numberOfDays = 30): Promise<CountByKeyValue[]> {
     throw new Error("Method not implemented.");
   }
 

@@ -1,13 +1,12 @@
 import { Client as LibsqlClient, createClient } from "@libsql/client";
 import {
   CountByCountry,
-  CountHitsPerPage,
+  CountByKeyValue,
   CountByReferrer,
+  CountHitsPerPage,
   SessionItem,
   Stats,
-  CountByBrowser,
-  CountByDevice,
-  CountByOs,
+  UserAgentQueryKeys,
 } from "@shared/types";
 import { WebEvent } from "../types/models";
 import { webEventToSqlFormat } from "../utils/parsers";
@@ -31,14 +30,34 @@ export class LibsqlRepo implements IDataRepo {
       tls: process.env.LIBSQL_SSL_DISABLE === "true",
     });
   }
-  getUniqueSessionsByDevice(numberOfDays?: number | undefined): Promise<CountByDevice[]> {
-    throw new Error("Method not implemented.");
-  }
-  getUniqueSessionsByOs(numberOfDays?: number | undefined): Promise<CountByOs[]> {
-    throw new Error("Method not implemented.");
-  }
-  getUniqueSessionsByBrowser(numberOfDays?: number | undefined): Promise<CountByBrowser[]> {
-    throw new Error("Method not implemented.");
+
+  // getSessionCountByUserAgent(key: UserAgentQueryKeys, numberOfDays = 30): Promise<CountByKeyValue[]> {
+  //   return this.sql<CountByKeyValue[]>`
+  //     SELECT ${key} as key, ${this.sql(key)} as value, COUNT(DISTINCT session_id) as count
+  //     FROM events
+  //     WHERE timestamp >= ${getDaysAgo(numberOfDays).toISOString()}
+  //     GROUP BY ${this.sql(key)}
+  //     ORDER BY count DESC, value ASC
+  //   `;
+  // }
+  async getSessionCountByUserAgent(key: UserAgentQueryKeys, numberOfDays = 30) {
+    const startDate = new Date(new Date().getTime() - numberOfDays * 24 * 60 * 60 * 1000);
+
+    const result = await this.client.execute({
+      sql: `
+        SELECT '${key}' as "key", ${key} as value, COUNT(DISTINCT session_id) as count
+        FROM events
+        WHERE timestamp >= :start
+        GROUP BY :key
+        ORDER BY count DESC, value ASC
+      `,
+      args: {
+        start: startDate.toISOString(),
+        key,
+      },
+    });
+
+    return result.rows as unknown as CountByKeyValue[];
   }
 
   async createEvent(event: WebEvent) {

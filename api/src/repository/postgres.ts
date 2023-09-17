@@ -1,12 +1,11 @@
 import {
-  CountByBrowser,
   CountByCountry,
-  CountByDevice,
-  CountByOs,
+  CountByKeyValue,
   CountByReferrer,
   CountHitsPerPage,
   SessionItem,
   Stats,
+  UserAgentQueryKeys,
 } from "@shared/types";
 import postgres from "postgres";
 import { WebEvent } from "../types/models";
@@ -39,22 +38,14 @@ export class PostgresRepo implements IDataRepo {
     this.sql = postgres(url, options);
   }
 
-  getUniqueSessionsByDevice(numberOfDays = 30): Promise<CountByDevice[]> {
-    return this.sql<CountByDevice[]>`
-      SELECT device_type as device, COUNT(DISTINCT session_id) as count
+  getSessionCountByUserAgent(key: UserAgentQueryKeys, numberOfDays = 30): Promise<CountByKeyValue[]> {
+    return this.sql<CountByKeyValue[]>`
+      SELECT ${key} as key, ${this.sql(key)} as value, COUNT(DISTINCT session_id) as count
       FROM events
       WHERE timestamp >= ${getDaysAgo(numberOfDays).toISOString()}
-      GROUP BY device_type
-      ORDER BY count DESC, device ASC
+      GROUP BY ${this.sql(key)}
+      ORDER BY count DESC, value ASC
     `;
-  }
-
-  getUniqueSessionsByOs(numberOfDays?: number | undefined): Promise<CountByOs[]> {
-    throw new Error("Method not implemented.");
-  }
-
-  getUniqueSessionsByBrowser(numberOfDays?: number | undefined): Promise<CountByBrowser[]> {
-    throw new Error("Method not implemented.");
   }
 
   async createEvent(event: WebEvent) {

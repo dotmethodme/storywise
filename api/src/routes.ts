@@ -4,6 +4,8 @@ import { extractEvent } from "./utils/extractEvent";
 import { EventCreateRequest } from "./types/models";
 import { config } from "./utils/config";
 import { getDataRepo } from "./repository/repo";
+import { UserAgentQueryKeys } from "@shared/types";
+import { isUserAgentQueryKey } from "./utils/guards";
 
 export async function handleCreateEvent(req: Request<{}, {}, EventCreateRequest>, res: Response) {
   try {
@@ -85,6 +87,30 @@ export async function getTopReferrersHandler(req: Request, res: Response) {
   try {
     const { days } = req.query;
     const result = await getDataRepo().getTopReferrers(Number(days) || 30);
+    res.json(result);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+export async function getCountSessionsByUserAgentHandler(
+  req: Request<
+    unknown,
+    unknown,
+    {
+      key: UserAgentQueryKeys;
+    }
+  >,
+  res: Response
+) {
+  try {
+    const { key } = req.query;
+    if (!isUserAgentQueryKey(key)) {
+      throw new Error("Invalid key");
+    }
+
+    const result = await getDataRepo().getSessionCountByUserAgent(key);
     res.json(result);
   } catch (err) {
     console.error(err);

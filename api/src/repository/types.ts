@@ -1,12 +1,11 @@
 import {
-  CountByBrowser,
-  CountByDevice,
-  CountByOs,
   CountByCountry,
-  CountHitsPerPage,
+  CountByKeyValue,
   CountByReferrer,
+  CountHitsPerPage,
   SessionItem,
   Stats,
+  UserAgentQueryKeys,
 } from "@shared/types";
 import { WebEvent } from "../types/models";
 
@@ -18,9 +17,7 @@ export interface IDataRepo {
   getTopReferrers(numberOfDays?: number): Promise<CountByReferrer[]>;
   getUniqueSessionsByCountry(numberOfDays?: number): Promise<CountByCountry[]>;
   getStats(numberOfDays?: number): Promise<Stats>;
-  getUniqueSessionsByDevice(numberOfDays?: number): Promise<CountByDevice[]>;
-  getUniqueSessionsByOs(numberOfDays?: number): Promise<CountByOs[]>;
-  getUniqueSessionsByBrowser(numberOfDays?: number): Promise<CountByBrowser[]>;
+  getSessionCountByUserAgent(key: UserAgentQueryKeys, numberOfDays?: number): Promise<CountByKeyValue[]>;
   hasAnyEvents(): Promise<boolean>;
   connect(): Promise<void>;
   disconnect(): Promise<void>;
