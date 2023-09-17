@@ -83,7 +83,7 @@ const showPricing = computed(() => {
   </div>
 
   <div
-    v-if="!invoices.pending.value && invoices.data"
+    v-if="!invoices.pending.value && invoices.data && (invoices.data.value || []).length > 0"
     class="border border-b-0 overflow-hidden rounded-lg mt-4"
   >
     <div class="overflow-x-auto">
