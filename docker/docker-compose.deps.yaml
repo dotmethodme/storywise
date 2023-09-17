@@ -21,7 +21,5 @@ services:
   libsql:
     image: ghcr.io/libsql/sqld:latest
     container_name: libsql
-    environment:
-      LIBSQL_PASSWORD: testing
     ports:
       - "8880:8080"

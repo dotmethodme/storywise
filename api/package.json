@@ -10,7 +10,7 @@
     "start": "node dist/index.js",
     "issueJwt": "ts-node-dev --transpile-only --ignore-watch node_modules src/scripts/issueJwt.ts",
     "seedDemo": "ts-node-dev --transpile-only --ignore-watch node_modules src/scripts/seedDemoRun.ts",
-    "test": "jest --verbose --detectOpenHandles --forceExit",
+    "test": "jest --verbose --detectOpenHandles --forceExit --runInBand",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [],

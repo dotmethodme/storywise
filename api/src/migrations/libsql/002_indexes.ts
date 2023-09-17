@@ -3,7 +3,7 @@ import { getLibsqlRepo } from "../../repository/repo";
 async function migrate(): Promise<boolean> {
   const db = getLibsqlRepo().db();
 
-  db.executeMultiple(`
+  await db.executeMultiple(`
     CREATE INDEX IF NOT EXISTS idx_events_timestamp ON events (timestamp);
     CREATE INDEX IF NOT EXISTS idx_events_timestamp_path ON events (timestamp, path);
     CREATE INDEX IF NOT EXISTS idx_events_timestamp_path_unique_sessions ON events (timestamp, path, session_id);

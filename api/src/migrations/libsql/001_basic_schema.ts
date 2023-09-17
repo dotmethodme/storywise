@@ -3,7 +3,7 @@ import { getLibsqlRepo } from "../../repository/repo";
 async function migrate(): Promise<boolean> {
   const db = getLibsqlRepo().db();
 
-  db.execute(`
+  await db.execute(`
     CREATE TABLE events (
       session_id TEXT NOT NULL,
       path TEXT NOT NULL,

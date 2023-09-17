@@ -26,10 +26,10 @@
         "--runTestsByPath",
         "${jest.testFile}"
       ],
-      "cwd": "/home/dotmethod/workspace/dotmethodme/storywise/api",
+      "cwd": "${workspaceFolder}/api",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "program": "/home/dotmethod/workspace/dotmethodme/storywise/node_modules/.bin/jest"
+      "program": "${workspaceFolder}/node_modules/.bin/jest"
     }
   ]
 }

@@ -66,3 +66,7 @@ export function getPostgresRepo(): PostgresRepo {
 
   throw new Error("PostgresRepo not initialized. POSTGRES_URL is not set");
 }
+
+export function clearRepo() {
+  dataRepo = undefined as any;
+}
