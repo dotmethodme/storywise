@@ -11,6 +11,7 @@ import {
 import { WebEvent } from "../types/models";
 import { webEventToSqlFormat } from "../utils/parsers";
 import { IDataRepo } from "./types";
+import { getDaysAgo } from "../utils/date";
 
 export class LibsqlRepo implements IDataRepo {
   private client: LibsqlClient;
@@ -31,18 +32,7 @@ export class LibsqlRepo implements IDataRepo {
     });
   }
 
-  // getSessionCountByUserAgent(key: UserAgentQueryKeys, numberOfDays = 30): Promise<CountByKeyValue[]> {
-  //   return this.sql<CountByKeyValue[]>`
-  //     SELECT ${key} as key, ${this.sql(key)} as value, COUNT(DISTINCT session_id) as count
-  //     FROM events
-  //     WHERE timestamp >= ${getDaysAgo(numberOfDays).toISOString()}
-  //     GROUP BY ${this.sql(key)}
-  //     ORDER BY count DESC, value ASC
-  //   `;
-  // }
   async getSessionCountByUserAgent(key: UserAgentQueryKeys, numberOfDays = 30) {
-    const startDate = new Date(new Date().getTime() - numberOfDays * 24 * 60 * 60 * 1000);
-
     const result = await this.client.execute({
       sql: `
         SELECT '${key}' as "key", ${key} as value, COUNT(DISTINCT session_id) as count
@@ -52,7 +42,7 @@ export class LibsqlRepo implements IDataRepo {
         ORDER BY count DESC, value ASC
       `,
       args: {
-        start: startDate.toISOString(),
+        start: getDaysAgo(numberOfDays).toISOString(),
         key,
       },
     });

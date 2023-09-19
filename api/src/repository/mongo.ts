@@ -10,6 +10,7 @@ import {
 import { MongoClient } from "mongodb";
 import { WebEvent } from "../types/models";
 import { IDataRepo } from "./types";
+import { getDaysAgo } from "../utils/date";
 
 export const databaseName = process.env.DATABASE_NAME || "analytics";
 export const cols = {
@@ -27,12 +28,43 @@ export class MongoRepo implements IDataRepo {
     this.client = new MongoClient(process.env.MONGODB_URI);
   }
 
-  getSessionCountByUserAgent(key: UserAgentQueryKeys, numberOfDays = 30): Promise<CountByKeyValue[]> {
-    throw new Error("Method not implemented.");
-  }
-
   async createEvent(event: WebEvent) {
     await this.client.db(databaseName).collection(cols.events).insertOne(event);
+  }
+
+  async getSessionCountByUserAgent(key: UserAgentQueryKeys, numberOfDays = 30) {
+    const results = await this.client
+      .db(databaseName)
+      .collection(cols.events)
+      .aggregate<CountByKeyValue>([
+        {
+          $match: { timestamp: { $gte: getDaysAgo(numberOfDays) } },
+        },
+        {
+          $group: {
+            _id: `$${key}`,
+            value: { $first: `$${key}` },
+            count: { $addToSet: "$session_id" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            value: 1,
+            count: { $size: "$count" },
+            key: { $literal: key },
+          },
+        },
+        {
+          $sort: {
+            count: -1,
+            value: 1,
+          },
+        },
+      ])
+      .toArray();
+
+    return results;
   }
 
   async getSessionsPerDay(numberOfDays = 30) {
