@@ -6,7 +6,6 @@ import { IDataRepo } from "./types";
 let dataRepo: IDataRepo;
 
 export function getDataRepo() {
-  console.log("POSTGRES_URL in getDataRepo", process.env.POSTGRES_URL);
   if (dataRepo) {
     return dataRepo;
   }

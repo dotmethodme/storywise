@@ -7,12 +7,28 @@ import { webEventToSqlFormat } from "../utils/parsers";
 import { generateUsers, getRandomPath, getRandomReferrer, getRandomScreenSize } from "./seedDemoData";
 
 export async function seedDemo(logs = true) {
-  const users = generateUsers(100);
+  const logger = logs ? console.log : () => {};
 
-  const events: WebEvent[] = [];
-  const numberOfDays = 100;
+  const users = generateUsers(1000);
+
+  let events: WebEvent[] = [];
+  const numberOfDays = 365;
+
+  async function flush() {
+    await insertData(events, logs);
+    events = [];
+  }
+
+  async function tryFlush() {
+    if (events.length >= 1000) {
+      await flush();
+    }
+  }
+
+  await clearData();
 
   for (var i = 0; i < numberOfDays; i++) {
+    logger(`Generating data for day ${i}`);
     const date = new Date();
     date.setDate(date.getDate() - i);
 
@@ -40,71 +56,60 @@ export async function seedDemo(logs = true) {
         delete event.screen_size_temp;
 
         events.push(event);
+
+        await tryFlush();
       }
     }
   }
 
-  await insertData(events, logs);
+  await flush();
+}
+
+async function clearData() {
+  if (process.env.MONGODB_URI) {
+    const repo = getMongoRepo();
+    await repo.connect();
+    const db = repo.db();
+    await db.collection(cols.events).deleteMany({});
+    await repo.disconnect();
+  } else if (process.env.LIBSQL_URL) {
+    const repo = getLibsqlRepo();
+    const db = repo.db();
+    await db.execute("DELETE FROM events");
+    await repo.disconnect();
+  } else if (process.env.POSTGRES_URL) {
+    const repo = new PostgresRepo();
+    const db = repo.db();
+    await db`DELETE FROM events`;
+    await repo.disconnect();
+  }
 }
 
 async function insertData(events: WebEvent[], logs: boolean) {
   const logger = logs ? console.log : () => {};
 
-  const batches = splitInBatches(events, 500);
-
   if (!!process.env.MONGODB_URI) {
     const repo = getMongoRepo();
     await repo.connect();
-
-    const db = repo.db();
-
-    // empty the events collection
-    await db.collection(cols.events).deleteMany({});
-
-    for (const batch of batches) {
-      await db.collection(cols.events).insertMany(batch);
-      logger(`Inserted ${batch.length} events`);
-    }
+    await repo.db().collection(cols.events).insertMany(events);
   } else if (!!process.env.LIBSQL_URL) {
     const repo = getLibsqlRepo();
-    const db = repo.db();
-    await db.execute("DELETE FROM events");
-
-    for (const batch of batches) {
-      await db.batch(
-        batch.map((event) => ({
-          sql: `
+    await repo.db().batch(
+      events.map((event) => ({
+        sql: `
             INSERT INTO events (${LibsqlRepo.allColumns})
             VALUES (${LibsqlRepo.allColumnsValues})
           `,
-          args: webEventToSqlFormat(event),
-        }))
-      );
-
-      logger(`Inserted ${batch.length} events`);
-    }
+        args: webEventToSqlFormat(event),
+      }))
+    );
   } else if (!!process.env.POSTGRES_URL) {
     const repo = new PostgresRepo();
-    const db = repo.db();
-    await db`DELETE FROM events`;
-
-    for (const batch of batches) {
-      await db.begin(async (sql) => {
-        const events = batch.map((event) => webEventToSqlFormat(event));
-        await sql`
-          INSERT INTO events ${sql(events)}
-        `;
-      });
-
-      logger(`Inserted ${batch.length} events`);
-    }
+    const sql = repo.db();
+    await sql`
+      INSERT INTO events ${sql(events.map((event) => webEventToSqlFormat(event)))}
+    `;
   }
-}
 
-function splitInBatches<T>(array: T[], batchSize: number): T[][] {
-  const batches: T[][] = [];
-  for (let i = 0; i < array.length; i += batchSize) {
-    batches.push(array.slice(i, i + batchSize));
-  }
-  return batches;
+  logger(`Inserted ${events.length} events`);
 }
