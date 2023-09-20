@@ -11,12 +11,14 @@ const done = [
   "MongoDB support",
   "Postgres support",
   "SQLite support (libsql)",
-];
-
-const todo = [
   "Top devices - mobile, desktop, tablet",
   "Top browsers - chrome, safari, firefox, edge, etc",
   "Top OS - windows, mac, linux, ios, android, etc",
+];
+
+const todo = [
+  "Export data to json",
+  "Import data from json",
   "Privacy levels - sever-side only, client-side fingerprint, client-side local storage (current default)",
   "Bounce rate",
   "UTM tags",
