@@ -50,7 +50,7 @@ const viewingMore = ref(false);
           </tr>
 
           <tr v-for="row in rows" :key="row.key">
-            <td>{{ row.key || "-" }}</td>
+            <td :title="row.key.toString()">{{ row.key || "-" }}</td>
             <td class="text-right">{{ row.value }}</td>
           </tr>
         </tbody>
@@ -63,11 +63,14 @@ const viewingMore = ref(false);
 <style scoped>
 .table {
   table-layout: fixed;
+  width: 100%;
 }
 
 th:first-child,
 td:first-child {
   width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 th:last-child,
