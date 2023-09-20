@@ -95,22 +95,16 @@ export async function getTopReferrersHandler(req: Request, res: Response) {
 }
 
 export async function getCountSessionsByUserAgentHandler(
-  req: Request<
-    unknown,
-    unknown,
-    {
-      key: UserAgentQueryKeys;
-    }
-  >,
+  req: Request<unknown, unknown, { key: UserAgentQueryKeys }>,
   res: Response
 ) {
   try {
-    const { key } = req.query;
+    const { key, days } = req.query;
     if (!isUserAgentQueryKey(key)) {
       throw new Error("Invalid key");
     }
 
-    const result = await getDataRepo().getSessionCountByUserAgent(key);
+    const result = await getDataRepo().getSessionCountByUserAgent(key, Number(days) || 30);
     res.json(result);
   } catch (err) {
     console.error(err);

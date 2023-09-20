@@ -6,6 +6,8 @@ import type {
   Stats,
   SiteConfig,
   CountByCountry,
+  UserAgentQueryKeys,
+  CountByKeyValue,
 } from "@shared/types";
 
 export async function getSessions(days = 30) {
@@ -45,5 +47,11 @@ export async function getStats(days = 30) {
 
 export async function getSiteConfig() {
   const res = await axios.get<SiteConfig>(`/admin/api/config`);
+  return res.data;
+}
+
+export async function getSessionCountByUserAgent(key: UserAgentQueryKeys, days = 30) {
+  const url = `/admin/api/count_sessions_by_user_agent?days=${days}&key=${key}`;
+  const res = await axios.get<CountByKeyValue[]>(url);
   return res.data;
 }

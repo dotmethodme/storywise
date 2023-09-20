@@ -4,257 +4,86 @@ import {
   getTopReferrers,
   getUniqueSessionsPerPage,
   getUniqueVisitorsByCountry,
+  getSessionCountByUserAgent,
 } from "@/service/data";
 import { useGlobalStore } from "@/stores/global";
-import type { CountByCountry, CountByReferrer, CountHitsPerPage } from "@shared/types";
+import { countryMap } from "@/utils/countries";
+import type { CountByCountry, CountByKeyValue, CountByReferrer, CountHitsPerPage } from "@shared/types";
 import { computed, onMounted, ref } from "vue";
+import TableBlock from "./TableBlock.vue";
+
+const store = useGlobalStore();
 
 const sessions = ref<CountHitsPerPage[]>([]);
 const hits = ref<CountHitsPerPage[]>([]);
 const referrers = ref<CountByReferrer[]>([]);
 const countries = ref<CountByCountry[]>([]);
-
-const store = useGlobalStore();
+const countByClientName = ref<CountByKeyValue[]>([]);
+const countByOsName = ref<CountByKeyValue[]>([]);
+const countByDeviceType = ref<CountByKeyValue[]>([]);
+const countByDeviceBrand = ref<CountByKeyValue[]>([]);
 
 async function fetchData(days: number) {
-  const [sessionData, hitData, referrerData, countryData] = await Promise.all([
+  const results = await Promise.all([
     getUniqueSessionsPerPage(days),
     getHitsPerPage(days),
     getTopReferrers(days),
     getUniqueVisitorsByCountry(days),
+    getSessionCountByUserAgent("client_name", days),
+    getSessionCountByUserAgent("os_name", days),
+    getSessionCountByUserAgent("device_type", days),
+    getSessionCountByUserAgent("device_brand", days),
   ]);
-  sessions.value = sessionData;
-  hits.value = hitData;
-  referrers.value = referrerData;
-  countries.value = countryData;
+  sessions.value = results[0];
+  hits.value = results[1];
+  referrers.value = results[2];
+  countries.value = results[3];
+  countByClientName.value = results[4];
+  countByOsName.value = results[5];
+  countByDeviceType.value = results[6];
+  countByDeviceBrand.value = results[7];
 }
 
-const viewLimit = 10;
-
-const visibleHits = computed(() => hits.value.slice(0, viewLimit));
-const visibleSessions = computed(() => sessions.value.slice(0, viewLimit));
-const visibleReferrers = computed(() => referrers.value.slice(0, viewLimit));
-const visibleCountries = computed(() => countries.value.slice(0, viewLimit));
-
-const viewMoreHits = computed(() => hits.value.length > viewLimit);
-const viewMoreHitsOn = ref(false);
-const viewMoreSessions = computed(() => sessions.value.length > viewLimit);
-const viewMoreSessionsOn = ref(false);
-const viewMoreReferrers = computed(() => referrers.value.length > viewLimit);
-const viewMoreReferrersOn = ref(false);
-const viewMoreCountries = computed(() => countries.value.length > viewLimit);
-const viewMoreCountriesOn = ref(false);
+const tableSessions = computed(() => sessions.value.map((x) => ({ key: x.path, value: x.count })));
+const tableHits = computed(() => hits.value.map((x) => ({ key: x.path, value: x.count })));
+const tableReferrers = computed(() => referrers.value.map((x) => ({ key: x.referrer, value: x.count })));
+const tableCountry = computed(() =>
+  countries.value.map((x) => ({ key: countryMap[x.country] || x.country, value: x.count }))
+);
+const tableClientName = computed(() =>
+  countByClientName.value.map((x) => ({ key: x.value, value: x.count }))
+);
+const tableOS = computed(() => countByOsName.value.map((x) => ({ key: x.value, value: x.count })));
+const tableDeviceType = computed(() =>
+  countByDeviceType.value.map((x) => ({ key: x.value, value: x.count }))
+);
+const tableDeviceBrand = computed(() =>
+  countByDeviceBrand.value.map((x) => ({ key: x.value, value: x.count }))
+);
 
 onMounted(() => fetchData(store.selectedDays));
 store.$subscribe((_, { selectedDays }) => fetchData(selectedDays));
 </script>
 <template>
   <div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <!-- Top unique visitors -->
-      <div class="card bg-base-100 shadow-lg card-compact mb-4">
-        <div class="card-body">
-          <table class="table table-compact w-full">
-            <tbody>
-              <tr>
-                <th class="font-bold text-ellipsis overflow-hidden">Top unique visitors</th>
-                <th class="font-bold text-right">
-                  <span
-                    class="link text-accent-content"
-                    v-if="viewMoreSessions"
-                    @click="() => (viewMoreSessionsOn = !viewMoreSessionsOn)"
-                    >More
-                  </span>
-                </th>
-              </tr>
-
-              <tr v-for="session in visibleSessions" :key="session.path">
-                <td class="text-ellipsis overflow-hidden" :title="session.path">
-                  {{ session.path || "-" }}
-                </td>
-                <td class="text-right">{{ session.count }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <dialog class="modal modal-bottom sm:modal-middle" :class="viewMoreSessionsOn ? 'modal-open' : ''">
-          <form method="dialog" class="modal-box max-h-max m-auto">
-            <table class="table table-compact w-full">
-              <tbody>
-                <tr>
-                  <th class="font-bold">Top unique visitors</th>
-                  <th class="font-bold text-right"></th>
-                </tr>
-
-                <tr v-for="session in sessions" :key="session.path">
-                  <td class="text-ellipsis overflow-hidden" :title="session.path">
-                    {{ session.path || "-" }}
-                  </td>
-                  <td class="text-right">{{ session.count }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </form>
-          <form method="dialog" class="modal-backdrop" @click="() => (viewMoreSessionsOn = false)"></form>
-        </dialog>
-      </div>
-
-      <!-- Top page views -->
-      <div class="card bg-base-100 shadow-lg card-compact mb-4">
-        <div class="card-body overflow-x-auto">
-          <table class="table table-compact w-full">
-            <tbody>
-              <tr>
-                <th class="font-bold">Top page views</th>
-                <th class="font-bold text-right">
-                  <span
-                    class="link text-accent-content"
-                    v-if="viewMoreHits"
-                    @click="() => (viewMoreHitsOn = !viewMoreHitsOn)"
-                  >
-                    More
-                  </span>
-                </th>
-              </tr>
-
-              <tr v-for="hit in visibleHits" :key="hit.path">
-                <td class="text-ellipsis overflow-hidden" :title="hit.path">
-                  {{ hit.path || "-" }}
-                </td>
-                <td class="text-right">{{ hit.count }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <dialog class="modal modal-bottom sm:modal-middle" :class="viewMoreHitsOn ? 'modal-open' : ''">
-          <form method="dialog" class="modal-box max-h-max m-auto">
-            <table class="table table-compact w-full">
-              <tbody>
-                <tr>
-                  <th class="font-bold">Top page views</th>
-                  <th class="font-bold text-right"></th>
-                </tr>
-
-                <tr v-for="session in hits" :key="session.path">
-                  <td>{{ session.path || "-" }}</td>
-                  <td class="text-right">{{ session.count }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </form>
-          <form method="dialog" class="modal-backdrop" @click="() => (viewMoreHitsOn = false)"></form>
-        </dialog>
-      </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <TableBlock :rows="tableSessions" title="Top unique visitors" />
+      <TableBlock :rows="tableHits" title="Top page views" />
     </div>
 
-    <!-- Top referrers -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <div class="card bg-base-100 shadow-lg card-compact">
-        <div class="card-body">
-          <table class="table table-compact">
-            <tbody>
-              <tr>
-                <th class="font-bold">Top referrers</th>
-                <th class="font-bold text-right">
-                  <span
-                    class="link text-accent-content"
-                    v-if="viewMoreReferrers"
-                    @click="() => (viewMoreReferrersOn = !viewMoreReferrersOn)"
-                  >
-                    More
-                  </span>
-                </th>
-              </tr>
-              <tr v-for="row in visibleReferrers" :key="row.referrer">
-                <td>{{ row.referrer || "-" }}</td>
-                <td class="text-right">{{ row.count }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+      <TableBlock :rows="tableReferrers" title="Referrers" />
+      <TableBlock :rows="tableCountry" title="Countries" />
+    </div>
 
-      <dialog class="modal modal-bottom sm:modal-middle" :class="viewMoreReferrersOn ? 'modal-open' : ''">
-        <form method="dialog" class="modal-box max-h-max m-auto">
-          <table class="table table-compact w-full">
-            <tbody>
-              <tr>
-                <th class="font-bold">Top referrers</th>
-                <th class="font-bold text-right"></th>
-              </tr>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+      <TableBlock :rows="tableClientName" title="Browser name" />
+      <TableBlock :rows="tableOS" title="Operating system" />
+    </div>
 
-              <tr v-for="row in referrers" :key="row.referrer">
-                <td>{{ row.referrer || "-" }}</td>
-                <td class="text-right">{{ row.count }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </form>
-        <form method="dialog" class="modal-backdrop" @click="() => (viewMoreReferrersOn = false)"></form>
-      </dialog>
-
-      <!-- Top countries -->
-      <div class="card bg-base-100 shadow-lg card-compact">
-        <div class="card-body">
-          <table class="table table-compact">
-            <tbody>
-              <tr>
-                <th class="font-bold">Top countries</th>
-                <th class="font-bold text-right">
-                  <span
-                    class="link text-accent-content"
-                    v-if="viewMoreCountries"
-                    @click="() => (viewMoreCountriesOn = !viewMoreCountriesOn)"
-                  >
-                    More
-                  </span>
-                </th>
-              </tr>
-              <tr v-for="row in visibleCountries" :key="row.country">
-                <td>{{ row.country || "-" }}</td>
-                <td class="text-right">{{ row.count }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <dialog class="modal modal-bottom sm:modal-middle" :class="viewMoreCountriesOn ? 'modal-open' : ''">
-        <form method="dialog" class="modal-box max-h-max m-auto">
-          <table class="table table-compact w-full">
-            <tbody>
-              <tr>
-                <th class="font-bold">Top countries</th>
-                <th class="font-bold text-right"></th>
-              </tr>
-
-              <tr v-for="row in countries" :key="row.country">
-                <td>{{ row.country || "-" }}</td>
-                <td class="text-right">{{ row.count }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </form>
-        <form method="dialog" class="modal-backdrop" @click="() => (viewMoreCountriesOn = false)"></form>
-      </dialog>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+      <TableBlock :rows="tableDeviceType" title="Device type" />
+      <TableBlock :rows="tableDeviceBrand" title="Device brand" />
     </div>
   </div>
 </template>
-
-<style scoped>
-.table {
-  table-layout: fixed;
-}
-
-th:first-child,
-td:first-child {
-  width: 90%;
-}
-
-th:last-child,
-td:last-child {
-  width: 10%;
-}
-</style>
