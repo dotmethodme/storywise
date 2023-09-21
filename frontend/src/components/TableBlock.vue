@@ -50,7 +50,7 @@ const viewingMore = ref(false);
           </tr>
 
           <tr v-for="row in rows" :key="row.key">
-            <td :title="row.key.toString()">{{ row.key || "-" }}</td>
+            <td :title="row.key ? row.key.toString() : undefined">{{ row.key || "-" }}</td>
             <td class="text-right">{{ row.value }}</td>
           </tr>
         </tbody>
