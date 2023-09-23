@@ -17,7 +17,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@libsql/client": "^0.3.1",
+    "@libsql/client": "^0.3.4",
     "bcrypt": "^5.1.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -33,9 +33,11 @@
     "mongodb": "^6.0.0",
     "morgan": "^1.10.0",
     "postgres": "^3.3.5",
+    "tmp-promise": "^3.0.3",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.2.2",
-    "ua-parser-js": "^1.0.35"
+    "ua-parser-js": "^1.0.35",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
@@ -49,7 +51,9 @@
     "@types/morgan": "^1.9.4",
     "@types/node": "^20.3.2",
     "@types/supertest": "^2.0.12",
+    "@types/tmp": "^0.2.4",
     "@types/ua-parser-js": "^0.7.36",
+    "@types/uuid": "^9.0.4",
     "supertest": "^6.3.3",
     "ts-jest": "^29.1.1"
   }

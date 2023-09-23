@@ -3,6 +3,7 @@ import {
   CountByKeyValue,
   CountByReferrer,
   CountHitsPerPage,
+  DataIo,
   SessionItem,
   Stats,
   UserAgentQueryKeys,
@@ -11,11 +12,15 @@ import { MongoClient } from "mongodb";
 import { WebEvent } from "../types/models";
 import { IDataRepo } from "./types";
 import { getDaysAgo } from "../utils/date";
+import { v4 } from "uuid";
+import fs from "fs/promises";
+import { file } from "tmp-promise";
 
 export const databaseName = process.env.DATABASE_NAME || "analytics";
 export const cols = {
   events: "events",
   migrations: "migrations",
+  data_io: "data_io",
 };
 
 export class MongoRepo implements IDataRepo {
@@ -335,5 +340,54 @@ export class MongoRepo implements IDataRepo {
 
   public db() {
     return this.client.db(databaseName);
+  }
+
+  async startExport() {
+    const newId = v4();
+    const newFile = await file({ name: `${newId}.jsonl` });
+
+    await this.db()
+      .collection(cols.data_io)
+      .insertOne({ id: newId, type: "export", status: "pending", file_path: newFile.path });
+
+    await this.performExport(newFile.path, newId);
+  }
+
+  private async performExport(filePath: string, id: string) {
+    const limit = 5000;
+    console.log("Starting export to", filePath);
+    let cursor: Date | undefined = undefined;
+
+    while (true) {
+      console.log("Exporting from", cursor?.toISOString());
+      const rows = await this.db()
+        .collection(cols.events)
+        .find(cursor ? { timestamp: { $gt: cursor } } : {})
+        .sort({ timestamp: 1 })
+        .project({ _id: 0 })
+        .limit(limit)
+        .toArray();
+
+      // Write rows to the export file
+      await fs.appendFile(filePath, rows.map((row) => JSON.stringify(row)).join("\n"));
+
+      if (rows.length === 0) {
+        break;
+      } else {
+        cursor = rows[rows.length - 1].timestamp;
+      }
+    }
+
+    // Update export status to 'complete'
+    await this.db()
+      .collection(cols.data_io)
+      .updateOne({ id }, { $set: { status: "complete", file_path: filePath } });
+
+    console.log("Export complete");
+  }
+
+  async listDataIo() {
+    const results = await this.db().collection(cols.data_io).find<DataIo>({}).toArray();
+    return results;
   }
 }

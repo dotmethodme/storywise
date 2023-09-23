@@ -3,6 +3,7 @@ import { cols } from "../repository/mongo";
 import { PostgresRepo } from "../repository/postgres";
 import { getLibsqlRepo, getMongoRepo } from "../repository/repo";
 import { WebEvent } from "../types/models";
+import { getDaysAgoRandomTime } from "../utils/date";
 import { webEventToSqlFormat } from "../utils/parsers";
 import { generateUsers, getRandomPath, getRandomReferrer, getRandomScreenSize } from "./seedDemoData";
 
@@ -29,8 +30,6 @@ export async function seedDemo(logs = true) {
 
   for (var i = 0; i < numberOfDays; i++) {
     logger(`Generating data for day ${i}`);
-    const date = new Date();
-    date.setDate(date.getDate() - i);
 
     const numberOfUsers = Math.floor(Math.random() * users.length);
     const usersForDate = users.slice(0, numberOfUsers);
@@ -42,7 +41,7 @@ export async function seedDemo(logs = true) {
       for (let j = 0; j < numberOfEvents; j++) {
         const event = {
           ...user,
-          timestamp: date,
+          timestamp: getDaysAgoRandomTime(i),
           path: getRandomPath(),
           screen_width: user.screen_size_temp.width,
           screen_height: user.screen_size_temp.height,
@@ -76,7 +75,6 @@ async function clearData() {
     const repo = getLibsqlRepo();
     const db = repo.db();
     await db.execute("DELETE FROM events");
-    await repo.disconnect();
   } else if (process.env.POSTGRES_URL) {
     const repo = new PostgresRepo();
     const db = repo.db();

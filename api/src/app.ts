@@ -5,22 +5,19 @@ import proxy from "express-http-proxy";
 import morgan from "morgan";
 import { authMiddleware } from "./middlewares/auth";
 import { jwtAuthMiddleware } from "./middlewares/jwtAuth";
+import { config } from "./utils/config";
+import { createEventHandler, getEventHandler } from "./routes/events";
 import {
-  getCountSessionsByUserAgentHandler,
-  getEventHandler,
-  getHeadersHandler,
-  getHitsPerPageHandler,
-  getJsFileHandler,
   getSessionsPerDayHandler,
-  getStatsHandler,
+  getHitsPerPageHandler,
+  getUniqueSessionsPerPageHandler,
   getTopReferrersHandler,
   getUniqueSessionsByCountryHandler,
-  getUniqueSessionsPerPageHandler,
-  handleCreateEvent,
-  healthCheckHandler,
-  siteConfig,
-} from "./routes";
-import { config } from "./utils/config";
+  getCountSessionsByUserAgentHandler,
+  getStatsHandler,
+} from "./routes/counts";
+import { healthCheckHandler, siteConfigHandler, getHeadersHandler, getJsFileHandler } from "./routes/misc";
+import { startExportHandler } from "./routes/dataIO";
 
 const isLocalEnv = process.env.NODE_ENV === "local";
 
@@ -36,7 +33,7 @@ export function getApp() {
   app.get("/", (_, res) => res.redirect("/admin"));
   app.get("/health", healthCheckHandler);
 
-  app.post("/api/event", handleCreateEvent);
+  app.post("/api/event", createEventHandler);
   app.get("/api/event", cors(), getEventHandler);
   app.options("/api/event", cors());
 
@@ -47,7 +44,10 @@ export function getApp() {
   app.get("/admin/api/unique_sessions_by_country", authMiddleware, getUniqueSessionsByCountryHandler);
   app.get("/admin/api/count_sessions_by_user_agent", authMiddleware, getCountSessionsByUserAgentHandler);
   app.get("/admin/api/stats", authMiddleware, getStatsHandler);
-  app.get("/admin/api/config", authMiddleware, siteConfig);
+  app.get("/admin/api/config", authMiddleware, siteConfigHandler);
+  app.get("/admin/api/export/start", authMiddleware, startExportHandler);
+  app.get("/admin/api/export/check", authMiddleware, () => {});
+  app.get("/admin/api/export/download/:id", authMiddleware, () => {});
   app.get("/login/:token", jwtAuthMiddleware);
 
   if (isLocalEnv) {

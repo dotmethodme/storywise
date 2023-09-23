@@ -3,11 +3,15 @@ import {
   CountByKeyValue,
   CountByReferrer,
   CountHitsPerPage,
+  DataIo,
   SessionItem,
   Stats,
   UserAgentQueryKeys,
 } from "@shared/types";
+import fs from "fs/promises";
 import postgres from "postgres";
+import { file } from "tmp-promise";
+import { v4 } from "uuid";
 import { WebEvent } from "../types/models";
 import { getDaysAgo } from "../utils/date";
 import { IDataRepo } from "./types";
@@ -167,5 +171,49 @@ export class PostgresRepo implements IDataRepo {
 
   db() {
     return this.sql;
+  }
+
+  async startExport() {
+    const newId = v4();
+    const newFile = await file({ name: `${newId}.jsonl` });
+
+    await this.sql`
+      insert into data_io (id, type, status, file_path)
+      values (${newId}, 'export', 'pending', ${newFile.path})
+    `;
+
+    this.performExport(newFile.path, newId);
+  }
+
+  private async performExport(filePath: string, id: string) {
+    const limit = 5000;
+    console.log("Starting export to", filePath);
+    let cursor: Date | undefined = undefined;
+    while (true) {
+      console.log("Exporting from", cursor?.toISOString());
+      const rows: WebEvent[] = await this.sql`
+        select * from events
+        ${cursor ? this.sql`where timestamp > ${cursor}` : this.sql``}
+        order by timestamp asc
+        limit ${limit}
+      `;
+
+      await fs.appendFile(filePath, rows.map((row) => JSON.stringify(row)).join("\n"));
+
+      if (rows.length < limit) {
+        break;
+      } else {
+        cursor = rows[rows.length - 1].timestamp;
+      }
+    }
+
+    await this.sql`update data_io set status = 'complete', file_path = ${filePath} where id = ${id}`;
+
+    console.log("Export complete");
+  }
+
+  async listDataIo() {
+    const results: DataIo[] = await this.sql`select * from data_io`;
+    return results;
   }
 }

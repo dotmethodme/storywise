@@ -4,6 +4,7 @@ import {
   CountByKeyValue,
   CountByReferrer,
   CountHitsPerPage,
+  DataIo,
   SessionItem,
   Stats,
   UserAgentQueryKeys,
@@ -12,6 +13,9 @@ import { WebEvent } from "../types/models";
 import { webEventToSqlFormat } from "../utils/parsers";
 import { IDataRepo } from "./types";
 import { getDaysAgo } from "../utils/date";
+import { v4 } from "uuid";
+import { file } from "tmp-promise";
+import fs from "fs/promises";
 
 export class LibsqlRepo implements IDataRepo {
   private client: LibsqlClient;
@@ -28,7 +32,7 @@ export class LibsqlRepo implements IDataRepo {
     this.client = createClient({
       url: process.env.LIBSQL_URL,
       authToken: process.env.LIBSQL_TOKEN,
-      tls: process.env.LIBSQL_SSL_DISABLE === "true",
+      // tls: process.env.LIBSQL_SSL_DISABLE !== "true",
     });
   }
 
@@ -225,5 +229,61 @@ export class LibsqlRepo implements IDataRepo {
 
   db() {
     return this.client;
+  }
+
+  async startExport() {
+    const newId = v4();
+    const newFile = await file({ name: `${newId}.jsonl` });
+
+    await this.client.execute({
+      sql: `
+        insert into data_io (id, type, status, file_path)
+        values (:newId, 'export', 'pending', :newFile)
+      `,
+      args: {
+        newId,
+        newFile: newFile.path,
+      },
+    });
+
+    this.performExport(newFile.path, newId);
+  }
+
+  private async performExport(filePath: string, id: string) {
+    const limit = 5000;
+    console.log("Starting export to", filePath);
+    let cursor = "1970-01-01T00:00:00.000Z";
+    while (true) {
+      console.log("Exporting from", cursor);
+      const rs = await this.client.execute({
+        sql: `
+          select * from events
+          where timestamp > :cursor
+          order by timestamp asc
+          limit :limit
+        `,
+        args: { limit, cursor },
+      });
+
+      await fs.appendFile(filePath, rs.rows.map((row) => JSON.stringify(row)).join("\n"));
+
+      if (rs.rows.length < limit) {
+        break;
+      } else {
+        cursor = rs.rows[rs.rows.length - 1].timestamp as string;
+      }
+    }
+
+    await this.client.execute({
+      sql: `update data_io set status = 'complete', file_path = :filePath where id = :id`,
+      args: { filePath, id },
+    });
+
+    console.log("Export complete");
+  }
+
+  async listDataIo() {
+    const results = await this.client.execute(`select * from data_io`);
+    return results.rows as unknown as DataIo[];
   }
 }

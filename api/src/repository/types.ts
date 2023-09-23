@@ -3,6 +3,7 @@ import {
   CountByKeyValue,
   CountByReferrer,
   CountHitsPerPage,
+  DataIo,
   SessionItem,
   Stats,
   UserAgentQueryKeys,
@@ -10,7 +11,14 @@ import {
 import { WebEvent } from "../types/models";
 
 export interface IDataRepo {
+  // Lifecycle
+  connect(): Promise<void>;
+  disconnect(): Promise<void>;
+  // Events
+  hasAnyEvents(): Promise<boolean>;
   createEvent(event: WebEvent): Promise<void>;
+
+  // Stats and counts
   getSessionsPerDay(numberOfDays?: number): Promise<SessionItem[]>;
   getHitsPerPage(numberOfDays?: number): Promise<CountHitsPerPage[]>;
   getUniqueSessionsPerPage(numberOfDays?: number): Promise<CountHitsPerPage[]>;
@@ -18,7 +26,8 @@ export interface IDataRepo {
   getUniqueSessionsByCountry(numberOfDays?: number): Promise<CountByCountry[]>;
   getStats(numberOfDays?: number): Promise<Stats>;
   getSessionCountByUserAgent(key: UserAgentQueryKeys, numberOfDays?: number): Promise<CountByKeyValue[]>;
-  hasAnyEvents(): Promise<boolean>;
-  connect(): Promise<void>;
-  disconnect(): Promise<void>;
+
+  // Exports
+  startExport(): Promise<void>;
+  listDataIo(): Promise<DataIo[]>;
 }

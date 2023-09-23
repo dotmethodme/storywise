@@ -8,12 +8,12 @@ const stats = ref<Stats>();
 
 const store = useGlobalStore();
 
-async function fetchData() {
-  stats.value = await getStats();
+async function fetchData(days: number) {
+  stats.value = await getStats(days);
 }
 
-onMounted(fetchData);
-store.$subscribe(fetchData);
+onMounted(() => fetchData(store.selectedDays));
+store.$subscribe((_, { selectedDays }) => fetchData(selectedDays));
 </script>
 <template>
   <div class="flex justify-center">
