@@ -32,7 +32,7 @@ export class LibsqlRepo implements IDataRepo {
     this.client = createClient({
       url: process.env.LIBSQL_URL,
       authToken: process.env.LIBSQL_TOKEN,
-      // tls: process.env.LIBSQL_SSL_DISABLE !== "true",
+      tls: process.env.LIBSQL_SSL_DISABLE === "true" ? false : true,
     });
   }
 
