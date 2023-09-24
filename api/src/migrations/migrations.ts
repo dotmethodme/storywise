@@ -5,6 +5,8 @@ export async function migrate() {
     await (await import("./postgres")).migratePostgres();
   } else if (!!process.env.LIBSQL_URL) {
     await (await import("./libsql")).migrateLibsql();
+  } else if (!!process.env.TIMESCALEDB_URL) {
+    await (await import("./timescale")).migrateTimescaleDB();
   } else {
     throw new Error("No other database type configured. Open to PRs if you want to add a new database!");
   }

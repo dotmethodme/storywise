@@ -9,6 +9,14 @@ services:
     ports:
       - "5444:5432"
 
+  timescaledb:
+    image: timescale/timescaledb:latest-pg14
+    container_name: timescaledb
+    environment:
+      POSTGRES_PASSWORD: testing
+    ports:
+      - "5566:5432"
+
   mongodb:
     image: mongo:6
     container_name: mongodb

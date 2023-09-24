@@ -19,12 +19,12 @@ import { IDataRepo } from "./types";
 export class PostgresRepo implements IDataRepo {
   public sql: postgres.Sql;
 
-  constructor() {
-    if (!process.env.POSTGRES_URL) {
+  constructor(dbUrl = process.env.POSTGRES_URL) {
+    if (!dbUrl) {
       throw new Error("POSTGRES_URL is not set");
     }
 
-    const url = process.env.POSTGRES_URL;
+    const url = dbUrl;
     let options: postgres.Options<{}> = {
       ssl: {
         rejectUnauthorized: false,

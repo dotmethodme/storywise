@@ -14,6 +14,7 @@ const done = [
   "Top devices - mobile, desktop, tablet",
   "Top browsers - chrome, safari, firefox, edge, etc",
   "Top OS - windows, mac, linux, ios, android, etc",
+  "TimescaleDB support",
 ];
 
 const todo = [

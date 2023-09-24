@@ -6,14 +6,9 @@ const features = [
       "Did I mention \"simple\"? Yes, think I did already. But damn, that's the best part - it's simple. It's easy to use. It's easy to setup. It's easy to understand. It's easy to love.",
   },
   {
-    title: "Open to contributions",
-    description:
-      "Missing a feature? Storywise welcomes community contributions. We're open to pull requests and feature requests.",
-  },
-  {
     title: "Multi-database",
     description:
-      "We support multiple databases, including Postgres, MongoDB, and SQLite (LibSql). Depending on what you're comfortable with, you can use the database of your choice.",
+      "We support multiple databases - Postgres, MongoDB, SQLite (LibSql) and TimescaleDB. Depending on what you're comfortable with, you can use the database of your choice.",
   },
   {
     title: "Export & import your data",
@@ -29,6 +24,11 @@ const features = [
     title: "Less is more",
     description:
       "Sure, storywise is flexible. But not overly-flexible. And it's by design - simplicity is key for any new features we add. We want to keep it simple.",
+  },
+  {
+    title: "Open to contributions",
+    description:
+      "Missing a feature? Storywise welcomes community contributions. We're open to pull requests and feature requests.",
   },
 ];
 </script>

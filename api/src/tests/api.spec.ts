@@ -2,10 +2,11 @@ import supertest from "supertest";
 import { getApp } from "../app";
 import { MongoRepo } from "../repository/mongo";
 import { PostgresRepo } from "../repository/postgres";
-import { clearRepo, getLibsqlRepo, getMongoRepo, getPostgresRepo } from "../repository/repo";
+import { clearRepo, getLibsqlRepo, getMongoRepo, getPostgresRepo, getTimescaleRepo } from "../repository/repo";
 import { seedDemo } from "../scripts/seedDemo";
-import { mongoUrlMock, postgresUrlMock, libsqlUrlMock } from "./helpers/constants";
+import { mongoUrlMock, postgresUrlMock, libsqlUrlMock, timescaleUrlMock } from "./helpers/constants";
 import { LibsqlRepo } from "../repository/libsql";
+import { TimescaleRepo } from "../repository/timescale";
 
 const user = "admin";
 const pass = "123";
@@ -29,12 +30,44 @@ describe("API tests", () => {
       await migration.migratePostgres();
       repo = getPostgresRepo();
       await repo.connect();
-      await seedDemo(false);
+      await seedDemo(false, 10, 50);
     });
 
     afterEach(async () => {
       await repo.sql`DROP TABLE IF EXISTS events;`;
       await repo.sql`DROP TABLE IF EXISTS migrations;`;
+      await repo.sql`DROP TABLE IF EXISTS data_io;`;
+      await repo.disconnect();
+      clearRepo();
+      process.env = OLD_ENV; // Restore old environment
+    });
+
+    test("API smoke tests", apiSmokeTests);
+  });
+
+  describe("Timescale", () => {
+    let repo: TimescaleRepo;
+    const OLD_ENV = process.env;
+
+    beforeEach(async () => {
+      jest.resetModules();
+      process.env = { ...OLD_ENV };
+
+      process.env.TIMESCALEDB_URL = timescaleUrlMock;
+      process.env.STORYWISE_USERNAME = user;
+      process.env.STORYWISE_PASSWORD = pass;
+
+      const migration = await import("../migrations/timescale");
+      await migration.migrateTimescaleDB();
+      repo = getTimescaleRepo();
+      await repo.connect();
+      await seedDemo(false, 10, 50);
+    });
+
+    afterEach(async () => {
+      await repo.sql`DROP TABLE IF EXISTS events;`;
+      await repo.sql`DROP TABLE IF EXISTS migrations;`;
+      await repo.sql`DROP TABLE IF EXISTS data_io;`;
       await repo.disconnect();
       clearRepo();
       process.env = OLD_ENV; // Restore old environment
@@ -59,12 +92,12 @@ describe("API tests", () => {
       await migration.migrateMongo();
       repo = getMongoRepo();
       await repo.connect();
-      await seedDemo(false);
+      await seedDemo(false, 10, 50);
     });
 
     afterEach(async () => {
-      await repo.db().dropCollection("events");
-      await repo.db().dropCollection("migrations");
+      await repo.db().collection("events").drop();
+      await repo.db().collection("migrations").drop();
       await repo.disconnect();
       clearRepo();
       process.env = OLD_ENV; // Restore old environment
@@ -83,7 +116,7 @@ describe("API tests", () => {
 
       process.env.LIBSQL_URL = libsqlUrlMock;
       process.env.LIBSQL_TOKEN = "testing";
-      process.env.LIBSQL_TLS_DISABLE = "true";
+      process.env.LIBSQL_SSL_DISABLE = "true";
       process.env.STORYWISE_USERNAME = user;
       process.env.STORYWISE_PASSWORD = pass;
 
@@ -91,12 +124,13 @@ describe("API tests", () => {
       await migration.migrateLibsql();
       repo = getLibsqlRepo();
       await repo.connect();
-      await seedDemo(false);
+      await seedDemo(false, 10, 50);
     });
 
     afterEach(async () => {
       await repo.db().execute(`DROP TABLE events;`);
       await repo.db().execute(`DROP TABLE migrations;`);
+      await repo.db().execute(`DROP TABLE data_io;`);
       await repo.disconnect();
       clearRepo();
       process.env = OLD_ENV; // Restore old environment

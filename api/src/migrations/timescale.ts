@@ -1,7 +1,7 @@
-import { getPostgresRepo } from "../repository/repo";
+import { getTimescaleRepo } from "../repository/repo";
 import { Migration } from "../types/migrations";
 
-export async function migratePostgres() {
+export async function migrateTimescaleDB() {
   console.log("Trying to run database migrations:");
 
   await ensureMigrationsTable();
@@ -10,7 +10,7 @@ export async function migratePostgres() {
 
   const appliedMigrations = await getMigrations();
 
-  const migrations = await import("./postgres/index");
+  const migrations = await import("./timescale/index");
 
   const keys = Object.keys(migrations) as (keyof typeof migrations)[];
 
@@ -27,6 +27,7 @@ export async function migratePostgres() {
         await migration();
         await acknowledgeMigration(key, "success");
       } catch (error) {
+        console.error(error);
         await acknowledgeMigration(key, "failed");
       }
 
@@ -39,13 +40,13 @@ export async function migratePostgres() {
   }
 }
 
-export async function acknowledgeMigration(name: string, status: "success" | "failed") {
-  const sql = getPostgresRepo().db();
+async function acknowledgeMigration(name: string, status: "success" | "failed") {
+  const sql = getTimescaleRepo().db();
   await sql`insert into migrations (name, status, timestamp) values (${name}, ${status}, ${new Date()})`;
 }
 
-export async function ensureMigrationsTable() {
-  const sql = getPostgresRepo().db();
+async function ensureMigrationsTable() {
+  const sql = getTimescaleRepo().db();
   await sql`
     CREATE TABLE IF NOT EXISTS migrations (
         name TEXT PRIMARY KEY,
@@ -55,8 +56,8 @@ export async function ensureMigrationsTable() {
   `;
 }
 
-export async function getMigrations() {
-  const sql = getPostgresRepo().db();
+async function getMigrations() {
+  const sql = getTimescaleRepo().db();
   const result = await sql`select * from migrations`;
   return result as unknown as Migration[];
 }
