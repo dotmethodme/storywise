@@ -9,6 +9,7 @@ import {
   UserAgentQueryKeys,
 } from "@shared/types";
 import { WebEvent } from "../types/models";
+import { App } from "@shared/app";
 
 export interface IDataRepo {
   // Lifecycle
@@ -30,4 +31,10 @@ export interface IDataRepo {
   // Exports
   startExport(): Promise<void>;
   listDataIo(): Promise<DataIo[]>;
+
+  // Apps
+  listApps(): Promise<App[]>;
+  createApp(name: string): Promise<void>;
+  updateApp(id: string, name: string): Promise<void>;
+  deleteApp(id: string): Promise<void>;
 }

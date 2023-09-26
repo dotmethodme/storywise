@@ -15,6 +15,7 @@ import { v4 } from "uuid";
 import { WebEvent } from "../types/models";
 import { getDaysAgo } from "../utils/date";
 import { IDataRepo } from "./types";
+import { App } from "@shared/app";
 
 export class PostgresRepo implements IDataRepo {
   public sql: postgres.Sql;
@@ -215,5 +216,23 @@ export class PostgresRepo implements IDataRepo {
   async listDataIo() {
     const results: DataIo[] = await this.sql`select * from data_io`;
     return results;
+  }
+
+  public async listApps() {
+    const result: App[] = await this.sql`select * from apps`;
+    return result;
+  }
+
+  public async createApp(name: string) {
+    const id = v4();
+    await this.sql`insert into apps (id, name) values (${id}, ${name})`;
+  }
+
+  public async updateApp(id: string, name: string) {
+    await this.sql`update apps set name = ${name} where id = ${id}`;
+  }
+
+  public async deleteApp(id: string) {
+    await this.sql`delete from apps where id = ${id}`;
   }
 }

@@ -4,11 +4,15 @@ import { onMounted } from "vue";
 import { RouterView } from "vue-router";
 import { getSiteConfig } from "@/service/data";
 import { useGlobalStore } from "@/stores/global";
+import { storeToRefs } from "pinia";
+import AppsDropdown from "./components/AppsDropdown.vue";
 
 const store = useGlobalStore();
+const { apps, activeApp } = storeToRefs(store);
 
 onMounted(async () => {
   store.siteConfig = await getSiteConfig();
+  store.fetchApps();
 });
 </script>
 
@@ -22,7 +26,11 @@ onMounted(async () => {
           </div>
           <div class="text-gray-400 text-2xl tracking-tight">simple analytics</div>
         </div>
-        <Menu></Menu>
+
+        <div class="flex gap-2" v-if="apps">
+          <AppsDropdown />
+          <Menu></Menu>
+        </div>
       </div>
 
       <RouterView />

@@ -9,6 +9,7 @@ import type {
   UserAgentQueryKeys,
   CountByKeyValue,
 } from "@shared/types";
+import type { App } from "@shared/app";
 
 export async function getSessions(days = 30) {
   const res = await axios.get<SessionItem[]>(`/admin/api/sessions_per_day?days=${days}`);
@@ -45,13 +46,30 @@ export async function getStats(days = 30) {
   return res.data;
 }
 
+export async function getSessionCountByUserAgent(key: UserAgentQueryKeys, days = 30) {
+  const url = `/admin/api/count_sessions_by_user_agent?days=${days}&key=${key}`;
+  const res = await axios.get<CountByKeyValue[]>(url);
+  return res.data;
+}
+
 export async function getSiteConfig() {
   const res = await axios.get<SiteConfig>(`/admin/api/config`);
   return res.data;
 }
 
-export async function getSessionCountByUserAgent(key: UserAgentQueryKeys, days = 30) {
-  const url = `/admin/api/count_sessions_by_user_agent?days=${days}&key=${key}`;
-  const res = await axios.get<CountByKeyValue[]>(url);
+export async function getApps() {
+  const res = await axios.get<App[]>(`/admin/api/apps`);
   return res.data;
+}
+
+export async function createApp(name: string) {
+  await axios.post(`/admin/api/apps`, { name });
+}
+
+export async function updateApp(id: number, name: string) {
+  await axios.put(`/admin/api/apps`, { id, name });
+}
+
+export async function deleteApp(id: number) {
+  await axios.delete(`/admin/api/apps`, { data: { id } });
 }

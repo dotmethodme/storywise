@@ -18,6 +18,7 @@ import {
 } from "./routes/counts";
 import { healthCheckHandler, siteConfigHandler, getHeadersHandler, getJsFileHandler } from "./routes/misc";
 import { startExportHandler } from "./routes/dataIO";
+import * as appHandlers from "./routes/app";
 
 const isLocalEnv = process.env.NODE_ENV === "local";
 
@@ -25,18 +26,23 @@ export function getApp() {
   const frontendPath = "dist-frontend";
   const app = express();
 
+  // Middleware
   app.use(cookieParser());
   app.use(morgan("dev"));
   app.use(cors({ origin: config.ALLOWED_ORIGIN, credentials: true }));
   app.use(express.json());
 
+  // Basic
   app.get("/", (_, res) => res.redirect("/admin"));
   app.get("/health", healthCheckHandler);
+  app.get("/api/headers", getHeadersHandler);
 
+  // Events
   app.post("/api/event", createEventHandler);
   app.get("/api/event", cors(), getEventHandler);
   app.options("/api/event", cors());
 
+  // Counts
   app.get("/admin/api/sessions_per_day", authMiddleware, getSessionsPerDayHandler);
   app.get("/admin/api/hits_per_page", authMiddleware, getHitsPerPageHandler);
   app.get("/admin/api/unique_sessions_per_page", getUniqueSessionsPerPageHandler);
@@ -45,11 +51,22 @@ export function getApp() {
   app.get("/admin/api/count_sessions_by_user_agent", authMiddleware, getCountSessionsByUserAgentHandler);
   app.get("/admin/api/stats", authMiddleware, getStatsHandler);
   app.get("/admin/api/config", authMiddleware, siteConfigHandler);
+
+  // Export
   app.get("/admin/api/export/start", authMiddleware, startExportHandler);
   app.get("/admin/api/export/check", authMiddleware, () => {});
   app.get("/admin/api/export/download/:id", authMiddleware, () => {});
+
+  // Apps
+  app.get("/admin/api/apps", authMiddleware, appHandlers.list);
+  app.post("/admin/api/apps", authMiddleware, appHandlers.create);
+  app.put("/admin/api/apps", authMiddleware, appHandlers.update);
+  app.delete("/admin/api/apps", authMiddleware, appHandlers.remove);
+
+  // Auth
   app.get("/login/:token", jwtAuthMiddleware);
 
+  // Frontend
   if (isLocalEnv) {
     app.get("/admin", authMiddleware, proxy("localhost:5173"));
     app.get("/admin/*", authMiddleware, proxy("localhost:5173"));
@@ -57,7 +74,7 @@ export function getApp() {
     app.use("/admin", authMiddleware, express.static(frontendPath));
   }
 
-  app.get("/api/headers", getHeadersHandler);
+  // Scripts
   app.get("/js/script.js", getJsFileHandler);
 
   return app;
