@@ -1,12 +1,13 @@
 // @ts-check
 // track an event by sending a POST request to the /api/event endpoint
 var storywise = {
+  appId: "{{APP_ID}}",
   base: "{{API_BASE_URL}}",
   pageview,
 };
 
 function pageview() {
-  const url = `${storywise.base}/api/event`;
+  const url = `${storywise.base}/api/event?app_id=${storywise.appId}`;
 
   const referrer = document.referrer;
 

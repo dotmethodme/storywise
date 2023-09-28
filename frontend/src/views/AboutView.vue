@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import { useGlobalStore } from "@/stores/global";
+import { storeToRefs } from "pinia";
 
 const url = window.location.origin;
 
 const store = useGlobalStore();
+const { activeAppId } = storeToRefs(store);
 </script>
 
 <template>
@@ -18,7 +20,7 @@ const store = useGlobalStore();
     &lt;html lang="en"&gt;
         &lt;head&gt;
             ...
-            <code  class="text-green-300">&lt;script defer async src="{{ url }}/js/script.js"&gt;&lt;/script&gt;</code>
+            <code  class="text-green-300">&lt;script defer async src="{{ url }}/js/script.js?app_id={{activeAppId}}"&gt;&lt;/script&gt;</code>
         &lt;/head&gt;
         &lt;body&gt;
             ...

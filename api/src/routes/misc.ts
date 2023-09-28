@@ -4,7 +4,8 @@ import { getAnalyticsCode } from "../utils/analyticScript";
 import { config } from "../utils/config";
 
 export async function getJsFileHandler(req: Request, res: Response) {
-  const fileContent = await getAnalyticsCode();
+  const appId = req.query.appId as string;
+  const fileContent = await getAnalyticsCode(appId);
   res.setHeader("Content-Type", "application/javascript");
   res.end(fileContent);
 }

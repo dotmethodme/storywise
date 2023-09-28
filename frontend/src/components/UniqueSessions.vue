@@ -9,10 +9,12 @@ import {
 import { useGlobalStore } from "@/stores/global";
 import { countryMap } from "@/utils/countries";
 import type { CountByCountry, CountByKeyValue, CountByReferrer, CountHitsPerPage } from "@shared/types";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import TableBlock from "./TableBlock.vue";
+import { storeToRefs } from "pinia";
 
 const store = useGlobalStore();
+const { activeAppId, selectedDays } = storeToRefs(store);
 
 const sessions = ref<CountHitsPerPage[]>([]);
 const hits = ref<CountHitsPerPage[]>([]);
@@ -23,16 +25,16 @@ const countByOsName = ref<CountByKeyValue[]>([]);
 const countByDeviceType = ref<CountByKeyValue[]>([]);
 const countByDeviceBrand = ref<CountByKeyValue[]>([]);
 
-async function fetchData(days: number) {
+async function fetchData(activeAppId: string, days: number) {
   const results = await Promise.all([
-    getUniqueSessionsPerPage(days),
-    getHitsPerPage(days),
-    getTopReferrers(days),
-    getUniqueVisitorsByCountry(days),
-    getSessionCountByUserAgent("client_name", days),
-    getSessionCountByUserAgent("os_name", days),
-    getSessionCountByUserAgent("device_type", days),
-    getSessionCountByUserAgent("device_brand", days),
+    getUniqueSessionsPerPage(activeAppId, days),
+    getHitsPerPage(activeAppId, days),
+    getTopReferrers(activeAppId, days),
+    getUniqueVisitorsByCountry(activeAppId, days),
+    getSessionCountByUserAgent(activeAppId, "client_name", days),
+    getSessionCountByUserAgent(activeAppId, "os_name", days),
+    getSessionCountByUserAgent(activeAppId, "device_type", days),
+    getSessionCountByUserAgent(activeAppId, "device_brand", days),
   ]);
   sessions.value = results[0];
   hits.value = results[1];
@@ -61,8 +63,8 @@ const tableDeviceBrand = computed(() =>
   countByDeviceBrand.value.map((x) => ({ key: x.value, value: x.count }))
 );
 
-onMounted(() => fetchData(store.selectedDays));
-store.$subscribe((_, { selectedDays }) => fetchData(selectedDays));
+onMounted(() => fetchData(activeAppId.value, selectedDays.value));
+watch([activeAppId, selectedDays], ([activeAppId, selectedDays]) => fetchData(activeAppId, selectedDays));
 </script>
 <template>
   <div>

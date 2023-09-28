@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import router from "@/router";
 import { createApp } from "@/service/data";
 import { useGlobalStore } from "@/stores/global";
 import { storeToRefs } from "pinia";
@@ -23,6 +24,16 @@ async function createAppHandler() {
   creating.value = false;
   showDialog.value = false;
 }
+
+function changeApp(appId: string) {
+  router.push({
+    path: `/${appId}`,
+  });
+  showDialog.value = false;
+  if (document.activeElement) {
+    (document.activeElement as HTMLElement).blur();
+  }
+}
 </script>
 <template>
   <div class="dropdown dropdown-bottom dropdown-end">
@@ -39,7 +50,9 @@ async function createAppHandler() {
     </label>
     <ul tabindex="0" class="dropdown-content z-10 menu p-2 shadow bg-base-100 rounded-box w-52">
       <li v-for="item in apps">
-        <a :class="{ focus: route.params.appId === item.id }" :href="`#/${item.id}`">{{ item.name }}</a>
+        <button :class="{ focus: route.params.appId === item.id }" @click="() => changeApp(item.id)">
+          {{ item.name }}
+        </button>
       </li>
       <li>
         <button @click="showDialog = true">

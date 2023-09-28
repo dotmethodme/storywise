@@ -11,7 +11,7 @@ export const useGlobalStore = defineStore("global", () => {
   const selectedDays = ref(30);
   const siteConfig = ref<SiteConfig>();
   const apps = ref<App[]>();
-  const activeAppId = computed(() => route.params.appId);
+  const activeAppId = computed(() => route.params.appId as string);
   const activeApp = computed(() => apps.value?.find((app) => app.id === activeAppId.value));
 
   watch([activeAppId, apps], ([appId, apps]) => {
@@ -24,5 +24,5 @@ export const useGlobalStore = defineStore("global", () => {
     apps.value = await getApps();
   }
 
-  return { selectedDays, siteConfig, apps, fetchApps, activeApp };
+  return { selectedDays, siteConfig, apps, fetchApps, activeApp, activeAppId };
 });
