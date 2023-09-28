@@ -41,7 +41,6 @@ async function createAppHandler() {
       <li v-for="item in apps">
         <a :class="{ focus: route.params.appId === item.id }" :href="`#/${item.id}`">{{ item.name }}</a>
       </li>
-      <!-- create -->
       <li>
         <button @click="showDialog = true">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
