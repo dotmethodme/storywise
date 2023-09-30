@@ -3,7 +3,7 @@ import { getSessions } from "@/service/data";
 import { useGlobalStore } from "@/stores/global";
 import * as echarts from "echarts";
 import { storeToRefs } from "pinia";
-import { onMounted, ref, watch } from "vue";
+import { onMounted, onUnmounted, ref, watch } from "vue";
 
 const chartEl = ref<HTMLElement>();
 const chartObj = ref<echarts.ECharts>();
@@ -17,6 +17,10 @@ async function render(activeAppId: string, selectedDays: number) {
   }
 
   const data = await getSessions(activeAppId, selectedDays);
+
+  if (data.length === 0) {
+    return;
+  }
 
   const option: echarts.EChartsOption = {
     xAxis: {
@@ -56,6 +60,7 @@ async function render(activeAppId: string, selectedDays: number) {
 }
 
 onMounted(async () => render(store.activeAppId, store.selectedDays));
+onUnmounted(() => chartObj.value?.dispose());
 watch([activeAppId, selectedDays], ([activeAppId, selectedDays]) => render(activeAppId, selectedDays));
 </script>
 
