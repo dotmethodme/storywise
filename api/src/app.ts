@@ -16,7 +16,13 @@ import {
   getCountSessionsByUserAgentHandler,
   getStatsHandler,
 } from "./routes/counts";
-import { healthCheckHandler, siteConfigHandler, getHeadersHandler, getJsFileHandler } from "./routes/misc";
+import {
+  healthCheckHandler,
+  siteConfigHandler,
+  getHeadersHandler,
+  getJsFileHandler,
+  hasEventsHandler,
+} from "./routes/misc";
 import { startExportHandler } from "./routes/dataIO";
 import * as appHandlers from "./routes/app";
 
@@ -51,6 +57,7 @@ export function getApp() {
   app.get("/admin/api/count_sessions_by_user_agent", authMiddleware, getCountSessionsByUserAgentHandler);
   app.get("/admin/api/stats", authMiddleware, getStatsHandler);
   app.get("/admin/api/config", authMiddleware, siteConfigHandler);
+  app.get("/admin/api/has-events", authMiddleware, hasEventsHandler);
 
   // Export
   app.get("/admin/api/export/start", authMiddleware, startExportHandler);

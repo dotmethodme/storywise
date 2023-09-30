@@ -2,6 +2,7 @@ import { UserAgentQueryKeys } from "@shared/types";
 import { Request, Response } from "express";
 import { getDataRepo } from "../repository/repo";
 import { isUserAgentQueryKey } from "../utils/guards";
+import { parseDays, parseAppId } from "../utils/queryParsers";
 
 export async function getSessionsPerDayHandler(req: Request, res: Response) {
   try {
@@ -99,22 +100,4 @@ export async function getCountSessionsByUserAgentHandler(
     console.error(err);
     res.status(500).json({ message: "Internal server error" });
   }
-}
-
-function parseDays(req: Request): number {
-  const { days } = req.query;
-  if (days && typeof days === "string" && !isNaN(parseInt(days))) {
-    return parseInt(days);
-  }
-
-  return 30;
-}
-
-function parseAppId(req: Request): string {
-  const { appId } = req.query;
-  if (appId && typeof appId === "string") {
-    return appId;
-  }
-
-  throw new Error("Invalid appId");
 }

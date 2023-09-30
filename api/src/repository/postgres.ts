@@ -155,7 +155,11 @@ export class PostgresRepo implements IDataRepo {
     return response;
   }
 
-  async hasAnyEvents() {
+  async hasAnyEvents(appId?: string) {
+    if (appId) {
+      const result = await this.sql`select 1 from events where app_id = ${appId} limit 1`;
+      return result.length > 0;
+    }
     const result = await this.sql`select 1 from events limit 1`;
     return result.length > 0;
   }

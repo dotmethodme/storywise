@@ -70,7 +70,7 @@ function changeApp(appId: string) {
     <dialog class="modal modal-bottom sm:modal-middle" :class="showDialog ? 'modal-open' : ''">
       <form method="dialog" class="modal-box max-h-max m-auto">
         <h1 class="text-2xl mb-4 serif tracking-tight">Create a new app</h1>
-        <input type="text" class="input input-bordered w-full" placeholder="App name" v-model="name" />
+        <input type="text" class="input input-bordered w-full" placeholder="example.com" v-model="name" />
 
         <div>
           <button class="btn btn-primary mt-4 w-full" @click="createAppHandler">

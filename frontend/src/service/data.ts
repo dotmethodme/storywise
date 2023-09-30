@@ -8,6 +8,7 @@ import type {
   CountByCountry,
   UserAgentQueryKeys,
   CountByKeyValue,
+  HasEvents,
 } from "@shared/types";
 import type { App } from "@shared/app";
 
@@ -54,6 +55,11 @@ export async function getSessionCountByUserAgent(appId: string, key: UserAgentQu
 
 export async function getSiteConfig() {
   const res = await axios.get<SiteConfig>(`/admin/api/config`);
+  return res.data;
+}
+
+export async function hasEvents(appId?: string) {
+  const res = await axios.get<HasEvents>(`/admin/api/has-events${appId ? `?appId=${appId}` : ""}`);
   return res.data;
 }
 

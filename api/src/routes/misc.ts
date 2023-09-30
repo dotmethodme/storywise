@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { getDataRepo } from "../repository/repo";
 import { getAnalyticsCode } from "../utils/analyticScript";
 import { config } from "../utils/config";
+import { parseAppId } from "../utils/queryParsers";
 
 export async function getJsFileHandler(req: Request, res: Response) {
   const appId = req.query.appId as string;
@@ -19,6 +20,18 @@ export async function siteConfigHandler(req: Request, res: Response) {
       allowedOrigin: config.ALLOWED_ORIGIN,
       apiBaseUrl: config.API_BASE_URL,
     });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+export async function hasEventsHandler(req: Request, res: Response) {
+  try {
+    const appId = parseAppId(req);
+    const hasEvents = await getDataRepo().hasAnyEvents(appId);
+
+    res.json({ hasEvents });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Internal server error" });

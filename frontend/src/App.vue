@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Menu from "@/components/Menu.vue";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { RouterView } from "vue-router";
 import { getSiteConfig } from "@/service/data";
 import { useGlobalStore } from "@/stores/global";
@@ -8,11 +8,13 @@ import { storeToRefs } from "pinia";
 import AppsDropdown from "./components/AppsDropdown.vue";
 
 const store = useGlobalStore();
-const { apps, activeApp } = storeToRefs(store);
+const { apps } = storeToRefs(store);
+const loadingSiteConfig = ref(false);
 
 onMounted(async () => {
   store.siteConfig = await getSiteConfig();
   store.fetchApps();
+  loadingSiteConfig.value = true;
 });
 </script>
 
@@ -33,7 +35,12 @@ onMounted(async () => {
         </div>
       </div>
 
-      <RouterView />
+      <template v-if="store.siteConfig">
+        <RouterView />
+      </template>
+      <template v-else-if="loadingSiteConfig">
+        <span class="loading loading-spinner loading-md"></span>
+      </template>
     </div>
   </div>
 </template>

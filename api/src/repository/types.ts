@@ -16,7 +16,7 @@ export interface IDataRepo {
   connect(): Promise<void>;
   disconnect(): Promise<void>;
   // Events
-  hasAnyEvents(): Promise<boolean>;
+  hasAnyEvents(appId?: string): Promise<boolean>;
   createEvent(event: WebEvent): Promise<void>;
 
   // Stats and counts
