@@ -12,23 +12,20 @@ const { apps, activeApp } = storeToRefs(store);
 
 const showDialog = ref(false);
 const creating = ref(false);
-const name = ref("");
+const deleteName = ref("");
 
 async function createAppHandler() {
   creating.value = true;
-
-  await createApp(name.value);
-
-  store.fetchApps();
-
+  await createApp(deleteName.value);
+  await store.fetchApps();
   creating.value = false;
   showDialog.value = false;
+  const lastApp = apps.value?.[apps.value.length - 1];
+  router.push({ path: `/${lastApp?.id || ""}` });
 }
 
 function changeApp(appId: string) {
-  router.push({
-    path: `/${appId}`,
-  });
+  router.push({ path: `/${appId}` });
   showDialog.value = false;
   if (document.activeElement) {
     (document.activeElement as HTMLElement).blur();
@@ -62,15 +59,22 @@ function changeApp(appId: string) {
               d="M4 20q-.825 0-1.413-.588T2 18V6q0-.825.588-1.413T4 4h5.175q.4 0 .763.15t.637.425L12 6h8q.825 0 1.413.588T22 8v10q0 .825-.588 1.413T20 20H4Zm0-2h16V8h-8.825l-2-2H4v12Zm0 0V6v12Zm10-4v1q0 .425.288.713T15 16q.425 0 .713-.288T16 15v-1h1q.425 0 .713-.288T18 13q0-.425-.288-.713T17 12h-1v-1q0-.425-.288-.713T15 10q-.425 0-.713.288T14 11v1h-1q-.425 0-.713.288T12 13q0 .425.288.713T13 14h1Z"
             />
           </svg>
-          Create new app
+          Create new site
         </button>
       </li>
     </ul>
 
     <dialog class="modal modal-bottom sm:modal-middle" :class="showDialog ? 'modal-open' : ''">
       <form method="dialog" class="modal-box max-h-max m-auto">
-        <h1 class="text-2xl mb-4 serif tracking-tight">Create a new app</h1>
-        <input type="text" class="input input-bordered w-full" placeholder="example.com" v-model="name" />
+        <h1 class="text-2xl mb-4 serif tracking-tight">Create new site</h1>
+        <p class="mb-4">Type in the name of the new site to get started</p>
+
+        <input
+          type="text"
+          class="input input-bordered w-full"
+          placeholder="example.com"
+          v-model="deleteName"
+        />
 
         <div>
           <button class="btn btn-primary mt-4 w-full" @click="createAppHandler">

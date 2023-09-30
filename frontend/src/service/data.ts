@@ -72,10 +72,10 @@ export async function createApp(name: string) {
   await axios.post(`/admin/api/apps`, { name });
 }
 
-export async function updateApp(id: number, name: string) {
+export async function updateApp(id: string, name: string) {
   await axios.put(`/admin/api/apps`, { id, name });
 }
 
-export async function deleteApp(id: number) {
+export async function deleteApp(id: string) {
   await axios.delete(`/admin/api/apps`, { data: { id } });
 }
