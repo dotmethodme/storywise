@@ -6,8 +6,8 @@ const route = useRoute();
 
 <template>
   <div class="text-right">
-    <ul class="menu md:menu-horizontal bg-base-200 rounded-box">
-      <li>
+    <ul class="menu md:menu-horizontal bg-base-200 rounded-xl">
+      <li class="rounded-xl">
         <a :href="`#/${route.params.appId}`">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -25,7 +25,7 @@ const route = useRoute();
           </svg>
         </a>
       </li>
-      <li>
+      <li class="rounded-xl">
         <a :href="`#/${route.params.appId}/about`">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -41,6 +41,8 @@ const route = useRoute();
               d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
+
+          Options
         </a>
       </li>
     </ul>
