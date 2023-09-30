@@ -227,7 +227,7 @@ export class PostgresRepo implements IDataRepo {
 
   public async createApp(name: string) {
     const id = this.uid.randomUUID();
-    await this.sql`insert into apps (id, name) values (${id}, ${name})`;
+    await this.sql`insert into apps (id, name, urls) values (${id}, ${name}, ${""})`;
   }
 
   public async updateApp(id: string, name: string) {

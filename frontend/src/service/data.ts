@@ -13,42 +13,42 @@ import type {
 import type { App } from "@shared/app";
 
 export async function getSessions(appId: string, days = 30) {
-  const res = await axios.get<SessionItem[]>(`/admin/api/sessions_per_day?days=${days}&appId=${appId}`);
+  const res = await axios.get<SessionItem[]>(`/admin/api/sessions_per_day?days=${days}&app_id=${appId}`);
   return res.data;
 }
 
 export async function getUniqueSessionsPerPage(appId: string, days = 30) {
-  const url = `/admin/api/unique_sessions_per_page?days=${days}&appId=${appId}`;
+  const url = `/admin/api/unique_sessions_per_page?days=${days}&app_id=${appId}`;
   const res = await axios.get<CountHitsPerPage[]>(url);
   return res.data;
 }
 
 export async function getHitsPerPage(appId: string, days = 30) {
-  const url = `/admin/api/hits_per_page?days=${days}&appId=${appId}`;
+  const url = `/admin/api/hits_per_page?days=${days}&app_id=${appId}`;
   const res = await axios.get<CountHitsPerPage[]>(url);
   return res.data;
 }
 
 export async function getTopReferrers(appId: string, days = 30) {
-  const url = `/admin/api/top_referrers?days=${days}&appId=${appId}`;
+  const url = `/admin/api/top_referrers?days=${days}&app_id=${appId}`;
   const res = await axios.get<CountByReferrer[]>(url);
   return res.data;
 }
 
 export async function getUniqueVisitorsByCountry(appId: string, days = 30) {
-  const url = `/admin/api/unique_sessions_by_country?days=${days}&appId=${appId}`;
+  const url = `/admin/api/unique_sessions_by_country?days=${days}&app_id=${appId}`;
   const res = await axios.get<CountByCountry[]>(url);
   return res.data;
 }
 
 export async function getStats(appId: string, days = 30) {
-  const url = `/admin/api/stats?days=${days}&appId=${appId}`;
+  const url = `/admin/api/stats?days=${days}&app_id=${appId}`;
   const res = await axios.get<Stats>(url);
   return res.data;
 }
 
 export async function getSessionCountByUserAgent(appId: string, key: UserAgentQueryKeys, days = 30) {
-  const url = `/admin/api/count_sessions_by_user_agent?days=${days}&appId=${appId}&key=${key}`;
+  const url = `/admin/api/count_sessions_by_user_agent?days=${days}&app_id=${appId}&key=${key}`;
   const res = await axios.get<CountByKeyValue[]>(url);
   return res.data;
 }
@@ -59,7 +59,7 @@ export async function getSiteConfig() {
 }
 
 export async function hasEvents(appId?: string) {
-  const res = await axios.get<HasEvents>(`/admin/api/has-events${appId ? `?appId=${appId}` : ""}`);
+  const res = await axios.get<HasEvents>(`/admin/api/has-events${appId ? `?app_id=${appId}` : ""}`);
   return res.data;
 }
 

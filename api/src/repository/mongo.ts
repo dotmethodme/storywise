@@ -15,12 +15,14 @@ import { getDaysAgo } from "../utils/date";
 import { v4 } from "uuid";
 import fs from "fs/promises";
 import { file } from "tmp-promise";
+import { App } from "@shared/app";
 
 export const databaseName = process.env.DATABASE_NAME || "analytics";
 export const cols = {
   events: "events",
   migrations: "migrations",
   data_io: "data_io",
+  apps: "apps",
 };
 
 export class MongoRepo implements IDataRepo {
@@ -37,13 +39,15 @@ export class MongoRepo implements IDataRepo {
     await this.client.db(databaseName).collection(cols.events).insertOne(event);
   }
 
-  async getSessionCountByUserAgent(key: UserAgentQueryKeys, numberOfDays = 30) {
-    const results = await this.client
-      .db(databaseName)
+  async getSessionCountByUserAgent(app_id: string, key: UserAgentQueryKeys, numberOfDays = 30) {
+    const results = await this.db()
       .collection(cols.events)
       .aggregate<CountByKeyValue>([
         {
-          $match: { timestamp: { $gte: getDaysAgo(numberOfDays) } },
+          $match: {
+            timestamp: { $gte: getDaysAgo(numberOfDays) },
+            app_id,
+          },
         },
         {
           $group: {
@@ -72,16 +76,14 @@ export class MongoRepo implements IDataRepo {
     return results;
   }
 
-  async getSessionsPerDay(numberOfDays = 30) {
-    const startDate = new Date(new Date().getTime() - numberOfDays * 24 * 60 * 60 * 1000);
-    const endDate = new Date();
-    const results = await this.client
-      .db(databaseName)
+  async getSessionsPerDay(app_id: string, numberOfDays = 30) {
+    const results = await this.db()
       .collection(cols.events)
       .aggregate<SessionItem>([
         {
           $match: {
-            timestamp: { $gte: startDate, $lt: endDate },
+            timestamp: { $gte: getDaysAgo(numberOfDays) },
+            app_id,
           },
         },
         {
@@ -121,16 +123,14 @@ export class MongoRepo implements IDataRepo {
     return results;
   }
 
-  async getHitsPerPage(numberOfDays = 30) {
-    const startDate = new Date(new Date().getTime() - numberOfDays * 24 * 60 * 60 * 1000);
-    const endDate = new Date();
-    const results = await this.client
-      .db(databaseName)
+  async getHitsPerPage(app_id: string, numberOfDays = 30) {
+    const results = await this.db()
       .collection(cols.events)
       .aggregate<CountHitsPerPage>([
         {
           $match: {
-            timestamp: { $gte: startDate, $lt: endDate },
+            timestamp: { $gte: getDaysAgo(numberOfDays) },
+            app_id,
           },
         },
         {
@@ -157,16 +157,14 @@ export class MongoRepo implements IDataRepo {
     return results;
   }
 
-  async getUniqueSessionsPerPage(numberOfDays = 30) {
-    const startDate = new Date(new Date().getTime() - numberOfDays * 24 * 60 * 60 * 1000);
-    const endDate = new Date();
-    const results = await this.client
-      .db(databaseName)
+  async getUniqueSessionsPerPage(app_id: string, numberOfDays = 30) {
+    const results = await this.db()
       .collection(cols.events)
       .aggregate<CountHitsPerPage>([
         {
           $match: {
-            timestamp: { $gte: startDate, $lt: endDate },
+            timestamp: { $gte: getDaysAgo(numberOfDays) },
+            app_id,
           },
         },
         {
@@ -199,17 +197,14 @@ export class MongoRepo implements IDataRepo {
     return results;
   }
 
-  async getTopReferrers(number_of_days = 30) {
-    const startDate = new Date(new Date().getTime() - number_of_days * 24 * 60 * 60 * 1000);
-    const endDate = new Date();
-
-    const results = await this.client
-      .db(databaseName)
+  async getTopReferrers(app_id: string, numberOfDays = 30) {
+    const results = await this.db()
       .collection(cols.events)
       .aggregate<CountByReferrer>([
         {
           $match: {
-            timestamp: { $gte: startDate, $lt: endDate },
+            timestamp: { $gte: getDaysAgo(numberOfDays) },
+            app_id,
           },
         },
         {
@@ -236,17 +231,14 @@ export class MongoRepo implements IDataRepo {
     return results;
   }
 
-  async getUniqueSessionsByCountry(number_of_days = 30) {
-    const startDate = new Date(new Date().getTime() - number_of_days * 24 * 60 * 60 * 1000);
-    const endDate = new Date();
-
-    const results = await this.client
-      .db(databaseName)
+  async getUniqueSessionsByCountry(app_id: string, numberOfDays = 30) {
+    const results = await this.db()
       .collection(cols.events)
       .aggregate<CountByCountry>([
         {
           $match: {
-            timestamp: { $gte: startDate, $lt: endDate },
+            timestamp: { $gte: getDaysAgo(numberOfDays) },
+            app_id,
           },
         },
         {
@@ -278,35 +270,29 @@ export class MongoRepo implements IDataRepo {
     return results;
   }
 
-  async getStats(number_of_days = 30) {
-    const startDate = new Date(new Date().getTime() - number_of_days * 24 * 60 * 60 * 1000);
-    const endDate = new Date();
-
+  async getStats(app_id: string, numberOfDays = 30) {
     const [uniqueVisitors, totalPageviews, viewsPerVisitor] = await Promise.all([
-      this.client
-        .db(databaseName)
+      this.db()
         .collection(cols.events)
         .aggregate<Stats[]>([
-          { $match: { timestamp: { $gte: startDate, $lt: endDate } } },
+          { $match: { timestamp: { $gte: getDaysAgo(numberOfDays) }, app_id } },
           { $group: { _id: "$session_id" } },
           { $count: "uniqueVisitors" },
           { $project: { _id: 0 } },
         ])
         .toArray(),
-      this.client
-        .db(databaseName)
+      this.db()
         .collection(cols.events)
         .aggregate<Stats[]>([
-          { $match: { timestamp: { $gte: startDate, $lt: endDate } } },
+          { $match: { timestamp: { $gte: getDaysAgo(numberOfDays) }, app_id } },
           { $count: "path" },
           { $project: { _id: 0, totalPageviews: "$path" } },
         ])
         .toArray(),
-      this.client
-        .db(databaseName)
+      this.db()
         .collection(cols.events)
         .aggregate<Stats>([
-          { $match: { timestamp: { $gte: startDate, $lt: endDate } } },
+          { $match: { timestamp: { $gte: getDaysAgo(numberOfDays) }, app_id } },
           { $group: { _id: "$session_id", count: { $sum: 1 } } },
           { $group: { _id: null, viewsPerVisitor: { $avg: "$count" } } },
           { $project: { _id: 0 } },
@@ -389,5 +375,25 @@ export class MongoRepo implements IDataRepo {
   async listDataIo() {
     const results = await this.db().collection(cols.data_io).find<DataIo>({}).toArray();
     return results;
+  }
+
+  async listApps() {
+    return this.db().collection(cols.apps).find<App>({}).toArray();
+  }
+
+  async createApp(name: string) {
+    await this.db()
+      .collection(cols.apps)
+      .insertOne({ id: v4(), name, created_at: new Date(), updated_at: new Date(), urls: "" });
+  }
+
+  async updateApp(id: string, name: string) {
+    await this.db()
+      .collection(cols.apps)
+      .updateOne({ id }, { $set: { name, updated_at: new Date() } });
+  }
+
+  async deleteApp(id: string) {
+    await this.db().collection(cols.apps).deleteOne({ id });
   }
 }

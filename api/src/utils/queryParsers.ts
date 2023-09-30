@@ -10,10 +10,10 @@ export function parseDays(req: Request): number {
 }
 
 export function parseAppId(req: Request): string {
-  const { appId } = req.query;
-  if (appId && typeof appId === "string") {
-    return appId;
+  const { app_id } = req.query;
+  if (app_id && typeof app_id === "string") {
+    return app_id;
   }
 
-  throw new Error("Invalid appId");
+  throw new Error("Invalid app_id");
 }

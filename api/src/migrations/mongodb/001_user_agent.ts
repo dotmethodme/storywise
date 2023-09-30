@@ -1,13 +1,13 @@
-import { IResult } from "ua-parser-js";
 import DeviceDetector from "device-detector-js";
 import { ObjectId, UpdateOneModel } from "mongodb";
-import { uaParserToModel } from "../../utils/extractEvent";
-import { getMongoRepo } from "../../repository/repo";
+import { IResult } from "ua-parser-js";
 import { cols } from "../../repository/mongo";
-
-const deviceDetector = new DeviceDetector();
+import { getMongoRepo } from "../../repository/repo";
+import { uaParserToModel } from "../../utils/extractEvent";
 
 async function migrate() {
+  const deviceDetector = new DeviceDetector();
+
   const db = getMongoRepo().db();
   const events = db
     .collection(cols.events)

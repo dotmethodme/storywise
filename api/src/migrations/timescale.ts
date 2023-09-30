@@ -27,7 +27,7 @@ export async function migrateTimescaleDB() {
         await migration();
         await acknowledgeMigration(key, "success");
       } catch (error) {
-        console.error(error);
+        console.error(`Migration ${key} failed: `, error);
         await acknowledgeMigration(key, "failed");
       }
 

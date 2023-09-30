@@ -14,8 +14,8 @@ async function migrate(): Promise<boolean> {
   `;
 
   await sql`
-    INSERT INTO apps (id, name)
-    VALUES ('default', 'Default')
+    INSERT INTO apps (id, name, urls)
+    VALUES ('default', 'Default', '')
     ON CONFLICT (id) DO NOTHING
   `;
 
