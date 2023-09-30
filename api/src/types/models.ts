@@ -8,6 +8,7 @@ export type EventCreateRequest = {
 };
 
 export type WebEvent = {
+  app_id: string;
   session_id: string;
   path: string;
   timestamp: Date;
