@@ -13,7 +13,7 @@ onMounted(async () => {
 watch([appsLoading, apps], () => {
   if (appsLoading.value || subscriptionLoading.value) return;
   if (!subscription.value) return;
-  if (apps.value.length === 0) {
+  if (apps.value.length < 1) {
     router.push("/admin/create");
   }
 });
