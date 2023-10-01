@@ -8,6 +8,7 @@ const deviceDetector = new DeviceDetector();
 export function extractEvent(request: Request): WebEvent {
   let event: WebEvent = {
     session_id: extractSessionId(request),
+    app_id: request.body.app_id,
     path: request.body.path,
     referrer: request.body.referrer,
     screen_width: request.body.screen_width,

@@ -33,6 +33,7 @@
     "mongodb": "^6.0.0",
     "morgan": "^1.10.0",
     "postgres": "^3.3.5",
+    "short-unique-id": "^5.0.3",
     "tmp-promise": "^3.0.3",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.2.2",

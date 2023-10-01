@@ -33,5 +33,7 @@ export default defineEventHandler<Request, Response>(async (event) => {
     },
   });
 
+  $fetch("http://storywise-syncer/refresh").catch(() => {});
+
   return newItem;
 });

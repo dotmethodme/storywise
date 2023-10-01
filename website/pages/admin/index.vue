@@ -6,36 +6,28 @@ definePageMeta({
   layout: "admin",
 });
 
-const result = useFetch<StorywiseApp[]>("/api/admin/app/list");
-
-const list = computed(() => {
-  if (!result.data.value) return;
-  return result.data.value;
-});
-
-const createMessage = computed(() => {
-  if (!result.data.value) return;
-  if (result.data.value.length === 0) {
-    return "Start using storywise by creating a new app. Click here!";
-  }
-  return "If you want to track a new app, click here!";
-});
-
 const route = useRoute();
-
 const adminStore = useAdminStore();
-const { user, subscriptionLoading, subscription } = storeToRefs(adminStore);
+const { apps, user, subscriptionLoading, subscription } = storeToRefs(adminStore);
+
+// const createMessage = computed(() => {
+//   if (!apps.value) return;
+//   if (apps.value.length === 0) {
+//     return "Start using storywise by creating a new app. Click here!";
+//   }
+//   return "If you want to track a new app, click here!";
+// });
 
 const isLoading = computed(() => {
   if (!user.value) return false;
   return route.query.variantId && typeof route.query.variantId === "string";
 });
+adminStore.fetchApps();
 
 onMounted(() => {
-  if (!user.value) return;
   const variantId = route.query.variantId;
   if (!variantId || typeof variantId !== "string") return;
-
+  if (!user.value) return;
   const { email, id } = user.value.profile;
 
   const url = generateUrlByVariantId(variantId, email, id);
@@ -57,11 +49,12 @@ const showPricing = computed(() => {
 <template>
   <h1 class="serif font-bold text-3xl mb-8">Overview</h1>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2-xl:grid-cols-4 select-none gap-4">
-    <NuxtLink :to="`/admin/edit/${item.id}`" v-for="item in list">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 2-xl:grid-cols-3 select-none gap-4">
+    <NuxtLink :to="`/admin/edit/${item.id}`" v-for="item in apps">
       <AdminAppLink :item="item" />
     </NuxtLink>
 
+    <!---
     <NuxtLink to="/admin/create">
       <div class="card bg-base-100 border cursor-pointer hover:shadow-lg h-full">
         <div class="card-body px-6 py-6">
@@ -73,6 +66,7 @@ const showPricing = computed(() => {
         </div>
       </div>
     </NuxtLink>
+    ----->
   </div>
 
   <div v-if="showPricing" class="border rounded-lg mt-4 py-8">

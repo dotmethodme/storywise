@@ -42,6 +42,7 @@ export async function seedDemo(logs = true, userCount = 1000, daysCount = 365) {
       for (let j = 0; j < numberOfEvents; j++) {
         const event = {
           ...user,
+          app_id: "default",
           timestamp: getDaysAgoRandomTime(i),
           path: getRandomPath(),
           screen_width: user.screen_size_temp.width,

@@ -17,7 +17,7 @@ const viewingMore = ref(false);
 <template>
   <div class="card bg-base-100 shadow card-compact">
     <div class="card-body">
-      <table class="table table-compact">
+      <table class="table table-sm">
         <tbody>
           <tr>
             <th class="font-bold">{{ title }}</th>
@@ -42,7 +42,7 @@ const viewingMore = ref(false);
 
   <dialog class="modal modal-bottom sm:modal-middle" :class="viewingMore ? 'modal-open' : ''">
     <form method="dialog" class="modal-box max-h-max m-auto">
-      <table class="table table-compact w-full">
+      <table class="table table-sm w-full">
         <tbody>
           <tr>
             <th class="font-bold">Operating system</th>

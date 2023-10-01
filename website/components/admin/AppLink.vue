@@ -47,10 +47,7 @@ async function handleOpen(e: MouseEvent) {
 <template>
   <div class="card bg-base-100 border cursor-pointer hover:shadow-lg h-full">
     <div class="card-body px-6 py-6">
-      <h2 class="card-title">
-        <Icon size="30px" name="system-uicons:box" />
-        {{ item.name }}
-      </h2>
+      <h2 class="card-title">{{ item.name }}.joinstorywise.com</h2>
       <div class="flex justify-between">
         <div>
           <template v-if="pending && !firstLoad">

@@ -27,6 +27,7 @@ export async function migratePostgres() {
         await migration();
         await acknowledgeMigration(key, "success");
       } catch (error) {
+        console.error(`Migration ${key} failed: `, error);
         await acknowledgeMigration(key, "failed");
       }
 

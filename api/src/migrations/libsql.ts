@@ -30,6 +30,7 @@ export async function migrateLibsql() {
         await migration();
         await acknowledgeMigration(db, key, "success");
       } catch (error) {
+        console.error(`Migration ${key} failed: `, error);
         await acknowledgeMigration(db, key, "failed");
       }
 

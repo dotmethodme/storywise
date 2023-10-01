@@ -2,19 +2,25 @@
 import { getSessions } from "@/service/data";
 import { useGlobalStore } from "@/stores/global";
 import * as echarts from "echarts";
-import { onMounted, ref } from "vue";
+import { storeToRefs } from "pinia";
+import { onMounted, onUnmounted, ref, watch } from "vue";
 
 const chartEl = ref<HTMLElement>();
 const chartObj = ref<echarts.ECharts>();
 const store = useGlobalStore();
+const { activeAppId, selectedDays } = storeToRefs(store);
 
-async function init(days: number | undefined) {
+async function render(activeAppId: string, selectedDays: number) {
   if (!chartEl.value) return;
   if (chartObj.value) {
     chartObj.value.dispose();
   }
 
-  const data = await getSessions(days);
+  const data = await getSessions(activeAppId, selectedDays);
+
+  if (data.length === 0) {
+    return;
+  }
 
   const option: echarts.EChartsOption = {
     xAxis: {
@@ -53,10 +59,9 @@ async function init(days: number | undefined) {
   chartObj.value = chart;
 }
 
-onMounted(async () => init(store.selectedDays));
-store.$subscribe(async (_, { selectedDays }) => {
-  init(selectedDays);
-});
+onMounted(async () => render(store.activeAppId, store.selectedDays));
+onUnmounted(() => chartObj.value?.dispose());
+watch([activeAppId, selectedDays], ([activeAppId, selectedDays]) => render(activeAppId, selectedDays));
 </script>
 
 <template>

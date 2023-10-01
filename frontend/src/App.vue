@@ -1,14 +1,20 @@
 <script setup lang="ts">
 import Menu from "@/components/Menu.vue";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { RouterView } from "vue-router";
 import { getSiteConfig } from "@/service/data";
 import { useGlobalStore } from "@/stores/global";
+import { storeToRefs } from "pinia";
+import AppsDropdown from "./components/AppsDropdown.vue";
 
 const store = useGlobalStore();
+const { apps } = storeToRefs(store);
+const loadingSiteConfig = ref(false);
 
 onMounted(async () => {
   store.siteConfig = await getSiteConfig();
+  store.fetchApps();
+  loadingSiteConfig.value = true;
 });
 </script>
 
@@ -22,10 +28,19 @@ onMounted(async () => {
           </div>
           <div class="text-gray-400 text-2xl tracking-tight">simple analytics</div>
         </div>
-        <Menu></Menu>
+
+        <div class="flex gap-2" v-if="apps">
+          <AppsDropdown />
+          <Menu></Menu>
+        </div>
       </div>
 
-      <RouterView />
+      <template v-if="store.siteConfig">
+        <RouterView />
+      </template>
+      <template v-else-if="loadingSiteConfig">
+        <span class="loading loading-spinner loading-md"></span>
+      </template>
     </div>
   </div>
 </template>

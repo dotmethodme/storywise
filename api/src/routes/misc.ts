@@ -2,9 +2,11 @@ import { Request, Response } from "express";
 import { getDataRepo } from "../repository/repo";
 import { getAnalyticsCode } from "../utils/analyticScript";
 import { config } from "../utils/config";
+import { parseAppId } from "../utils/queryParsers";
 
 export async function getJsFileHandler(req: Request, res: Response) {
-  const fileContent = await getAnalyticsCode();
+  const appId = req.query.appId as string;
+  const fileContent = await getAnalyticsCode(appId);
   res.setHeader("Content-Type", "application/javascript");
   res.end(fileContent);
 }
@@ -24,6 +26,18 @@ export async function siteConfigHandler(req: Request, res: Response) {
   }
 }
 
+export async function hasEventsHandler(req: Request, res: Response) {
+  try {
+    const appId = parseAppId(req);
+    const hasEvents = await getDataRepo().hasAnyEvents(appId);
+
+    res.json({ hasEvents });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
 export async function healthCheckHandler(req: Request, res: Response) {
   try {
     await getDataRepo().hasAnyEvents();
@@ -35,11 +49,5 @@ export async function healthCheckHandler(req: Request, res: Response) {
 }
 
 export async function getHeadersHandler(req: Request, res: Response) {
-  try {
-    console.log(req.headers);
-    res.json(req.headers);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Internal server error" });
-  }
+  res.json(req.headers);
 }

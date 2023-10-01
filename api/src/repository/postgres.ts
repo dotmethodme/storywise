@@ -15,11 +15,17 @@ import { v4 } from "uuid";
 import { WebEvent } from "../types/models";
 import { getDaysAgo } from "../utils/date";
 import { IDataRepo } from "./types";
+import { App } from "@shared/app";
+import ShortUniqueId from "short-unique-id";
 
 export class PostgresRepo implements IDataRepo {
   public sql: postgres.Sql;
 
+  private uid: ShortUniqueId;
+
   constructor(dbUrl = process.env.POSTGRES_URL) {
+    this.uid = new ShortUniqueId({ length: 7 });
+
     if (!dbUrl) {
       throw new Error("POSTGRES_URL is not set");
     }
@@ -42,11 +48,12 @@ export class PostgresRepo implements IDataRepo {
     this.sql = postgres(url, options);
   }
 
-  getSessionCountByUserAgent(key: UserAgentQueryKeys, numberOfDays = 30): Promise<CountByKeyValue[]> {
+  getSessionCountByUserAgent(appId: string, key: UserAgentQueryKeys, numberOfDays = 30): Promise<CountByKeyValue[]> {
     return this.sql<CountByKeyValue[]>`
       SELECT ${key} as key, ${this.sql(key)} as value, COUNT(DISTINCT session_id) as count
       FROM events
       WHERE timestamp >= ${getDaysAgo(numberOfDays).toISOString()}
+      AND app_id = ${appId}
       GROUP BY ${this.sql(key)}
       ORDER BY count DESC, value ASC
     `;
@@ -58,9 +65,7 @@ export class PostgresRepo implements IDataRepo {
     `;
   }
 
-  getSessionsPerDay(numberOfDays = 30) {
-    const startDate = getDaysAgo(numberOfDays || 30);
-    const endDate = new Date();
+  getSessionsPerDay(appId: string, numberOfDays = 30) {
     return this.sql<SessionItem[]>`
       SELECT
         EXTRACT(YEAR FROM timestamp) as year,
@@ -68,84 +73,78 @@ export class PostgresRepo implements IDataRepo {
         EXTRACT(DAY FROM timestamp) as day,
         COUNT(DISTINCT session_id) as count
       FROM events
-      WHERE timestamp >= ${startDate.toISOString()} 
-      AND timestamp < ${endDate.toISOString()}
+      WHERE timestamp >= ${getDaysAgo(numberOfDays).toISOString()} 
+      AND app_id = ${appId}
       GROUP BY year, month, day
       ORDER BY year, month, day;
     `;
   }
 
-  getHitsPerPage(numberOfDays = 30) {
-    const startDate = getDaysAgo(numberOfDays);
-    const endDate = new Date();
+  getHitsPerPage(appId: string, numberOfDays = 30) {
     return this.sql<CountHitsPerPage[]>`
       SELECT path, COUNT(*) as count
       FROM events
-      WHERE timestamp >= ${startDate.toISOString()} 
-      AND timestamp < ${endDate.toISOString()}
+      WHERE timestamp >= ${getDaysAgo(numberOfDays).toISOString()}
+      AND app_id = ${appId}
       GROUP BY path
       ORDER BY count DESC, path ASC
     `;
   }
 
-  getUniqueSessionsPerPage(numberOfDays = 30) {
-    const startDate = getDaysAgo(numberOfDays);
-    const endDate = new Date();
+  getUniqueSessionsPerPage(appId: string, numberOfDays = 30) {
     return this.sql<CountHitsPerPage[]>`
       SELECT path, COUNT(DISTINCT session_id) as count
       FROM events
-      WHERE timestamp >= ${startDate.toISOString()}
-      AND timestamp < ${endDate.toISOString()}
+      WHERE timestamp >= ${getDaysAgo(numberOfDays).toISOString()}
+      AND app_id = ${appId}
       GROUP BY path
       ORDER BY count DESC, path ASC
     `;
   }
 
-  getTopReferrers(numberOfDays = 30) {
-    const startDate = getDaysAgo(numberOfDays);
-    const endDate = new Date();
+  getTopReferrers(appId: string, numberOfDays = 30) {
     return this.sql<CountByReferrer[]>`
       SELECT referrer, COUNT(*) as count
       FROM events
-      WHERE timestamp >= ${startDate.toISOString()}
-      AND timestamp < ${endDate.toISOString()}
+      WHERE timestamp >= ${getDaysAgo(numberOfDays).toISOString()}
+      AND app_id = ${appId}
       GROUP BY referrer
       ORDER BY count DESC, referrer ASC
     `;
   }
 
-  getUniqueSessionsByCountry(numberOfDays = 30) {
-    const startDate = getDaysAgo(numberOfDays);
-    const endDate = new Date();
+  getUniqueSessionsByCountry(appId: string, numberOfDays = 30) {
     return this.sql<CountByCountry[]>`
       SELECT country, COUNT(DISTINCT session_id) as count
       FROM events
-      WHERE timestamp >= ${startDate.toISOString()}
-      AND timestamp < ${endDate.toISOString()}
+      WHERE timestamp >= ${getDaysAgo(numberOfDays).toISOString()}
+      AND app_id = ${appId}
       GROUP BY country
       ORDER BY count DESC, country ASC
     `;
   }
 
-  async getStats(numberOfDays = 30) {
-    const startDate = getDaysAgo(numberOfDays);
-    const endDate = new Date();
+  async getStats(appId: string, numberOfDays = 30) {
+    const startDate = getDaysAgo(numberOfDays).toISOString();
     const result = await this.sql<Stats[]>`
       SELECT 
       (
         SELECT COUNT(DISTINCT session_id)
         FROM events
-        WHERE timestamp >= ${startDate.toISOString()} AND timestamp < ${endDate.toISOString()}
+        WHERE timestamp >= ${startDate}
+        AND app_id = ${appId}
       ) as "uniqueVisitors",
       (
         select COUNT(path) as totalPageviews FROM events
-        WHERE timestamp >= ${startDate.toISOString()} AND timestamp < ${endDate.toISOString()}
+        WHERE timestamp >= ${startDate}
+        AND app_id = ${appId}
       ) as "totalPageviews",
       (
         SELECT AVG(viewsPerVisitor) FROM (
           SELECT session_id, COUNT(*) as viewsPerVisitor
           FROM events
-          WHERE timestamp >= ${startDate.toISOString()} AND timestamp < ${endDate.toISOString()}
+          WHERE timestamp >= ${startDate}
+          AND app_id = ${appId}
           GROUP BY session_id
         ) as subq
       ) as "viewsPerVisitor"
@@ -156,7 +155,11 @@ export class PostgresRepo implements IDataRepo {
     return response;
   }
 
-  async hasAnyEvents() {
+  async hasAnyEvents(appId?: string) {
+    if (appId) {
+      const result = await this.sql`select 1 from events where app_id = ${appId} limit 1`;
+      return result.length > 0;
+    }
     const result = await this.sql`select 1 from events limit 1`;
     return result.length > 0;
   }
@@ -215,5 +218,23 @@ export class PostgresRepo implements IDataRepo {
   async listDataIo() {
     const results: DataIo[] = await this.sql`select * from data_io`;
     return results;
+  }
+
+  public async listApps() {
+    const result: App[] = await this.sql`select * from apps`;
+    return result;
+  }
+
+  public async createApp(name: string) {
+    const id = this.uid.randomUUID();
+    await this.sql`insert into apps (id, name, urls) values (${id}, ${name}, ${""})`;
+  }
+
+  public async updateApp(id: string, name: string) {
+    await this.sql`update apps set name = ${name} where id = ${id}`;
+  }
+
+  public async deleteApp(id: string) {
+    await this.sql`delete from apps where id = ${id}`;
   }
 }

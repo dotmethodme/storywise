@@ -2,18 +2,19 @@
 import { getStats } from "@/service/data";
 import { useGlobalStore } from "@/stores/global";
 import type { Stats } from "@shared/types";
-import { onMounted, ref } from "vue";
+import { storeToRefs } from "pinia";
+import { onMounted, ref, watch } from "vue";
 
 const stats = ref<Stats>();
-
 const store = useGlobalStore();
+const { activeAppId, selectedDays } = storeToRefs(store);
 
-async function fetchData(days: number) {
-  stats.value = await getStats(days);
+async function fetchData(activeAppId: string, days: number) {
+  stats.value = await getStats(activeAppId, days);
 }
 
-onMounted(() => fetchData(store.selectedDays));
-store.$subscribe((_, { selectedDays }) => fetchData(selectedDays));
+onMounted(() => fetchData(store.activeAppId, store.selectedDays));
+watch([activeAppId, selectedDays], ([activeAppId, selectedDays]) => fetchData(activeAppId, selectedDays));
 </script>
 <template>
   <div class="flex justify-center">
