@@ -16,6 +16,7 @@ const hasEventsLoading = ref(false);
 const doesAppHaveEvents = ref(false);
 
 async function fetchHasEvents() {
+  if (!activeAppId.value) return;
   hasEventsLoading.value = true;
   const result = await hasEvents(activeAppId.value);
   doesAppHaveEvents.value = result.hasEvents;

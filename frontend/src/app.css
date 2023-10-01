@@ -9,7 +9,9 @@ body {
 .modal {
   width: 100vw;
   height: 100vh;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-top: 2rem;
 }
 
 .modal-backdrop {
@@ -23,3 +25,4 @@ body {
 .modal-box {
   z-index: 9990;
 }
+
