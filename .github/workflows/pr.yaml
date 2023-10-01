@@ -1,0 +1,29 @@
+name: PR Checks
+
+concurrency:
+  group: storywise-pr
+  cancel-in-progress: true
+
+on:
+  pull_request:
+    branches:
+      - main
+    
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+      - name: Checkout Git repo
+        uses: actions/checkout@master
+
+      - name: npm install
+        run: npm install
+
+      - name: npm run typecheck
+        run: npm run typecheck
+
+      - name: npm run build
+        run: npm run build
