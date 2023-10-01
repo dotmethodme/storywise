@@ -377,6 +377,10 @@ export class MongoRepo implements IDataRepo {
     return results;
   }
 
+  async deleteDataIo(id: string) {
+    await this.db().collection(cols.data_io).deleteOne({ id });
+  }
+
   async listApps() {
     return this.db().collection(cols.apps).find<App>({}).toArray();
   }

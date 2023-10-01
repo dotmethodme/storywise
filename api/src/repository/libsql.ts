@@ -283,6 +283,13 @@ export class LibsqlRepo implements IDataRepo {
     return results.rows as unknown as DataIo[];
   }
 
+  async deleteDataIo(id: string) {
+    await this.client.execute({
+      sql: `delete from data_io where id = :id`,
+      args: { id },
+    });
+  }
+
   async listApps() {
     const results = await this.client.execute(`select * from apps`);
     return results.rows as unknown as App[];

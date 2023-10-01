@@ -89,8 +89,6 @@ export async function listDataIo() {
   return res.data;
 }
 
-// export async function downloadFile(file_path: string) {
-//   await axios.get(`/admin/api/data_io/download_file?file_path=${file_path}`, { responseType: "blob" });
-// }
-
-export async function deleteDataIo(id: string) {}
+export async function deleteDataIo(id: string) {
+  await axios.delete(`/admin/api/data_io/${id}`);
+}

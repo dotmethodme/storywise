@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import CodePreview from "@/components/CodePreview.vue";
-import { deleteApp, downloadFile, listDataIo, startExport, updateApp } from "@/service/data";
+import { deleteApp, deleteDataIo, listDataIo, startExport, updateApp } from "@/service/data";
 import { useGlobalStore } from "@/stores/global";
 import type { DataIo } from "@shared/types";
 import { storeToRefs } from "pinia";
@@ -57,7 +57,10 @@ function downloadFile(filePath: string) {
   iframe.src = `/admin/api/data_io/storywise_export.jsonl?file_path=${filePath}`;
 }
 
-function deleteDataIo(id: string) {}
+async function deleteDataIoHandler(id: string) {
+  await deleteDataIo(id);
+  await fetchDataIo();
+}
 
 onMounted(() => {
   updateName.value = activeApp.value?.name || "";
@@ -91,7 +94,7 @@ onMounted(() => {
               <button class="btn btn-ghost btn-sm" @click="()=>downloadFile(item.file_path!)">
                 Download
               </button>
-              <button class="btn btn-ghost btn-sm" @click="() => deleteDataIo(item.id)">Delete</button>
+              <button class="btn btn-ghost btn-sm" @click="() => deleteDataIoHandler(item.id)">Delete</button>
             </template>
           </td>
         </tr>

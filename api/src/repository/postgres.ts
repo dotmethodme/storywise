@@ -220,6 +220,10 @@ export class PostgresRepo implements IDataRepo {
     return results;
   }
 
+  async deleteDataIo(id: string) {
+    await this.sql`delete from data_io where id = ${id}`;
+  }
+
   public async listApps() {
     const result: App[] = await this.sql`select * from apps`;
     return result;

@@ -31,6 +31,7 @@ export interface IDataRepo {
   // Exports
   startExport(): Promise<void>;
   listDataIo(): Promise<DataIo[]>;
+  deleteDataIo(id: string): Promise<void>;
 
   // Apps
   listApps(): Promise<App[]>;
