@@ -24,20 +24,24 @@ const isLoading = computed(() => {
 });
 adminStore.fetchApps();
 
-onMounted(() => {
-  const variantId = route.query.variantId;
-  if (!variantId || typeof variantId !== "string") return;
-  if (!user.value) return;
-  const { email, id } = user.value.profile;
+watch(
+  [route, user],
+  () => {
+    const variantId = route.query.variantId;
+    if (!variantId || typeof variantId !== "string") return;
+    if (!user.value) return;
+    const { email, id } = user.value.profile;
 
-  const url = generateUrlByVariantId(variantId, email, id);
-  if (!url) return;
+    const url = generateUrlByVariantId(variantId, email, id);
+    if (!url) return;
 
-  window.location.replace(url);
+    window.location.replace(url);
 
-  // window.createLemonSqueezy();
-  // LemonSqueezy.Url.Open(url);
-});
+    // window.createLemonSqueezy();
+    // LemonSqueezy.Url.Open(url);
+  },
+  { immediate: true }
+);
 
 const showPricing = computed(() => {
   if (subscriptionLoading.value) return false;
