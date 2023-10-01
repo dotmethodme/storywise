@@ -1,10 +1,12 @@
 <script lang="ts" setup>
 import CodePreview from "@/components/CodePreview.vue";
-import { deleteApp, updateApp } from "@/service/data";
+import { deleteApp, downloadFile, listDataIo, startExport, updateApp } from "@/service/data";
 import { useGlobalStore } from "@/stores/global";
+import type { DataIo } from "@shared/types";
 import { storeToRefs } from "pinia";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { formatDate } from "@/utils/dates";
 
 const store = useGlobalStore();
 const { activeApp, activeAppId, apps } = storeToRefs(store);
@@ -27,6 +29,7 @@ async function deleteAppHandler() {
 
 const updating = ref(false);
 const updateName = ref("");
+
 async function updateAppHandler() {
   updating.value = true;
   await updateApp(activeAppId.value, updateName.value);
@@ -34,8 +37,31 @@ async function updateAppHandler() {
   updating.value = false;
 }
 
+const dataIo = ref<DataIo[]>();
+const hasPendingJobs = computed(() => dataIo.value && dataIo.value.some((item) => item.status === "pending"));
+async function fetchDataIo() {
+  dataIo.value = await listDataIo();
+  const hasPendingJobs = dataIo.value && dataIo.value.some((item) => item.status === "pending");
+  if (hasPendingJobs) {
+    setTimeout(fetchDataIo, 1000);
+  }
+}
+
+async function createExportHander() {
+  await startExport();
+  await fetchDataIo();
+}
+
+function downloadFile(filePath: string) {
+  const iframe = document.getElementById("downloadIframe") as HTMLIFrameElement;
+  iframe.src = `/admin/api/data_io/storywise_export.jsonl?file_path=${filePath}`;
+}
+
+function deleteDataIo(id: string) {}
+
 onMounted(() => {
   updateName.value = activeApp.value?.name || "";
+  fetchDataIo();
 });
 </script>
 
@@ -43,6 +69,43 @@ onMounted(() => {
   <h2 class="mt-4 text-xl font-bold tracking-tight text-gray-800 text-left">Embed</h2>
   <p class="mt-4 mb-4 text-lg">Simply embed the following code in the head of your website:</p>
   <CodePreview />
+
+  <h2 class="my-8 text-xl font-bold tracking-tight text-gray-800 text-left">Data exports/imports</h2>
+
+  <!-- list data imports and exports -->
+  <div class="w-full" v-if="dataIo && dataIo.length > 0">
+    <table class="table w-full">
+      <thead>
+        <tr>
+          <th>Created</th>
+          <th>Status</th>
+          <th class="text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="item in dataIo" :key="item.id">
+          <td>{{ formatDate(item.created_at) }}</td>
+          <td>{{ item.status }}</td>
+          <td class="text-right">
+            <template v-if="item.status === 'complete'">
+              <button class="btn btn-ghost btn-sm" @click="()=>downloadFile(item.file_path!)">
+                Download
+              </button>
+              <button class="btn btn-ghost btn-sm" @click="() => deleteDataIo(item.id)">Delete</button>
+            </template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <iframe id="downloadIframe" style="display: none"></iframe>
+  </div>
+
+  <div class="w-full mt-4">
+    <button class="btn btn-primary" @click="createExportHander" :disabled="hasPendingJobs">
+      Export data
+    </button>
+  </div>
 
   <h2 class="my-8 text-xl font-bold tracking-tight text-gray-800 text-left">Configuration</h2>
 

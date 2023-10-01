@@ -23,7 +23,7 @@ import {
   getJsFileHandler,
   hasEventsHandler,
 } from "./routes/misc";
-import { startExportHandler } from "./routes/dataIO";
+import { downloadFileHandler, listDataIoHandler, startExportHandler } from "./routes/dataIO";
 import * as appHandlers from "./routes/app";
 
 const isLocalEnv = process.env.NODE_ENV === "local";
@@ -61,8 +61,10 @@ export function getApp() {
 
   // Export
   app.get("/admin/api/export/start", authMiddleware, startExportHandler);
-  app.get("/admin/api/export/check", authMiddleware, () => {});
-  app.get("/admin/api/export/download/:id", authMiddleware, () => {});
+  app.get("/admin/api/data_io/list", authMiddleware, listDataIoHandler);
+  app.delete("/admin/api/data_io/:id", authMiddleware, listDataIoHandler);
+  app.get("/admin/api/data_io/download_file", authMiddleware, downloadFileHandler);
+  app.get("/admin/api/data_io/storywise_export.jsonl", authMiddleware, downloadFileHandler);
 
   // Apps
   app.get("/admin/api/apps", authMiddleware, appHandlers.list);

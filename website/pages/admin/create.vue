@@ -43,7 +43,7 @@ async function createApp() {
 </script>
 
 <template>
-  <h1 class="serif font-bold text-3xl mb-8">Creating a new storywise app</h1>
+  <h1 class="serif font-bold text-3xl mb-8">Create a new storywise</h1>
 
   <div class="form-control w-full max-w-lg">
     <label class="label">
@@ -67,7 +67,7 @@ async function createApp() {
 
   <div class="form-control w-full max-w-lg mb-4">
     <label class="label">
-      <span class="label-text">Username</span>
+      <span class="label-text">Master account username</span>
     </label>
     <input
       type="text"
@@ -80,7 +80,7 @@ async function createApp() {
 
   <div class="form-control w-full max-w-lg">
     <label class="label">
-      <span class="label-text">Password</span>
+      <span class="label-text">Master password</span>
     </label>
     <input
       type="text"
@@ -89,6 +89,11 @@ async function createApp() {
       v-model="password"
       :class="{ 'input-error': password.length > 0 && !isPasswordValid }"
     />
+    <label class="label">
+      <span class="label-text-alt">
+        Can be used to access the storywise instance directly without access to the storywise dashboard.
+      </span>
+    </label>
   </div>
 
   <button

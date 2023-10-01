@@ -2,12 +2,20 @@
 import { useAdminStore } from "@/stores/admin";
 
 const store = useAdminStore();
-const { user } = storeToRefs(store);
+const { user, apps, appsLoading, subscription, subscriptionLoading } = storeToRefs(store);
 const router = useRouter();
 
 onMounted(async () => {
-  await store.fetchUser();
-  await store.fetchSubscription();
+  store.fetchUser();
+  store.fetchSubscription();
+});
+
+watch([appsLoading, apps], () => {
+  if (appsLoading.value || subscriptionLoading.value) return;
+  if (!subscription.value) return;
+  if (apps.value.length === 0) {
+    router.push("/admin/create");
+  }
 });
 
 const path = computed(() => {
@@ -27,7 +35,7 @@ const path = computed(() => {
   <div class="drawer lg:drawer-open h-screen">
     <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
 
-    <div class="drawer-content">
+    <div class="drawer-content h-full overflow-x-scroll">
       <label
         for="my-drawer-2"
         class="btn btn-primary drawer-button lg:hidden fixed bottom-4 left-4 opacity-1 rounded-full"
