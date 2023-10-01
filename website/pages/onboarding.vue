@@ -8,8 +8,9 @@ defineAppConfig({
 
 const router = useRouter();
 const route = useRoute();
-const variantId = ref(route.query.variantId as string);
 const { signIn, data, status } = useAuth();
+const variantId = ref(route.query.variantId as string);
+const checked = ref(false);
 
 const plan = computed(() => {
   if (!variantId.value) return null;
@@ -36,7 +37,7 @@ function startRegistration() {
 
     <div class="form-control">
       <label class="label cursor-pointer">
-        <input type="checkbox" checked="checked" class="checkbox checkbox-primary mr-4" />
+        <input type="checkbox" v-model="checked" class="checkbox checkbox-primary mr-4" />
         <span class="label-text">
           By creating an account, you accept our
           <NuxtLink class="link" href="/terms">Terms of Service</NuxtLink> and
@@ -45,6 +46,8 @@ function startRegistration() {
       </label>
     </div>
 
-    <button class="btn btn-primary mt-4" @click="startRegistration">Register with GitHub</button>
+    <button class="btn btn-primary mt-4" @click="startRegistration" :disabled="!checked">
+      Register with GitHub
+    </button>
   </div>
 </template>
