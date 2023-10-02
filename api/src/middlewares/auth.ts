@@ -8,10 +8,12 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
       await verifyJwt(req.cookies.storywise_token);
       return next();
     } catch (err) {
-      res.status(401).send("JWT Authentication failed");
+      console.error("JWT Authentication failed", err);
+      res.clearCookie("storywise_token");
+      return res.status(401).send("JWT Authentication failed");
     }
   }
-  
+
   const expectedUser = process.env.STORYWISE_USERNAME ?? process.env.USERNAME ?? "admin";
   const expectedPass = process.env.STORYWISE_PASSWORD ?? process.env.PASSWORD ?? "123";
   const expectedPassHash = process.env.STORYWISE_PASSWORD_HASH ?? process.env.PASSWORD_HASH;
