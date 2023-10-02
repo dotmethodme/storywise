@@ -10,13 +10,17 @@ onMounted(async () => {
   store.fetchSubscription();
 });
 
-watch([appsLoading, apps], () => {
-  if (appsLoading.value || subscriptionLoading.value) return;
-  if (!subscription.value) return;
-  if (apps.value.length < 1) {
-    router.push("/admin/create");
-  }
-});
+watch(
+  [appsLoading, apps],
+  () => {
+    if (appsLoading.value || subscriptionLoading.value) return;
+    if (!subscription.value) return;
+    if (apps.value.length < 1) {
+      router.push("/admin/create");
+    }
+  },
+  { immediate: true }
+);
 
 const path = computed(() => {
   if (router.currentRoute.value.path == "/admin") {
