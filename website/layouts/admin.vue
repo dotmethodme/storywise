@@ -11,7 +11,7 @@ onMounted(async () => {
 });
 
 watch(
-  [appsLoading, apps],
+  [appsLoading, apps, subscriptionLoading, subscription],
   () => {
     if (appsLoading.value || subscriptionLoading.value) return;
     if (!subscription.value) return;
