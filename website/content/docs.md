@@ -28,8 +28,6 @@ You can choose from a whole host of options to deploy storywise. Some easy optio
 
 **Live demo:**  
 [https://demo.joinstorywise.com/admin](https://demo.joinstorywise.com/admin)  
-Username: `admin`  
-Password: `123`
 
 **Github repository:**  
 [https://github.com/dotmethodme/storywise](https://github.com/dotmethodme/storywise)

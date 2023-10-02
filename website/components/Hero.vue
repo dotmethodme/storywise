@@ -20,32 +20,10 @@ const showModal = ref(false);
           <Icon name="ic:baseline-discord" size="2em" class="mr-1" />
           Discord
         </a>
-        <button class="btn btn-ghost" @click="showModal = true">
+        <a class="btn btn-ghost" href="https://demo.joinstorywise.com/admin">
           <Icon name="material-symbols:rocket" size="2em" class="mr-1" />
           Demo
-        </button>
-
-        <dialog
-          class="modal"
-          :class="{
-            'modal-open': showModal,
-          }"
-        >
-          <form method="dialog" class="modal-box">
-            <h3 class="font-bold text-lg">Use the following credentials:</h3>
-            <p class="py-4">
-              Username: admin <br />
-              Password: 123 <br />
-            </p>
-            <p class="py-4">Best viewed on desktop for the time being</p>
-            <p>
-              <a class="btn btn-primary w-full" href="https://demo.joinstorywise.com/admin" target="_blank">
-                Launch demo
-              </a>
-            </p>
-          </form>
-          <form method="dialog" class="modal-backdrop" @click="showModal = false"></form>
-        </dialog>
+        </a>
       </div>
     </div>
   </div>

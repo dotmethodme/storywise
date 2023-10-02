@@ -3,6 +3,10 @@ import bcrypt from "bcrypt";
 import { verifyJwt } from "./jwtAuth";
 
 export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
+  if (process.env.TOTALLY_INSECURE_MODE_WITH_NO_PASSWORD === "true") {
+    return next();
+  }
+
   if (req.cookies?.storywise_token) {
     try {
       await verifyJwt(req.cookies.storywise_token);
