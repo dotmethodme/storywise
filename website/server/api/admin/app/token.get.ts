@@ -24,7 +24,7 @@ export function issueJwt() {
       allowed: true,
     },
     privateKey,
-    { algorithm: "RS256", expiresIn: "1m" }
+    { algorithm: "RS256", expiresIn: "12h" }
   );
 
   return token;
