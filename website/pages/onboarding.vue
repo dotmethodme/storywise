@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { getPlanById } from "~/utils/products";
+import { getPlanById } from "~/utils/plans";
 
 // layout
 defineAppConfig({
@@ -51,3 +51,4 @@ function startRegistration() {
     </button>
   </div>
 </template>
+~/utils/plans

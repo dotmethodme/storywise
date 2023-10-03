@@ -48,3 +48,8 @@ export type StorywiseAppPatch = {
   username: string;
   password?: string;
 };
+
+export type DatabaseSize = {
+  sizeBytes: string;
+  sizePretty: string;
+};

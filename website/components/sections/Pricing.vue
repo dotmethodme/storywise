@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { annualPlans, monthlyPlans } from "~/utils/products";
+import { annualPlans, monthlyPlans } from "~/utils/plans";
 
 const slider = ref(0);
 const yearly = ref(false);
@@ -91,3 +91,4 @@ const plan = computed(() => (yearly.value ? annualPlans[slider.value] : monthlyP
     </div>
   </div>
 </template>
+~/utils/plans

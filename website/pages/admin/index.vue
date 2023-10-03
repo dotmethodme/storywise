@@ -58,6 +58,8 @@ const showPricing = computed(() => {
       <AdminAppLink :item="item" />
     </NuxtLink>
 
+    <Usage />
+
     <!---
     <NuxtLink to="/admin/create">
       <div class="card bg-base-100 border cursor-pointer hover:shadow-lg h-full">
