@@ -53,7 +53,7 @@ const showPricing = computed(() => {
 <template>
   <h1 class="serif font-bold text-3xl mb-8">Overview</h1>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 2-xl:grid-cols-3 select-none gap-4">
+  <div class="grid grid-cols-1 lg:grid-cols-2 select-none gap-4">
     <NuxtLink :to="`/admin/edit/${item.id}`" v-for="item in apps">
       <AdminAppLink :item="item" />
     </NuxtLink>
