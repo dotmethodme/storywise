@@ -1,5 +1,5 @@
 <template>
-  <div class="px-4 py-8 max-w-screen-xl m-auto flex-col lg:flex-row flex justify-center gap-4">
+  <div class="px-4 py-8 max-w-screen-xl m-auto flex-col lg:flex-row flex justify-center gap-4 items-center">
     <div class="flex flex-col flex-1 align-center justify-center m-0 max-w-lg">
       <h1 class="serif text-5xl mb-4 font-bold tracking-tight">The storywise cloud</h1>
       <p class="sans text-xl">

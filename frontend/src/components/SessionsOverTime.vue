@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { getSessions } from "@/service/data";
 import { useGlobalStore } from "@/stores/global";
+import { getPreferredColorScheme } from "@/utils/theme";
 import * as echarts from "echarts";
 import { storeToRefs } from "pinia";
 import { onMounted, onUnmounted, ref, watch } from "vue";
@@ -39,6 +40,7 @@ async function render(activeAppId: string, selectedDays: number) {
       bottom: "0%",
       top: "2%",
       containLabel: true,
+      borderColor: "#0f0",
     },
     yAxis: {
       type: "value",
@@ -53,7 +55,7 @@ async function render(activeAppId: string, selectedDays: number) {
     ],
   };
 
-  const chart = echarts.init(chartEl.value);
+  const chart = echarts.init(chartEl.value, getPreferredColorScheme() === "dark" ? "dark" : undefined);
   chart.setOption(option);
 
   chartObj.value = chart;

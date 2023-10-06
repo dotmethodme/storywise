@@ -69,11 +69,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <h2 class="mt-4 text-xl font-bold tracking-tight text-gray-800 text-left">Embed</h2>
+  <h2 class="mt-4 text-xl font-bold tracking-tight text-base-content text-left">Embed</h2>
   <p class="mt-4 mb-4 text-lg">Simply embed the following code in the head of your website:</p>
   <CodePreview />
 
-  <h2 class="my-8 text-xl font-bold tracking-tight text-gray-800 text-left">Data exports/imports</h2>
+  <h2 class="my-8 text-xl font-bold tracking-tight text-base-content text-left">Data exports/imports</h2>
 
   <!-- list data imports and exports -->
   <div class="w-full" v-if="dataIo && dataIo.length > 0">
@@ -88,14 +88,21 @@ onMounted(() => {
       <tbody>
         <tr v-for="item in dataIo" :key="item.id">
           <td>{{ formatDate(item.created_at) }}</td>
-          <td>{{ item.status }}</td>
+          <td>
+            {{ item.status }}
+          </td>
           <td class="text-right">
             <template v-if="item.status === 'complete'">
               <button class="btn btn-ghost btn-sm" @click="()=>downloadFile(item.file_path!)">
                 Download
               </button>
-              <button class="btn btn-ghost btn-sm" @click="() => deleteDataIoHandler(item.id)">Delete</button>
             </template>
+
+            <template v-if="item.status === 'pending'">
+              <div class="loading loading-xs mr-4"></div>
+            </template>
+
+            <button class="btn btn-ghost btn-sm" @click="() => deleteDataIoHandler(item.id)">Delete</button>
           </td>
         </tr>
       </tbody>
@@ -110,7 +117,7 @@ onMounted(() => {
     </button>
   </div>
 
-  <h2 class="my-8 text-xl font-bold tracking-tight text-gray-800 text-left">Configuration</h2>
+  <h2 class="my-8 text-xl font-bold tracking-tight text-base-content text-left">Configuration</h2>
 
   <div class="w-full">
     <div class="flex items-end">
