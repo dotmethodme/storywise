@@ -27,16 +27,26 @@ export async function jwtAuthMiddleware(req: Request, res: Response, next: NextF
 
 export function verifyJwt(token: string) {
   const publicKey = process.env.JWT_PUBLIC_KEY;
+  const appName = process.env.DATABASE_NAME;
 
-  if (publicKey === undefined) {
+  if (!publicKey || !appName) {
     throw new Error("Backend does not support JWTs");
   }
 
   return new Promise((resolve, reject) => {
     jwt.verify(token, publicKey, (err, decoded) => {
       if (err) {
-        reject(err);
+        return reject(err);
       }
+
+      if (!decoded || typeof decoded !== "object" || !("appName" in decoded)) {
+        return reject(new Error("Invalid JWT"));
+      }
+
+      if (decoded.appName !== appName) {
+        return reject(new Error("Invalid JWT"));
+      }
+
       resolve(decoded);
     });
   });

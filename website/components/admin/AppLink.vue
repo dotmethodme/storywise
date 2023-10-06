@@ -35,6 +35,7 @@ async function handleOpen(e: MouseEvent) {
   e.preventDefault();
   const response = await useFetch<{ token: string }>("/api/admin/app/token", {
     method: "get",
+    query: { id: props.item.id },
   });
 
   const token = response.data.value?.token;

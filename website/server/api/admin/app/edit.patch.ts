@@ -1,6 +1,7 @@
 import { StorywiseApp, StorywiseAppPatch } from "@/types/types";
 import { PrismaClient } from "@prisma/client";
 import { hash } from "bcrypt";
+import { getAppById } from "~/service/apps";
 
 const prisma = new PrismaClient();
 
@@ -9,10 +10,14 @@ type Response = Promise<StorywiseApp>;
 
 export default defineEventHandler<Request, Response>(async (event) => {
   const body = await readBody(event);
+  const { organizationId } = event.context.profile;
 
-  const item = await prisma.app.findUnique({ where: { id: body.id } });
+  const app = await getAppById(prisma, body.id, organizationId);
 
-  if (!item) throw createError({ statusCode: 404, statusMessage: "Not found" });
+  if (!app) throw createError({ statusCode: 404, statusMessage: "Not found" });
+  if (app.organizationId !== event.context.profile.organizationId) {
+    throw createError({ statusCode: 403, statusMessage: "Forbidden" });
+  }
 
   const update: { username: string; hashedPassword?: string } = { username: body.username };
 

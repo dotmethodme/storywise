@@ -31,6 +31,8 @@ const path = computed(() => {
     return "organization";
   } else if (router.currentRoute.value.path == "/admin/profile") {
     return "profile";
+  } else if (router.currentRoute.value.path == "/admin/support") {
+    return "support";
   }
 });
 </script>
@@ -81,6 +83,12 @@ const path = computed(() => {
               <NuxtLink :class="{ focus: path === 'organization' }" href="/admin/organization">
                 <Icon size="24px" name="octicon:organization-24" />
                 Organization
+              </NuxtLink>
+            </li>
+            <li>
+              <NuxtLink :class="{ focus: path === 'support' }" href="/admin/support">
+                <Icon size="24px" name="mdi:support" />
+                Support
               </NuxtLink>
             </li>
           </ul>

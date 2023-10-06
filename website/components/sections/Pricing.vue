@@ -15,6 +15,19 @@ const benefits = [
   "Archive old data",
   "As many events as fit in the storage",
 ];
+
+const route = useRoute();
+
+const shouldAllowSignup = computed(() => {
+  return route.query.signup === "true";
+});
+
+const signupLink = computed(() => {
+  if (shouldAllowSignup.value) {
+    return `/onboarding?variantId=${plan.value.variantId}`;
+  }
+  return `#sign-up`;
+});
 </script>
 
 <template>
@@ -59,6 +72,7 @@ const benefits = [
         </div>
 
         <h1 class="mt-10 font-bold mb-2">What'll you get:</h1>
+
         <div class="grid grid-cols-2">
           <div class="flex flex-row items-center" v-for="benefit in benefits">
             <Icon size="1.4em" name="ic:round-check" class="text-green-600" />
@@ -66,12 +80,14 @@ const benefits = [
           </div>
         </div>
 
-        <div class="flex justify-center mt-10" v-if="plan.variantId">
-          <a class="btn btn-primary m-auto" href="#sign-up">
-            Join now
-            <Icon name="charm:rocket" class="" size="1.4em" />
-          </a>
-        </div>
+        <template v-if="plan.variantId">
+          <div class="flex justify-center mt-10">
+            <a class="btn btn-primary m-auto" :href="signupLink">
+              Join now
+              <Icon name="charm:rocket" class="" size="1.4em" />
+            </a>
+          </div>
+        </template>
 
         <div class="flex justify-center mt-10" v-else>
           <span class="mr-2">Drop us a message at</span>

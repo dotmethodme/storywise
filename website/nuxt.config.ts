@@ -58,7 +58,7 @@ export default defineNuxtConfig({
   },
   auth: {
     isEnabled: true,
-    origin: process.env.NODE_ENV === "production" ? "https://joinstorywise.com" : undefined,
+    origin: getOrigin(),
   },
   pinia: {
     autoImports: ["defineStore", ["defineStore", "definePiniaStore"], "storeToRefs"],
@@ -67,3 +67,13 @@ export default defineNuxtConfig({
     "/admin/**": { ssr: false },
   },
 });
+
+function getOrigin() {
+  if (process.env.NODE_ENV === "production") {
+    return "https://joinstorywise.com";
+  } else if (process.env.NODE_ENV === "dev") {
+    return "https://dev.joinstorywise.com";
+  } else {
+    return undefined;
+  }
+}
