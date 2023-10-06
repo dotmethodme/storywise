@@ -38,7 +38,9 @@ export default defineEventHandler<Request, Response>(async (event) => {
     },
   });
 
-  $fetch("http://storywise-syncer/refresh").catch(() => {});
+  $fetch("http://storywise-syncer/refresh", { method: "GET" }).catch((err) => {
+    console.error("Failed to refresh syncer", err);
+  });
 
   return newItem;
 });
