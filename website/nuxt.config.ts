@@ -12,6 +12,7 @@ export default defineNuxtConfig({
     JWT_PRIVATE_KEY: process.env.JWT_PRIVATE_KEY,
     LEMONSQUEEZY_WEBHOOK_SECRET: process.env.LEMONSQUEEZY_WEBHOOK_SECRET,
     LEMONSQUEEZY_API_KEY: process.env.LEMONSQUEEZY_API_KEY,
+    SYNCER_URL: process.env.SYNCER_URL,
     public: {
       // todo
     },
@@ -71,7 +72,7 @@ export default defineNuxtConfig({
 function getOrigin() {
   if (process.env.NODE_ENV === "production") {
     return "https://joinstorywise.com";
-  } else if (process.env.NODE_ENV === "dev") {
+  } else if (process.env.NODE_ENV === "development") {
     return "https://dev.joinstorywise.com";
   } else {
     return undefined;

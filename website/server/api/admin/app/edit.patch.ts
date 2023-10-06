@@ -4,6 +4,7 @@ import { hash } from "bcrypt";
 import { getAppById } from "~/service/apps";
 
 const prisma = new PrismaClient();
+const config = useRuntimeConfig();
 
 type Request = { body: StorywiseAppPatch };
 type Response = Promise<StorywiseApp>;
@@ -38,7 +39,7 @@ export default defineEventHandler<Request, Response>(async (event) => {
     },
   });
 
-  $fetch("http://storywise-syncer/refresh", { method: "GET" }).catch((err) => {
+  $fetch(`${config.SYNCER_URL}/refresh`, { method: "GET" }).catch((err) => {
     console.error("Failed to refresh syncer", err);
   });
 

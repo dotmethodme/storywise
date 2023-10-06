@@ -156,9 +156,10 @@ export function generateUrlByVariantId(
   if (!plan) return;
 
   const otherVariants = allPlans
-    .filter((p) => p.variantId !== variantId)
+    .filter((p) => p.type !== plan.type)
     .map((x) => x.variantId)
     .join(",");
+
   const url = new URL(`https://storywise.lemonsqueezy.com/checkout/buy/${plan.slug}`);
   url.searchParams.append("disabled", otherVariants);
   url.searchParams.set("checkout[email]", email);
