@@ -11,6 +11,7 @@ const adminStore = useAdminStore();
 const { apps, user, subscriptionLoading, subscription } = storeToRefs(adminStore);
 
 const isLoading = computed(() => {
+  if (!route.query.variantId) return false;
   if (!user.value) return false;
   if (subscriptionLoading.value) return true;
   if (subscription.value && subscription.value.attributes.status === "active") return false;
