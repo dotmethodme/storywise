@@ -10,23 +10,21 @@ const route = useRoute();
 const adminStore = useAdminStore();
 const { apps, user, subscriptionLoading, subscription } = storeToRefs(adminStore);
 
-// const createMessage = computed(() => {
-//   if (!apps.value) return;
-//   if (apps.value.length === 0) {
-//     return "Start using storywise by creating a new app. Click here!";
-//   }
-//   return "If you want to track a new app, click here!";
-// });
-
 const isLoading = computed(() => {
   if (!user.value) return false;
+  if (subscriptionLoading.value) return true;
+  if (subscription.value && subscription.value.attributes.status === "active") return false;
   return route.query.variantId && typeof route.query.variantId === "string";
 });
+
 adminStore.fetchApps();
 
 watch(
-  [route, user],
+  [route, user, subscription, subscriptionLoading],
   () => {
+    if (subscriptionLoading.value) return;
+    if (subscription.value && subscription.value.attributes.status === "active") return;
+
     const variantId = route.query.variantId;
     if (!variantId || typeof variantId !== "string") return;
     if (!user.value) return;
@@ -36,9 +34,6 @@ watch(
     if (!url) return;
 
     window.location.replace(url);
-
-    // window.createLemonSqueezy();
-    // LemonSqueezy.Url.Open(url);
   },
   { immediate: true }
 );
