@@ -5,6 +5,16 @@ const slider = ref(0);
 const yearly = ref(false);
 
 const plan = computed(() => (yearly.value ? annualPlans[slider.value] : monthlyPlans[slider.value]));
+const benefits = [
+  "Full data ownership",
+  "No setup effort",
+  "Export/Import data",
+  "Your own database",
+  "Your own infrastructure",
+  "Access to support",
+  "Archive old data",
+  "As many events as fit in the storage",
+];
 </script>
 
 <template>
@@ -50,29 +60,9 @@ const plan = computed(() => (yearly.value ? annualPlans[slider.value] : monthlyP
 
         <h1 class="mt-10 font-bold mb-2">What'll you get:</h1>
         <div class="grid grid-cols-2">
-          <div class="flex flex-row items-center">
+          <div class="flex flex-row items-center" v-for="benefit in benefits">
             <Icon size="1.4em" name="ic:round-check" class="text-green-600" />
-            <p class="ml-2">10 projects</p>
-          </div>
-          <div class="flex flex-row items-center">
-            <Icon size="1.4em" name="ic:round-check" class="text-green-600" />
-            <p class="ml-2">Full data ownership</p>
-          </div>
-          <div class="flex flex-row items-center">
-            <Icon size="1.4em" name="ic:round-check" class="text-green-600" />
-            <p class="ml-2">1 server per project</p>
-          </div>
-          <div class="flex flex-row items-center">
-            <Icon size="1.4em" name="ic:round-check" class="text-green-600" />
-            <p class="ml-2">1 database per project</p>
-          </div>
-          <div class="flex flex-row items-center">
-            <Icon size="1.4em" name="ic:round-check" class="text-green-600" />
-            <p class="ml-2">Access to support</p>
-          </div>
-          <div class="flex flex-row items-center">
-            <Icon size="1.4em" name="ic:round-check" class="text-green-600" />
-            <p class="ml-2">Archive old data</p>
+            <p class="ml-2">{{ benefit }}</p>
           </div>
         </div>
 

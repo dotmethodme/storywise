@@ -5,7 +5,7 @@ export const monthlyPlans = [
     size: "1GB storage",
     sizeBytes: 1073741824,
     price: "$10",
-    events: "(~819,200 pageviews)",
+    events: "(~1 million events)",
     type: "monthly",
   },
   {
@@ -14,7 +14,7 @@ export const monthlyPlans = [
     size: "2GB storage",
     sizeBytes: 2147483648,
     price: "$19",
-    events: "(~1,638,400 pageviews)",
+    events: "(~2 million events)",
     type: "monthly",
   },
   {
@@ -23,7 +23,7 @@ export const monthlyPlans = [
     size: "4GB storage",
     sizeBytes: 4294967296,
     price: "$36",
-    events: "(~3,276,800 pageviews)",
+    events: "(~4 million events)",
     type: "monthly",
   },
   {
@@ -32,7 +32,7 @@ export const monthlyPlans = [
     size: "6GB storage",
     sizeBytes: 6442450944,
     price: "$54",
-    events: "(~4,915,200 pageviews)",
+    events: "(~6 million events)",
     type: "monthly",
   },
   {
@@ -41,7 +41,7 @@ export const monthlyPlans = [
     size: "8GB storage",
     sizeBytes: 8589934592,
     price: "$70.4",
-    events: "(~6,553,600 pageviews)",
+    events: "(~8 million events)",
     type: "monthly",
   },
   {
@@ -50,7 +50,7 @@ export const monthlyPlans = [
     size: "10GB storage",
     sizeBytes: 10737418240,
     price: "$85",
-    events: "(~8,192,000 pageviews)",
+    events: "(~10 million events)",
     type: "monthly",
   },
   {
@@ -59,7 +59,7 @@ export const monthlyPlans = [
     size: "12GB storage",
     sizeBytes: 12884901888,
     price: "$102",
-    events: "(~9,830,400 pageviews)",
+    events: "(~12 million events)",
     type: "monthly",
   },
   {
@@ -77,7 +77,7 @@ export const annualPlans = [
     size: "1GB storage",
     sizeBytes: 1073741824,
     price: "$108",
-    events: "(~819,200 pageviews)",
+    events: "(~1 million events)",
     type: "annually",
   },
   {
@@ -86,7 +86,7 @@ export const annualPlans = [
     size: "2GB storage",
     sizeBytes: 2147483648,
     price: "$205.2",
-    events: "(~1,638,400 pageviews)",
+    events: "(~2 million events)",
     type: "annually",
   },
   {
@@ -95,7 +95,7 @@ export const annualPlans = [
     size: "4GB storage",
     sizeBytes: 4294967296,
     price: "$367.2",
-    events: "(~3,276,800 pageviews)",
+    events: "(~4 million events)",
     type: "annually",
   },
   {
@@ -104,7 +104,7 @@ export const annualPlans = [
     size: "6GB storage",
     sizeBytes: 6442450944,
     price: "$550.8",
-    events: "(~4,915,200 pageviews)",
+    events: "(~6 million events)",
     type: "annually",
   },
   {
@@ -113,7 +113,7 @@ export const annualPlans = [
     size: "8GB storage",
     sizeBytes: 8589934592,
     price: "$718.08",
-    events: "(~6,553,600 pageviews)",
+    events: "(~8 million events)",
     type: "annually",
   },
   {
@@ -122,7 +122,7 @@ export const annualPlans = [
     size: "10GB storage",
     sizeBytes: 10737418240,
     price: "$867",
-    events: "(~8,192,000 pageviews)",
+    events: "(~10 million events)",
     type: "annually",
   },
   {
@@ -131,7 +131,7 @@ export const annualPlans = [
     size: "12GB storage",
     sizeBytes: 12884901888,
     price: "$1040.4",
-    events: "(~9,830,400 pageviews)",
+    events: "(~12 million events)",
     type: "annually",
   },
   {
