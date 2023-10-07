@@ -32,6 +32,7 @@ export class PostgresRepo implements IDataRepo {
 
     const url = dbUrl;
     let options: postgres.Options<{}> = {
+      prepare: false,
       ssl: {
         rejectUnauthorized: false,
       },
