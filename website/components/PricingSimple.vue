@@ -7,6 +7,8 @@ const { user } = storeToRefs(adminStore);
 const slider = ref(0);
 const yearly = ref(false);
 
+const { annualPlans, monthlyPlans, generateUrlByVariantId } = usePlans();
+
 const plan = computed(() => (yearly.value ? annualPlans[slider.value] : monthlyPlans[slider.value]));
 
 const url = computed(() => {

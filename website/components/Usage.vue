@@ -7,9 +7,9 @@ import { render } from "nuxt/dist/app/compat/capi";
 const chartDom = ref<HTMLDivElement | null>(null);
 const myChart = ref<echarts.ECharts>();
 
+const { getPlanById } = usePlans();
 const adminStore = useAdminStore();
 const { subscription } = storeToRefs(adminStore);
-
 const { data: dbSize } = await useFetch("/api/admin/database/size");
 
 const usage = computed(() => {

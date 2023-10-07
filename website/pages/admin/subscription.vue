@@ -7,6 +7,7 @@ definePageMeta({
   layout: "admin",
 });
 
+const { getPlanById } = usePlans();
 const adminStore = useAdminStore();
 const { subscription, subscriptionLoading } = storeToRefs(adminStore);
 

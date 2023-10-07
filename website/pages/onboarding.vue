@@ -1,11 +1,10 @@
 <script lang="ts" setup>
-import { getPlanById } from "~/utils/plans";
-
 // layout
 defineAppConfig({
   layout: "docs",
 });
 
+const { getPlanById } = usePlans();
 const router = useRouter();
 const route = useRoute();
 const { signIn, data, status } = useAuth();

@@ -6,6 +6,7 @@ definePageMeta({
   layout: "admin",
 });
 
+const { generateUrlByVariantId } = usePlans();
 const route = useRoute();
 const adminStore = useAdminStore();
 const { apps, user, subscriptionLoading, subscription } = storeToRefs(adminStore);

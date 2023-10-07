@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { annualPlans, monthlyPlans } from "~/utils/plans";
-
 const slider = ref(0);
 const yearly = ref(false);
+
+const { annualPlans, monthlyPlans } = usePlans();
 
 const plan = computed(() => (yearly.value ? annualPlans[slider.value] : monthlyPlans[slider.value]));
 const benefits = [
