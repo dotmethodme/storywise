@@ -41,9 +41,10 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           tag-prefix: ""
           skip-on-empty: "false"
-          skip-version-file: true
+          skip-version-file: false
           output-file: false
           skip-commit: true
+          preset: conventionalcommits
 
       - name: Automated GitHub Release
         uses: actions/create-release@v1
