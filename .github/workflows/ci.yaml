@@ -45,7 +45,7 @@ jobs:
           skip-on-empty: "false"
           skip-version-file: false
           output-file: false
-          skip-commit: true
+          skip-commit: false
           preset: conventionalcommits
           version-file: ./api/package.json
 
