@@ -1,4 +1,6 @@
 name: CI Pipeline
+permissions:
+  contents: write
 
 concurrency:
   group: storywise
@@ -45,6 +47,7 @@ jobs:
           output-file: false
           skip-commit: true
           preset: conventionalcommits
+          version-file: ./api/package.json
 
       - name: Automated GitHub Release
         uses: actions/create-release@v1
