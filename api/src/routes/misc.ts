@@ -51,3 +51,7 @@ export async function healthCheckHandler(req: Request, res: Response) {
 export async function getHeadersHandler(req: Request, res: Response) {
   res.json(req.headers);
 }
+
+export async function getVersionHandler(req: Request, res: Response) {
+  res.json({ version: process.env.VERSION || "unknown" });
+}

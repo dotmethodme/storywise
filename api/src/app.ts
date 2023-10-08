@@ -22,6 +22,7 @@ import {
   getHeadersHandler,
   getJsFileHandler,
   hasEventsHandler,
+  getVersionHandler,
 } from "./routes/misc";
 import { deleteDataIoHandler, downloadFileHandler, listDataIoHandler, startExportHandler } from "./routes/dataIO";
 import * as appHandlers from "./routes/app";
@@ -42,6 +43,7 @@ export function getApp() {
   app.get("/", (_, res) => res.redirect("/admin"));
   app.get("/health", healthCheckHandler);
   app.get("/api/headers", getHeadersHandler);
+  app.get("/api/version", getVersionHandler);
 
   // Events
   app.post("/api/event", createEventHandler);
