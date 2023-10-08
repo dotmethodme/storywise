@@ -46,17 +46,18 @@ You can choose from a whole host of options to deploy storywise. Some easy optio
 
 ## Environment variables
 
-| Name           | Description                                                                                                                                                       |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| MONGODB_URI    | The connection string to your MongoDB database.                                                                                                                   |
-| POSTGRES_URL   | The connection string to your Postgres database.                                                                                                                  |
-| LIBSQL_URL     | The connection string to your Libsql database.                                                                                                                    |
-| DATABASE_NAME  | The name of the database you want to use. If it doesn't exist, it will be created for you.                                                                        |
-| USERNAME       | The username you want to use to log in to the admin panel.                                                                                                        |
-| PASSWORD       | The password you want to use to log in to the admin panel.                                                                                                        |
-| API_BASE_URL   | The base URL of your API. This is used to produce the right URLs for the tracking scripts.                                                                        |
-| NODE_ENV       | The environment you're running the app in. If the environment is `local`, the app will be able to preserve certain features such as Hot Module Reloading.         |
-| ALLOWED_ORIGIN | The origin that browsers are allowed to send requests from. This is in effect used as a CORS policy for the API which receives user activity events. Default: `*` |
+| Name                                 | Description                                                                                                                                                       |
+| ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| DATABASE_NAME <br> **required**      | The name of the database to be used (regardless of database type)                                                                                                 |
+| MONGODB_URI                          | The connection string to your MongoDB database.                                                                                                                   |
+| POSTGRES_URL                         | The connection string to your Postgres database.                                                                                                                  |
+| TIMESCALEDB_URL                      | The connection string to your TimescaleDB database.                                                                                                               |
+| LIBSQL_URL                           | The connection string to your Libsql database.                                                                                                                    |
+| STORYWISE_USERNAME <br> **required** | The username you want to use to log in to the admin panel.                                                                                                        |
+| STORYWISE_PASSWORD <br> **required** | The password you want to use to log in to the admin panel.                                                                                                        |
+| API_BASE_URL <br> **required**       | The base URL of your API. This is used to produce the right URLs for the tracking scripts.                                                                        |
+| NODE_ENV                             | The environment you're running the app in. If the environment is `local`, the app will be able to preserve certain features such as Hot Module Reloading.         |
+| ALLOWED_ORIGIN                       | The origin that browsers are allowed to send requests from. This is in effect used as a CORS policy for the API which receives user activity events. Default: `*` |
 
 ## Deploy on docker-compose
 

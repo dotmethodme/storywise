@@ -40,7 +40,7 @@
 
       <NuxtLink
         class="link link-hover"
-        href="https://hub.docker.com/repository/docker/mihainueleanu/storywise"
+        href="https://hub.docker.com/r/mihainueleanu/storywise"
         target="_blank"
       >
         Dockerhub
