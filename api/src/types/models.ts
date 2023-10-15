@@ -24,7 +24,8 @@ export type WebEvent = {
   screen_height?: number | undefined;
   window_width?: number | undefined;
   window_height?: number | undefined;
-} & EventClientDetails;
+} & EventClientDetails &
+  UtmTags;
 
 export type EventClientDetails = {
   bot_name?: string | undefined;
@@ -43,4 +44,12 @@ export type EventClientDetails = {
   os_name?: string | undefined;
   os_version?: string | undefined;
   os_platform?: OperatingSystemResult["platform"] | undefined;
+};
+
+export type UtmTags = {
+  utm_source?: string | undefined;
+  utm_medium?: string | undefined;
+  utm_campaign?: string | undefined;
+  utm_term?: string | undefined;
+  utm_content?: string | undefined;
 };

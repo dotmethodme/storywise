@@ -9,6 +9,7 @@ import type {
   UserAgentQueryKeys,
   CountByKeyValue,
   HasEvents,
+  UtmTagKey,
 } from "@shared/types";
 import type { App } from "@shared/app";
 
@@ -49,6 +50,12 @@ export async function getStats(appId: string, days = 30) {
 
 export async function getSessionCountByUserAgent(appId: string, key: UserAgentQueryKeys, days = 30) {
   const url = `/admin/api/count_sessions_by_user_agent?days=${days}&app_id=${appId}&key=${key}`;
+  const res = await axios.get<CountByKeyValue[]>(url);
+  return res.data;
+}
+
+export async function getSessionCountByUtmTag(appId: string, key: UtmTagKey, days = 30) {
+  const url = `/admin/api/count_sessions_by_utm?days=${days}&app_id=${appId}&key=${key}`;
   const res = await axios.get<CountByKeyValue[]>(url);
   return res.data;
 }

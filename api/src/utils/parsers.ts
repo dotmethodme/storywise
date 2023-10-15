@@ -41,5 +41,11 @@ export function webEventToSqlFormat(event: WebEvent) {
     os_name: event.os_name || null,
     os_version: event.os_version || null,
     os_platform: event.os_platform || null,
+    app_id: event.app_id || null,
+    utm_source: event.utm_source || null,
+    utm_medium: event.utm_medium || null,
+    utm_campaign: event.utm_campaign || null,
+    utm_term: event.utm_term || null,
+    utm_content: event.utm_content || null,
   });
 }

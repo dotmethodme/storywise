@@ -3,7 +3,7 @@ import { useGlobalStore } from "@/stores/global";
 
 const store = useGlobalStore();
 
-const dayOptions = [7, 14, 30, 90];
+const dayOptions = [7, 14, 30, 90, 120];
 </script>
 
 <template>

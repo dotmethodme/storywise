@@ -7,6 +7,7 @@ import {
   SessionItem,
   Stats,
   UserAgentQueryKeys,
+  UtmTagKey,
 } from "@shared/types";
 import fs from "fs/promises";
 import postgres from "postgres";
@@ -49,7 +50,18 @@ export class PostgresRepo implements IDataRepo {
     this.sql = postgres(url, options);
   }
 
-  getSessionCountByUserAgent(appId: string, key: UserAgentQueryKeys, numberOfDays = 30): Promise<CountByKeyValue[]> {
+  getSessionCountByUserAgent(appId: string, key: UserAgentQueryKeys, numberOfDays = 30) {
+    return this.sql<CountByKeyValue[]>`
+      SELECT ${key} as key, ${this.sql(key)} as value, COUNT(DISTINCT session_id) as count
+      FROM events
+      WHERE timestamp >= ${getDaysAgo(numberOfDays).toISOString()}
+      AND app_id = ${appId}
+      GROUP BY ${this.sql(key)}
+      ORDER BY count DESC, value ASC
+    `;
+  }
+
+  getSessionCountByUtmTag(appId: string, key: UtmTagKey, numberOfDays = 30) {
     return this.sql<CountByKeyValue[]>`
       SELECT ${key} as key, ${this.sql(key)} as value, COUNT(DISTINCT session_id) as count
       FROM events

@@ -15,7 +15,7 @@ const viewingMore = ref(false);
 </script>
 
 <template>
-  <div class="card bg-base-100 shadow card-compact">
+  <div class="card bg-base-100 shadow card-compact" v-if="countsVisible.length > 0">
     <div class="card-body">
       <table class="table table-sm">
         <tbody>
@@ -32,7 +32,7 @@ const viewingMore = ref(false);
             </th>
           </tr>
           <tr v-for="row in countsVisible" :key="row.key">
-            <td>{{ row.key || "-" }}</td>
+            <td>{{ row.key || "None" }}</td>
             <td class="text-right">{{ row.value }}</td>
           </tr>
         </tbody>
@@ -50,7 +50,7 @@ const viewingMore = ref(false);
           </tr>
 
           <tr v-for="row in rows" :key="row.key">
-            <td :title="row.key ? row.key.toString() : undefined">{{ row.key || "-" }}</td>
+            <td :title="row.key ? row.key.toString() : undefined">{{ row.key || "None" }}</td>
             <td class="text-right">{{ row.value }}</td>
           </tr>
         </tbody>

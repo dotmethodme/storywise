@@ -1,7 +1,7 @@
 import { UserAgentQueryKeys } from "@shared/types";
 import { Request, Response } from "express";
 import { getDataRepo } from "../repository/repo";
-import { isUserAgentQueryKey } from "../utils/guards";
+import { isUserAgentQueryKey, isUtmTagKey } from "../utils/guards";
 import { parseDays, parseAppId } from "../utils/queryParsers";
 
 export async function getSessionsPerDayHandler(req: Request, res: Response) {
@@ -95,6 +95,24 @@ export async function getCountSessionsByUserAgentHandler(
     const appId = parseAppId(req);
 
     const result = await getDataRepo().getSessionCountByUserAgent(appId, key, numberOfDays);
+    res.json(result);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+export async function getCountSessionsByUtmHandler(req: Request<any, any, { key: UserAgentQueryKeys }>, res: Response) {
+  try {
+    const { key } = req.query;
+    if (!isUtmTagKey(key)) {
+      throw new Error("Invalid key. Must be one of utm_source, utm_medium, utm_campaign, utm_term, utm_content");
+    }
+
+    const numberOfDays = parseDays(req);
+    const appId = parseAppId(req);
+
+    const result = await getDataRepo().getSessionCountByUtmTag(appId, key, numberOfDays);
     res.json(result);
   } catch (err) {
     console.error(err);

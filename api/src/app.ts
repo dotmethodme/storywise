@@ -15,6 +15,7 @@ import {
   getUniqueSessionsByCountryHandler,
   getCountSessionsByUserAgentHandler,
   getStatsHandler,
+  getCountSessionsByUtmHandler,
 } from "./routes/counts";
 import {
   healthCheckHandler,
@@ -57,6 +58,7 @@ export function getApp() {
   app.get("/admin/api/top_referrers", authMiddleware, getTopReferrersHandler);
   app.get("/admin/api/unique_sessions_by_country", authMiddleware, getUniqueSessionsByCountryHandler);
   app.get("/admin/api/count_sessions_by_user_agent", authMiddleware, getCountSessionsByUserAgentHandler);
+  app.get("/admin/api/count_sessions_by_utm", authMiddleware, getCountSessionsByUtmHandler);
   app.get("/admin/api/stats", authMiddleware, getStatsHandler);
   app.get("/admin/api/config", authMiddleware, siteConfigHandler);
   app.get("/admin/api/has-events", authMiddleware, hasEventsHandler);
