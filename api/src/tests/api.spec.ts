@@ -261,6 +261,18 @@ async function apiDataQueries() {
     expect(item.key).toBeDefined();
     expect(item.key).toEqual("os_name");
   }
+
+  const countByUtmTagSource = await supertest(app)
+    .get(`/admin/api/count_sessions_by_utm?key=utm_source&app_id=${app_id}`)
+    .auth(user, pass)
+    .expect(200);
+
+  for (const item of countByUtmTagSource.body) {
+    expect(item.count).toBeDefined();
+    expect(item.value).toBeDefined();
+    expect(item.key).toBeDefined();
+    expect(item.key).toEqual("utm_source");
+  }
 }
 
 async function apiAppsCrud() {

@@ -7,6 +7,7 @@ import {
   SessionItem,
   Stats,
   UserAgentQueryKeys,
+  UtmTagKey,
 } from "@shared/types";
 import { MongoClient } from "mongodb";
 import { WebEvent } from "../types/models";
@@ -59,9 +60,46 @@ export class MongoRepo implements IDataRepo {
         {
           $project: {
             _id: 0,
+            key: { $literal: key },
             value: 1,
             count: { $size: "$count" },
+          },
+        },
+        {
+          $sort: {
+            count: -1,
+            value: 1,
+          },
+        },
+      ])
+      .toArray();
+
+    return results;
+  }
+
+  async getSessionCountByUtmTag(app_id: string, key: UtmTagKey, numberOfDays = 30) {
+    const results = await this.db()
+      .collection(cols.events)
+      .aggregate<CountByKeyValue>([
+        {
+          $match: {
+            timestamp: { $gte: getDaysAgo(numberOfDays) },
+            app_id,
+          },
+        },
+        {
+          $group: {
+            _id: `$${key}`,
+            value: { $first: `$${key}` },
+            count: { $addToSet: "$session_id" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
             key: { $literal: key },
+            value: 1,
+            count: { $size: "$count" },
           },
         },
         {

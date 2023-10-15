@@ -8,6 +8,7 @@ import {
   SessionItem,
   Stats,
   UserAgentQueryKeys,
+  UtmTagKey,
 } from "@shared/types";
 import { WebEvent } from "../types/models";
 import { webEventToSqlFormat } from "../utils/parsers";
@@ -193,6 +194,26 @@ export class LibsqlRepo implements IDataRepo {
   }
 
   async getSessionCountByUserAgent(appId: string, key: UserAgentQueryKeys, numberOfDays = 30) {
+    const result = await this.client.execute({
+      sql: `
+        SELECT '${key}' as "key", ${key} as value, COUNT(DISTINCT session_id) as count
+        FROM events
+        WHERE timestamp >= :start
+        AND app_id = :appId
+        GROUP BY :key
+        ORDER BY count DESC, value ASC
+      `,
+      args: {
+        appId,
+        start: getDaysAgo(numberOfDays).toISOString(),
+        key,
+      },
+    });
+
+    return result.rows as unknown as CountByKeyValue[];
+  }
+
+  async getSessionCountByUtmTag(appId: string, key: UtmTagKey, numberOfDays = 30) {
     const result = await this.client.execute({
       sql: `
         SELECT '${key}' as "key", ${key} as value, COUNT(DISTINCT session_id) as count

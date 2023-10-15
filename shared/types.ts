@@ -44,6 +44,8 @@ export type HasEvents = {
 
 export type UserAgentQueryKeys = "client_type" | "client_name" | "device_type" | "device_brand" | "os_name";
 
+export type UtmTagKey = "utm_source" | "utm_medium" | "utm_campaign" | "utm_term" | "utm_content";
+
 export type DataIo = {
   id: string;
   type: string;

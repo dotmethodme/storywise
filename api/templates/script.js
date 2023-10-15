@@ -22,6 +22,20 @@ function pageview() {
     window_height: window.innerHeight,
   };
 
+  // capture utm tags if they exist
+  const queryStringParameters = new URLSearchParams(window.location.search);
+  const utmSource = queryStringParameters.get("utm_source");
+  const utmMedium = queryStringParameters.get("utm_medium");
+  const utmCampaign = queryStringParameters.get("utm_campaign");
+  const utmTerm = queryStringParameters.get("utm_term");
+  const utmContent = queryStringParameters.get("utm_content");
+
+  if (utmSource) requestBody["utm_source"] = utmSource;
+  if (utmMedium) requestBody["utm_medium"] = utmMedium;
+  if (utmCampaign) requestBody["utm_campaign"] = utmCampaign;
+  if (utmTerm) requestBody["utm_term"] = utmTerm;
+  if (utmContent) requestBody["utm_content"] = utmContent;
+
   fetch(url, {
     method: "POST",
     headers: {
