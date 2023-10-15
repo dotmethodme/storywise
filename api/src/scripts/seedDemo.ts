@@ -7,7 +7,13 @@ import { TimescaleRepo } from "../repository/timescale";
 import { WebEvent } from "../types/models";
 import { getDaysAgoRandomTime } from "../utils/date";
 import { webEventToSqlFormat } from "../utils/parsers";
-import { generateUsers, getRandomPath, getRandomReferrer, getRandomScreenSize } from "./seedDemoData";
+import {
+  generateRandomUtm,
+  generateUsers,
+  getRandomPath,
+  getRandomReferrer,
+  getRandomScreenSize,
+} from "./seedDemoData";
 
 export async function seedDemo(logs = true, userCount = 1000, daysCount = 365) {
   const logger = logs ? console.log : () => {};
@@ -51,6 +57,7 @@ export async function seedDemo(logs = true, userCount = 1000, daysCount = 365) {
           window_height: user.screen_size_temp.height,
           window: getRandomScreenSize(),
           referrer: getRandomReferrer(),
+          ...generateRandomUtm(),
         };
 
         // @ts-ignore

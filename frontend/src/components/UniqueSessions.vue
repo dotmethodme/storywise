@@ -96,24 +96,15 @@ watch([activeAppId, selectedDays], ([activeAppId, selectedDays]) => fetchData(ac
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
       <TableBlock :rows="tableReferrers" title="Referrers" />
       <TableBlock :rows="tableCountry" title="Countries" />
-    </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
       <TableBlock :rows="tableClientName" title="Browser name" />
       <TableBlock :rows="tableOS" title="Operating system" />
-    </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
       <TableBlock :rows="tableDeviceType" title="Device type" />
       <TableBlock :rows="tableDeviceBrand" title="Device brand" />
-    </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
       <TableBlock :rows="tableUtmSource" title="UTM Source" />
       <TableBlock :rows="tableUtmMedium" title="UTM Medium" />
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
       <TableBlock :rows="tableUtmCampaign" title="UTM Campaign" />
     </div>
   </div>

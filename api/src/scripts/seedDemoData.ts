@@ -191,6 +191,22 @@ function generateRandomLanguage() {
   return languages[Math.floor(Math.random() * languages.length)];
 }
 
+const utm_sources = ["google", "facebook", "twitter"];
+const utm_mediums = ["cpc", "social", "email"];
+const utm_campaigns = ["awesome-campaign", "awesome-campaign-2", "awesome-campaign-3"];
+
+export function generateRandomUtm() {
+  // 99% return null
+  if (Math.random() < 0.99) {
+    return {};
+  }
+  return {
+    utm_source: utm_sources[Math.floor(Math.random() * utm_sources.length)],
+    utm_medium: utm_mediums[Math.floor(Math.random() * utm_mediums.length)],
+    utm_campaign: utm_campaigns[Math.floor(Math.random() * utm_campaigns.length)],
+  };
+}
+
 function generateRandomIP(): string {
   const ipParts = [];
 

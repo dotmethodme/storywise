@@ -15,7 +15,7 @@ const viewingMore = ref(false);
 </script>
 
 <template>
-  <div class="card bg-base-100 shadow card-compact">
+  <div class="card bg-base-100 shadow card-compact" v-if="countsVisible.length > 0">
     <div class="card-body">
       <table class="table table-sm">
         <tbody>
