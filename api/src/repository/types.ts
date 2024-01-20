@@ -7,6 +7,7 @@ import {
   SessionItem,
   Stats,
   UserAgentQueryKeys,
+  UtmTagKey,
 } from "@shared/types";
 import { WebEvent } from "../types/models";
 import { App } from "@shared/app";
@@ -27,6 +28,7 @@ export interface IDataRepo {
   getUniqueSessionsByCountry(appId: string, numberOfDays?: number): Promise<CountByCountry[]>;
   getStats(appId: string, numberOfDays?: number): Promise<Stats>;
   getSessionCountByUserAgent(appId: string, key: UserAgentQueryKeys, numberOfDays?: number): Promise<CountByKeyValue[]>;
+  getSessionCountByUtmTag(appId: string, key: UtmTagKey, numberOfDays?: number): Promise<CountByKeyValue[]>;
 
   // Exports
   startExport(): Promise<void>;

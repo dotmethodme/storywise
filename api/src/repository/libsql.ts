@@ -8,6 +8,7 @@ import {
   SessionItem,
   Stats,
   UserAgentQueryKeys,
+  UtmTagKey,
 } from "@shared/types";
 import { WebEvent } from "../types/models";
 import { webEventToSqlFormat } from "../utils/parsers";
@@ -23,9 +24,9 @@ export class LibsqlRepo implements IDataRepo {
   private uid: ShortUniqueId;
   private client: LibsqlClient;
   public static allColumns =
-    "session_id,path,timestamp,ip,user_agent,referrer,language,country,screen_width,screen_height,window_width,window_height,bot_name,bot_category,bot_url,bot_producer_name,bot_producer_url,client_type,client_name,client_version,client_engine,client_engine_version,device_type,device_brand,device_model,os_name,os_version,os_platform";
+    "session_id,path,timestamp,ip,user_agent,referrer,language,country,screen_width,screen_height,window_width,window_height,bot_name,bot_category,bot_url,bot_producer_name,bot_producer_url,client_type,client_name,client_version,client_engine,client_engine_version,device_type,device_brand,device_model,os_name,os_version,os_platform,app_id,utm_source,utm_medium,utm_campaign,utm_term,utm_content";
   public static allColumnsValues =
-    ":session_id,:path,:timestamp,:ip,:user_agent,:referrer,:language,:country,:screen_width,:screen_height,:window_width,:window_height,:bot_name,:bot_category,:bot_url,:bot_producer_name,:bot_producer_url,:client_type,:client_name,:client_version,:client_engine,:client_engine_version,:device_type,:device_brand,:device_model,:os_name,:os_version,:os_platform";
+    ":session_id,:path,:timestamp,:ip,:user_agent,:referrer,:language,:country,:screen_width,:screen_height,:window_width,:window_height,:bot_name,:bot_category,:bot_url,:bot_producer_name,:bot_producer_url,:client_type,:client_name,:client_version,:client_engine,:client_engine_version,:device_type,:device_brand,:device_model,:os_name,:os_version,:os_platform,:app_id,:utm_source,:utm_medium,:utm_campaign,:utm_term,:utm_content";
 
   constructor() {
     this.uid = new ShortUniqueId({ length: 7 });
@@ -193,6 +194,26 @@ export class LibsqlRepo implements IDataRepo {
   }
 
   async getSessionCountByUserAgent(appId: string, key: UserAgentQueryKeys, numberOfDays = 30) {
+    const result = await this.client.execute({
+      sql: `
+        SELECT '${key}' as "key", ${key} as value, COUNT(DISTINCT session_id) as count
+        FROM events
+        WHERE timestamp >= :start
+        AND app_id = :appId
+        GROUP BY :key
+        ORDER BY count DESC, value ASC
+      `,
+      args: {
+        appId,
+        start: getDaysAgo(numberOfDays).toISOString(),
+        key,
+      },
+    });
+
+    return result.rows as unknown as CountByKeyValue[];
+  }
+
+  async getSessionCountByUtmTag(appId: string, key: UtmTagKey, numberOfDays = 30) {
     const result = await this.client.execute({
       sql: `
         SELECT '${key}' as "key", ${key} as value, COUNT(DISTINCT session_id) as count
