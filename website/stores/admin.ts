@@ -1,6 +1,6 @@
-import { UserRespose } from "~/types/types";
-import { Subscription } from "~/types/lemonsqueezy";
-import { StorywiseApp } from "~/types/types";
+import type { UserRespose } from "~/types/types";
+import type { Subscription } from "~/types/lemonsqueezy";
+import type { StorywiseApp } from "~/types/types";
 
 export const useAdminStore = defineStore("admin", () => {
   const appsLoading = ref(true);

@@ -1,6 +1,6 @@
 import type { EventHandlerRequest } from "h3";
 import { getInvoices } from "~/server/services/LemonSqueezy";
-import { Invoice } from "~/types/lemonsqueezy";
+import type { Invoice } from "~/types/lemonsqueezy";
 
 type Response = Promise<Invoice[]>;
 

@@ -1,4 +1,4 @@
-import { Organization, Profile } from "@prisma/client";
+import type { Organization, Profile } from "@prisma/client";
 
 type Session = {
   user?: {

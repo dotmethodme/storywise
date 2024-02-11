@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { StorywiseApp } from "@/types/types";
+import type { StorywiseApp } from "@/types/types";
 import { PrismaClient } from "@prisma/client";
 import { getAppById } from "~/service/apps";
 

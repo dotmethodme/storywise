@@ -88,10 +88,13 @@ export default defineNuxtConfig({
   auth: {
     isEnabled: true,
     origin: getOrigin(),
+    provider: {
+      type: "authjs",
+    },
   },
-  pinia: {
-    autoImports: ["defineStore", ["defineStore", "definePiniaStore"], "storeToRefs"],
-  },
+  // pinia: {
+  //   autoImports: ["defineStore", ["defineStore", "definePiniaStore"], "storeToRefs"],
+  // },
   routeRules: {
     "/admin/**": { ssr: false },
   },

@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { useAdminStore } from "~/stores/admin";
-import { StorywiseApp } from "~/types/types";
 
 definePageMeta({
   layout: "admin",

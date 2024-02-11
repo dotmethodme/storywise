@@ -1,4 +1,4 @@
-import { StorywiseApp } from "@/types/types";
+import type { StorywiseApp } from "@/types/types";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();

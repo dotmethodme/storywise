@@ -1,6 +1,6 @@
 import { getSubscriptionByUserId } from "~/server/services/LemonSqueezy";
 import type { EventHandlerRequest } from "h3";
-import { Subscription } from "~/types/lemonsqueezy";
+import type { Subscription } from "~/types/lemonsqueezy";
 
 type Response = Promise<Subscription>;
 

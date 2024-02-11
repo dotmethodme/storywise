@@ -1,6 +1,6 @@
-import { Invoice, Subscription } from "~/types/lemonsqueezy";
-import { SubscriptionResponse } from "./SubscriptionResponse";
-import { InvoiceListResponse } from "./InvoiceListResponse";
+import type { Invoice, Subscription } from "~/types/lemonsqueezy";
+import type { SubscriptionResponse } from "./SubscriptionResponse";
+import type { InvoiceListResponse } from "./InvoiceListResponse";
 
 const config = useRuntimeConfig();
 
