@@ -1,4 +1,4 @@
-import { StorywiseApp, StorywiseAppCreate } from "@/types/types";
+import type { StorywiseApp, StorywiseAppCreate } from "@/types/types";
 import { PrismaClient } from "@prisma/client";
 import { hash } from "bcrypt";
 

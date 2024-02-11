@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { useAdminStore } from "~/stores/admin";
 import { DateTime } from "luxon";
-import { SubscriptionInvoice } from "~/server/api/webhook/ls.post";
+import type { SubscriptionInvoice } from "~/server/api/webhook/ls.post";
 
 definePageMeta({
   layout: "admin",

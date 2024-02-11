@@ -1,4 +1,4 @@
-import { StorywiseApp, StorywiseAppPatch } from "@/types/types";
+import type { StorywiseApp, StorywiseAppPatch } from "@/types/types";
 import { PrismaClient } from "@prisma/client";
 import { hash } from "bcrypt";
 import { getAppById } from "~/service/apps";

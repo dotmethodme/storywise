@@ -1,4 +1,4 @@
-import { Invoice } from "~/types/lemonsqueezy";
+import type { Invoice } from "~/types/lemonsqueezy";
 
 export type InvoiceListResponse = {
   meta: {

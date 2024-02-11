@@ -10,27 +10,27 @@
     "typecheck": "vue-tsc --noEmit -p tsconfig.app.json --composite false"
   },
   "dependencies": {
-    "@fontsource-variable/inter": "^5.0.12",
-    "axios": "^1.5.1",
+    "@fontsource-variable/inter": "^5.0.16",
+    "axios": "^1.6.7",
     "echarts": "^5.4.3",
-    "luxon": "^3.4.3",
-    "pinia": "^2.1.6",
-    "vue": "^3.3.4",
+    "luxon": "^3.4.4",
+    "pinia": "^2.1.7",
+    "vue": "^3.4.18",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
     "@tsconfig/node18": "^18.2.2",
-    "@types/luxon": "^3.3.2",
-    "@types/node": "^18.16.17",
-    "@vitejs/plugin-vue": "^4.4.0",
-    "@vue/tsconfig": "^0.4.0",
-    "autoprefixer": "^10.4.16",
+    "@types/luxon": "^3.4.2",
+    "@types/node": "^20.11.17",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "@vue/tsconfig": "^0.5.1",
+    "autoprefixer": "^10.4.17",
     "daisyui": "^3.8.3",
     "npm-run-all": "^4.1.5",
-    "postcss": "^8.4.31",
-    "tailwindcss": "^3.3.3",
-    "typescript": "^5.2.2",
-    "vite": "^4.4.10",
-    "vue-tsc": "^1.8.15"
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.3.3",
+    "vite": "^5.1.1",
+    "vue-tsc": "^1.8.27"
   }
 }

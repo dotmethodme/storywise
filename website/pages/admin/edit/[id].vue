@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { StorywiseApp } from "~/types/types";
+import type { StorywiseApp } from "~/types/types";
 
 definePageMeta({
   layout: "admin",

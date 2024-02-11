@@ -17,7 +17,7 @@ const { pending, error, refresh } = await useFetch(`${baseUrl}/api/event`, {
   },
 });
 
-let interval: NodeJS.Timer;
+let interval: NodeJS.Timeout;
 
 onMounted(() => {
   interval = setInterval(() => {

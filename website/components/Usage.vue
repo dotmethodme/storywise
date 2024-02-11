@@ -2,7 +2,6 @@
 import { useAdminStore } from "~/stores/admin";
 import { formatBytes } from "~/utils/bytes";
 import * as echarts from "echarts";
-import { render } from "nuxt/dist/app/compat/capi";
 
 const chartDom = ref<HTMLDivElement | null>(null);
 const myChart = ref<echarts.ECharts>();

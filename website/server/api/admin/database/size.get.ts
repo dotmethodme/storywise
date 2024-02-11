@@ -1,6 +1,6 @@
-import { getServerSession, getToken } from "#auth";
+import { getToken } from "#auth";
 import { PrismaClient } from "@prisma/client";
-import { DatabaseSize } from "~/types/types";
+import type { DatabaseSize } from "~/types/types";
 
 const config = useRuntimeConfig();
 const prisma = new PrismaClient();

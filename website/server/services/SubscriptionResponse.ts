@@ -1,4 +1,4 @@
-import { Subscription } from "~/types/lemonsqueezy";
+import type { Subscription } from "~/types/lemonsqueezy";
 
 export type SubscriptionResponse = {
   jsonapi: {

@@ -1,6 +1,6 @@
 import { getServerSession, getToken } from "#auth";
 import { PrismaClient } from "@prisma/client";
-import { UserRespose } from "../../../types/types";
+import type { UserRespose } from "../../../types/types";
 
 const config = useRuntimeConfig();
 const prisma = new PrismaClient();
