@@ -36,7 +36,7 @@
     "jsonwebtoken": "^9.0.2",
     "lemonsqueezy.ts": "^0.1.7",
     "luxon": "^3.4.4",
-    "next-auth": "^4.21.1",
+    "next-auth": "4.21.1",
     "password-generator": "^2.3.2",
     "pinia": "^2.1.7",
     "vue-tsc": "^1.8.27",

@@ -97,4 +97,3 @@ const signupLink = computed(() => {
     </div>
   </div>
 </template>
-~/utils/plans
