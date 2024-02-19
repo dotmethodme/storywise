@@ -20,6 +20,7 @@ on:
       - "Dockerfile.website"
       - "package.json"
       - "package-lock.json"
+      - ".github/**"
 
 env:
   REGISTRY_IMAGE: mihainueleanu/storywise
@@ -67,7 +68,7 @@ jobs:
       matrix:
         platform:
           - linux/amd64
-          - linux/arm64
+          - ARM64
     outputs:
       tag: ${{ needs.tag.outputs.tag }}
     steps:
