@@ -2,30 +2,35 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"time"
 )
 
-type CountByKeyValue struct {
-	Key   sql.NullString
-	Value sql.NullString
-	Count int
+type NullableString struct {
+	sql.NullString
 }
 
-type SessionItem struct {
-	Year  int
-	Month int
-	Day   int
-	Count int
+func (s NullableString) MarshalJSON() ([]byte, error) {
+	if s.Valid {
+		return json.Marshal(s.String)
+	}
+	return []byte(`null`), nil
+}
+
+type CountByKeyValue struct {
+	Key   NullableString `json:"key,omitempty"`
+	Value NullableString `json:"value,omitempty"`
+	Count NullableString `json:"count,omitempty"`
 }
 
 type CountHitsPerPage struct {
-	Path  string
-	Count int
+	Path  NullableString `json:"path"`
+	Count NullableString `json:"count"`
 }
 
 type CountByReferrer struct {
-	Referrer string
-	Count    int
+	Referrer NullableString `json:"referrer"`
+	Count    NullableString `json:"count"`
 }
 
 type CountByCountry struct {
@@ -82,4 +87,11 @@ type UtmTags struct {
 	UtmCampaign *string
 	UtmTerm     *string
 	UtmContent  *string
+}
+
+type SessionItem struct {
+	Year  string `json:"year"`
+	Month string `json:"month"`
+	Day   string `json:"day"`
+	Count string `json:"count"`
 }
