@@ -18,9 +18,9 @@ func (s NullableString) MarshalJSON() ([]byte, error) {
 }
 
 type CountByKeyValue struct {
-	Key   NullableString `json:"key,omitempty"`
-	Value NullableString `json:"value,omitempty"`
-	Count NullableString `json:"count,omitempty"`
+	Key   NullableString `json:"key"`
+	Value NullableString `json:"value"`
+	Count NullableString `json:"count"`
 }
 
 type CountHitsPerPage struct {
@@ -34,14 +34,14 @@ type CountByReferrer struct {
 }
 
 type CountByCountry struct {
-	Country string
-	Count   int
+	Country NullableString `json:"country"`
+	Count   NullableString `json:"count"`
 }
 
 type Stats struct {
-	UniqueVisitors  int
-	TotalPageviews  int
-	ViewsPerVisitor float64
+	UniqueVisitors  string  `json:"uniqueVisitors"`
+	TotalPageviews  string  `json:"totalPageviews"`
+	ViewsPerVisitor float32 `json:"viewsPerVisitor"`
 }
 
 type WebEvent struct {
@@ -94,4 +94,16 @@ type SessionItem struct {
 	Month string `json:"month"`
 	Day   string `json:"day"`
 	Count string `json:"count"`
+}
+
+type App struct {
+	ID        string `json:"id"`
+	Name      string `json:"name"`
+	URLs      string `json:"urls"`
+	CreatedAt string `json:"created_at"`
+	UpdatedAt string `json:"updated_at"`
+}
+
+type HasAnyEvents struct {
+	HasEvents bool `json:"hasEvents"`
 }
