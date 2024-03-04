@@ -37,7 +37,7 @@ func getDaysAgo(days int) time.Time {
 	return daysAgo
 }
 
-var allowedKeys = map[string]string{
+var allowedKeysUserAgent = map[string]string{
 	"client_type":  "client_type",
 	"client_name":  "client_name",
 	"device_type":  "device_type",
@@ -48,7 +48,7 @@ var allowedKeys = map[string]string{
 func (repo *PostgresRepo) GetSessionCountByUserAgent(appId string, key string, numberOfDays int) ([]CountByKeyValue, error) {
 	results := []CountByKeyValue{}
 
-	column, ok := allowedKeys[key]
+	column, ok := allowedKeysUserAgent[key]
 	if !ok {
 		log.Printf("Invalid key provided: %s", key)
 		return nil, fmt.Errorf("invalid key provided")
@@ -61,8 +61,6 @@ func (repo *PostgresRepo) GetSessionCountByUserAgent(appId string, key string, n
         AND app_id = $2
         GROUP BY %s
         ORDER BY count DESC, value ASC`, column, column, column)
-
-	log.Println(query, key, getDaysAgo(numberOfDays), appId)
 
 	rows, err := repo.db.Query(query, getDaysAgo(numberOfDays), appId)
 	if err != nil {
@@ -127,7 +125,6 @@ func (repo *PostgresRepo) GetTopReferrers(appId string, numberOfDays int) ([]Cou
 		ORDER BY count DESC, referrer ASC
 	`
 
-	log.Println(query, getDaysAgo(numberOfDays), appId)
 	rows, err := repo.db.Query(query, getDaysAgo(numberOfDays), appId)
 	if err != nil {
 		return nil, err
@@ -157,7 +154,6 @@ func (repo *PostgresRepo) GetHitsPerPage(appId string, numberOfDays int) ([]Coun
 		ORDER BY count DESC, path ASC
 	`
 
-	log.Println(query, getDaysAgo(numberOfDays), appId)
 	rows, err := repo.db.Query(query, getDaysAgo(numberOfDays), appId)
 	if err != nil {
 		return nil, err
@@ -187,7 +183,6 @@ func (repo *PostgresRepo) GetUniqueSessionsPerPage(appId string, numberOfDays in
 		ORDER BY count DESC, path ASC
 	`
 
-	log.Println(query, getDaysAgo(numberOfDays), appId)
 	rows, err := repo.db.Query(query, getDaysAgo(numberOfDays), appId)
 	if err != nil {
 		return nil, err
@@ -217,7 +212,6 @@ func (repo *PostgresRepo) GetUniqueSessionsByCountry(appId string, numberOfDays 
 		ORDER BY count DESC, country ASC
 	`
 
-	log.Println(query, getDaysAgo(numberOfDays), appId)
 	rows, err := repo.db.Query(query, getDaysAgo(numberOfDays), appId)
 	if err != nil {
 		return nil, err
@@ -262,7 +256,6 @@ func (repo *PostgresRepo) GetStats(appId string, numberOfDays int) (Stats, error
 		) as "viewsPerVisitor"
 	`
 
-	log.Println(query, getDaysAgo(numberOfDays), appId)
 	err := repo.db.QueryRow(query, getDaysAgo(numberOfDays), appId).Scan(&result.UniqueVisitors, &result.TotalPageviews, &result.ViewsPerVisitor)
 	if err != nil {
 		return result, err
@@ -297,16 +290,75 @@ func (repo *PostgresRepo) ListApps() ([]App, error) {
 }
 
 func (repo *PostgresRepo) HasAnyEvents(appId string) (bool, error) {
-	query := "select 1 from events limit 1"
 	if appId != "" {
-		query = "select 1 from events where app_id = $1 limit 1"
+		query := "select 1 from events where app_id = $1 limit 1"
+		rows, err := repo.db.Query(query, appId)
+		if err != nil {
+			return false, err
+		}
+		defer rows.Close()
+
+		return rows.Next(), nil
+	} else {
+		query := "select 1 from events limit 1"
+		rows, err := repo.db.Query(query)
+		if err != nil {
+			return false, err
+		}
+		defer rows.Close()
+
+		return rows.Next(), nil
 	}
 
-	rows, err := repo.db.Query(query, appId)
+}
+
+// getSessionCountByUtmTag(appId: string, key: UtmTagKey, numberOfDays = 30) {
+//     return this.sql<CountByKeyValue[]>`
+//       SELECT ${key} as key, ${this.sql(key)} as value, COUNT(DISTINCT session_id) as count
+//       FROM events
+//       WHERE timestamp >= ${getDaysAgoString(numberOfDays)}
+//       AND app_id = ${appId}
+//       GROUP BY ${this.sql(key)}
+//       ORDER BY count DESC, value ASC
+//     `;
+//   }
+
+var allowedKeysUtm = map[string]string{
+	"utm_source":   "utm_source",
+	"utm_medium":   "utm_medium",
+	"utm_campaign": "utm_campaign",
+}
+
+func (repo *PostgresRepo) GetSessionCountByUtmTag(appId string, key string, numberOfDays int) ([]CountByKeyValue, error) {
+	results := []CountByKeyValue{}
+
+	column, ok := allowedKeysUtm[key]
+	if !ok {
+		log.Printf("Invalid key provided: %s", key)
+		return nil, fmt.Errorf("invalid key provided")
+	}
+
+	query := fmt.Sprintf(`
+		SELECT '%s' AS key, %s as value, COUNT(DISTINCT session_id) AS count
+		FROM events
+		WHERE timestamp >= $1
+		AND app_id = $2
+		GROUP BY %s
+		ORDER BY count DESC, value ASC`, column, column, column)
+
+	rows, err := repo.db.Query(query, getDaysAgo(numberOfDays), appId)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 	defer rows.Close()
 
-	return rows.Next(), nil
+	for rows.Next() {
+		var result CountByKeyValue
+		if err := rows.Scan(&result.Key, &result.Value, &result.Count); err != nil {
+			return nil, err
+		}
+		results = append(results, result)
+	}
+
+	return results, nil
 }

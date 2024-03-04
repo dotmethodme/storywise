@@ -5,7 +5,7 @@
     "build:frontend": "npm run build -w frontend",
     "build:website": "npm run build -w website",
     "build": "npm run build:api && npm run build:frontend && npm run copy:frontend",
-    "copy:frontend": "cp -r frontend/dist api/dist-frontend",
+    "copy:frontend": "cp -r frontend/dist api/dist-frontend && cp -r frontend/dist api-go/dist-frontend",
     "start": "npm run start -w api",
     "dev:api": "npm run dev -w api",
     "dev:frontend": "npm run dev -w frontend",

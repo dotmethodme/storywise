@@ -11,9 +11,7 @@ func main() {
 	app := fiber.New()
 	pg := NewPostgresRepo()
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World!")
-	})
+	app.Static("/admin", "dist-frontend")
 
 	app.Get("/admin/api/count_sessions_by_user_agent", func(c *fiber.Ctx) error {
 		app_id := c.Query("app_id", "default")
@@ -179,6 +177,42 @@ func main() {
 		return c.JSON(HasAnyEvents{
 			HasEvents: result,
 		})
+	})
+
+	app.Get("/admin/api/config", func(c *fiber.Ctx) error {
+		hasEvents, err := pg.HasAnyEvents("")
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+
+		return c.JSON(fiber.Map{
+			"hasEvents":     hasEvents,
+			"allowedOrigin": "http://localhost:3000",
+			"apiBaseUrl":    "http://localhost:3000",
+		})
+	})
+
+	app.Get("/admin/api/count_sessions_by_utm", func(c *fiber.Ctx) error {
+		app_id := c.Query("app_id", "default")
+		key := c.Query("key", "utm_source")
+		days := c.Query("days", "30")
+		daysInt, err := strconv.Atoi(days)
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"error": "days must be a number",
+			})
+		}
+
+		result, err := pg.GetSessionCountByUtmTag(app_id, key, daysInt)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+
+		return c.JSON(result)
 	})
 
 	log.Fatal(app.Listen(":3000"))
