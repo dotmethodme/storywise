@@ -312,17 +312,6 @@ func (repo *PostgresRepo) HasAnyEvents(appId string) (bool, error) {
 
 }
 
-// getSessionCountByUtmTag(appId: string, key: UtmTagKey, numberOfDays = 30) {
-//     return this.sql<CountByKeyValue[]>`
-//       SELECT ${key} as key, ${this.sql(key)} as value, COUNT(DISTINCT session_id) as count
-//       FROM events
-//       WHERE timestamp >= ${getDaysAgoString(numberOfDays)}
-//       AND app_id = ${appId}
-//       GROUP BY ${this.sql(key)}
-//       ORDER BY count DESC, value ASC
-//     `;
-//   }
-
 var allowedKeysUtm = map[string]string{
 	"utm_source":   "utm_source",
 	"utm_medium":   "utm_medium",
