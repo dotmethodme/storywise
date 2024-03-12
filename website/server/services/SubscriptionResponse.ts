@@ -9,3 +9,13 @@ export type SubscriptionResponse = {
   };
   data: Subscription;
 };
+
+export type SubscriptionListResponse = {
+  jsonapi: {
+    version: string;
+  };
+  links: {
+    self: string;
+  };
+  data: Subscription[];
+};

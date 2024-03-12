@@ -34,6 +34,12 @@ export const useAdminStore = defineStore("admin", () => {
     subscriptionLoading.value = false;
   }
 
+  async function ensureSubscription() {
+    const res = await useFetch("/api/admin/subscription/ensure");
+    console.log(res.data.value);
+    return res.data.value;
+  }
+
   return {
     user,
     fetchUser,
@@ -43,5 +49,6 @@ export const useAdminStore = defineStore("admin", () => {
     apps,
     appsLoading,
     fetchApps,
+    ensureSubscription,
   };
 });

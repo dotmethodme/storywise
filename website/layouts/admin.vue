@@ -8,6 +8,12 @@ const router = useRouter();
 onMounted(async () => {
   store.fetchUser();
   store.fetchSubscription();
+  store.ensureSubscription().then((data) => {
+    if (data?.created) {
+      store.fetchUser();
+      store.fetchSubscription();
+    }
+  });
 });
 
 watch(

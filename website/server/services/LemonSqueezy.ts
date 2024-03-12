@@ -1,5 +1,5 @@
 import type { Invoice, Subscription } from "~/types/lemonsqueezy";
-import type { SubscriptionResponse } from "./SubscriptionResponse";
+import type { SubscriptionListResponse, SubscriptionResponse } from "./SubscriptionResponse";
 import type { InvoiceListResponse } from "./InvoiceListResponse";
 
 const config = useRuntimeConfig();
@@ -27,4 +27,11 @@ export async function getInvoices(subId: string): Promise<Invoice[]> {
 export async function deleteSubscription(subId: string): Promise<void> {
   const url = `https://api.lemonsqueezy.com/v1/subscriptions/${subId}`;
   await fetch(url, { method: "DELETE", headers });
+}
+
+export async function getSubscriptionByEmail(email: string): Promise<Subscription[]> {
+  const url = `https://api.lemonsqueezy.com/v1/subscriptions?filter[user_email]=${email}`;
+  const result = await fetch(url, { method: "GET", headers });
+  const response: SubscriptionListResponse = await result.json();
+  return response.data;
 }

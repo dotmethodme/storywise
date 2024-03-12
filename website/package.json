@@ -21,7 +21,7 @@
     "@types/luxon": "^3.4.2",
     "@types/node": "^20",
     "daisyui": "^3.8.3",
-    "nuxt": "^3.10.1",
+    "nuxt": "^3.10.3",
     "nuxt-icon": "^0.6.8",
     "prisma": "^5.9.1"
   },
