@@ -5,12 +5,25 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/logger"
+
+	"joinstorywise.com/api/db"
+	"joinstorywise.com/api/middlewares"
+	"joinstorywise.com/api/migrations"
+	"joinstorywise.com/api/models"
 )
 
 func main() {
 	app := fiber.New()
-	pg := NewPostgresRepo()
+	pg := db.NewPostgresRepo()
 
+	migrations.ExecuteAll(pg)
+
+	app.Use(logger.New(logger.Config{
+		Format: `{"time":"${time}","status":${status},"latency":"${latency}","ip":"${ip}","method":"${method}","path":"${path}","error":"${error}"}` + "\n",
+	}))
+	app.Use("/admin/*", middlewares.AuthMiddleware)
+	app.Use("/admin/jwt/:token", middlewares.JwtAuthMiddleware)
 	app.Static("/admin", "dist-frontend")
 
 	app.Get("/admin/api/count_sessions_by_user_agent", func(c *fiber.Ctx) error {
@@ -174,7 +187,7 @@ func main() {
 			})
 		}
 
-		return c.JSON(HasAnyEvents{
+		return c.JSON(models.HasAnyEvents{
 			HasEvents: result,
 		})
 	})
