@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -14,6 +15,7 @@ import (
 )
 
 func main() {
+	port := os.Getenv("PORT")
 	app := fiber.New()
 	pg := db.NewPostgresRepo()
 
@@ -202,8 +204,8 @@ func main() {
 
 		return c.JSON(fiber.Map{
 			"hasEvents":     hasEvents,
-			"allowedOrigin": "http://localhost:3000",
-			"apiBaseUrl":    "http://localhost:3000",
+			"allowedOrigin": "http://localhost:" + port,
+			"apiBaseUrl":    "http://localhost:" + port,
 		})
 	})
 
@@ -228,5 +230,5 @@ func main() {
 		return c.JSON(result)
 	})
 
-	log.Fatal(app.Listen(":3000"))
+	log.Fatal(app.Listen(":" + port))
 }

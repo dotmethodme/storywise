@@ -1,6 +1,8 @@
 module joinstorywise.com/api
 
-go 1.20
+go 1.21
+
+toolchain go1.22.0
 
 require (
 	github.com/gofiber/fiber/v2 v2.52.4
@@ -10,8 +12,12 @@ require (
 require golang.org/x/crypto v0.22.0
 
 require (
+	github.com/dlclark/regexp2 v1.2.0 // indirect
+	github.com/gamebtc/devicedetector v0.0.0-20200513081329-9d0833c20d79 // indirect
 	github.com/gofiber/fiber/v3 v3.0.0-beta.2 // indirect
 	github.com/gofiber/utils/v2 v2.0.0-beta.4 // indirect
+	github.com/mcuadros/go-version v0.0.0-20190830083331-035f6764e8d2 // indirect
+	gopkg.in/yaml.v2 v2.3.0 // indirect
 )
 
 require (
