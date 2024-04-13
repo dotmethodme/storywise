@@ -26,18 +26,18 @@ type CountByKeyValue struct {
 }
 
 type CountHitsPerPage struct {
-	Path  NullableString `json:"path"`
-	Count NullableString `json:"count"`
+	Path  *string `json:"path"`
+	Count *string `json:"count"`
 }
 
 type CountByReferrer struct {
-	Referrer NullableString `json:"referrer"`
-	Count    NullableString `json:"count"`
+	Referrer *string `json:"referrer"`
+	Count    *string `json:"count"`
 }
 
 type CountByCountry struct {
-	Country NullableString `json:"country"`
-	Count   NullableString `json:"count"`
+	Country *string `json:"country"`
+	Count   *string `json:"count"`
 }
 
 type Stats struct {

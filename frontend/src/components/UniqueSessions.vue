@@ -1,19 +1,16 @@
 <script lang="ts" setup>
-import {
-  getHitsPerPage,
-  getTopReferrers,
-  getUniqueSessionsPerPage,
-  getUniqueVisitorsByCountry,
-  getSessionCountByUtmTag,
-  generatedApi,
-} from "@/service/data";
+import { getSessionCountByUtmTag, generatedApi } from "@/service/data";
 import { useGlobalStore } from "@/stores/global";
 import { countryMap } from "@/utils/countries";
-import type { CountByCountry, CountByReferrer, CountHitsPerPage } from "@shared/types";
 import { computed, onMounted, ref, watch } from "vue";
 import TableBlock from "./TableBlock.vue";
 import { storeToRefs } from "pinia";
-import { CountByKeyValue } from "@/generated/data-contracts";
+import {
+  CountByCountry,
+  CountByKeyValue,
+  CountByReferrer,
+  CountHitsPerPage,
+} from "@/generated/data-contracts";
 
 const store = useGlobalStore();
 const { activeAppId, selectedDays } = storeToRefs(store);
@@ -32,26 +29,26 @@ const countByUtmCampaign = ref<CountByKeyValue[]>([]);
 
 async function fetchData(activeAppId: string, days: number) {
   const results = await Promise.all([
-    getUniqueSessionsPerPage(activeAppId, days),
-    getHitsPerPage(activeAppId, days),
-    getTopReferrers(activeAppId, days),
-    getUniqueVisitorsByCountry(activeAppId, days),
-    generatedApi.getCountSessionsByUserAgent({ app_id: activeAppId, key: "client_name", days: days }),
-    generatedApi.getCountSessionsByUserAgent({ app_id: activeAppId, key: "os_name", days: days }),
-    generatedApi.getCountSessionsByUserAgent({ app_id: activeAppId, key: "device_type", days: days }),
+    generatedApi.getUniqueSessionsPerPage({ app_id: activeAppId, days }),
+    generatedApi.getHitsPerPage({ app_id: activeAppId, days }),
+    generatedApi.getTopReferrers({ app_id: activeAppId, days }),
+    generatedApi.getUniqueSessionsByCountry({ app_id: activeAppId, days }),
+    generatedApi.getCountSessionsByUserAgent({ app_id: activeAppId, key: "client_name", days }),
+    generatedApi.getCountSessionsByUserAgent({ app_id: activeAppId, key: "os_name", days }),
+    generatedApi.getCountSessionsByUserAgent({ app_id: activeAppId, key: "device_type", days }),
     generatedApi.getCountSessionsByUserAgent({
       app_id: activeAppId,
       key: "device_brand",
-      days: days,
+      days,
     }),
     getSessionCountByUtmTag(activeAppId, "utm_source", days),
     getSessionCountByUtmTag(activeAppId, "utm_medium", days),
     getSessionCountByUtmTag(activeAppId, "utm_campaign", days),
   ]);
-  sessions.value = results[0];
-  hits.value = results[1];
-  referrers.value = results[2];
-  countries.value = results[3];
+  sessions.value = results[0].data.items;
+  hits.value = results[1].data.items;
+  referrers.value = results[2].data.items;
+  countries.value = results[3].data.items;
   countByClientName.value = results[4].data.items;
   countByOsName.value = results[5].data.items;
   countByDeviceType.value = results[6].data.items;
@@ -65,7 +62,10 @@ const tableSessions = computed(() => sessions.value.map((x) => ({ key: x.path, v
 const tableHits = computed(() => hits.value.map((x) => ({ key: x.path, value: x.count })));
 const tableReferrers = computed(() => referrers.value.map((x) => ({ key: x.referrer, value: x.count })));
 const tableCountry = computed(() =>
-  countries.value.map((x) => ({ key: countryMap[x.country] || x.country, value: x.count })),
+  countries.value.map((x) => ({
+    key: x.country ? countryMap[x.country] || x.country : x.country,
+    value: x.count,
+  })),
 );
 const tableClientName = computed(() =>
   countByClientName.value.map((x) => ({ key: x.value, value: x.count })),

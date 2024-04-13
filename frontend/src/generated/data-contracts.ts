@@ -9,10 +9,25 @@
  * ---------------------------------------------------------------
  */
 
+export interface CountByCountry {
+  count: string | null;
+  country: string | null;
+}
+
 export interface CountByKeyValue {
   count: string | null;
   key: string | null;
   value: string | null;
+}
+
+export interface CountByReferrer {
+  count: string | null;
+  referrer: string | null;
+}
+
+export interface CountHitsPerPage {
+  count: string | null;
+  path: string | null;
 }
 
 export interface ErrorDetail {
@@ -63,6 +78,15 @@ export interface GetCountSessionsByUserAgentOutputBody {
   items: CountByKeyValue[];
 }
 
+export interface GetHitsPerPageOutputBody {
+  /**
+   * A URL to the JSON Schema for this object.
+   * @format uri
+   */
+  $schema?: string;
+  items: CountHitsPerPage[];
+}
+
 export interface GetSessionsPerDayOutputBody {
   /**
    * A URL to the JSON Schema for this object.
@@ -70,6 +94,33 @@ export interface GetSessionsPerDayOutputBody {
    */
   $schema?: string;
   items: SessionItem[];
+}
+
+export interface GetTopReferrersOutputBody {
+  /**
+   * A URL to the JSON Schema for this object.
+   * @format uri
+   */
+  $schema?: string;
+  items: CountByReferrer[];
+}
+
+export interface GetUniqueSessionsByCountryOutputBody {
+  /**
+   * A URL to the JSON Schema for this object.
+   * @format uri
+   */
+  $schema?: string;
+  items: CountByCountry[];
+}
+
+export interface GetUniqueSessionsPerPageOutputBody {
+  /**
+   * A URL to the JSON Schema for this object.
+   * @format uri
+   */
+  $schema?: string;
+  items: CountHitsPerPage[];
 }
 
 export interface GreetingOutputBody {
@@ -91,6 +142,14 @@ export interface SessionItem {
 
 export type GetCountSessionsByUserAgentData = GetCountSessionsByUserAgentOutputBody;
 
+export type GetHitsPerPageData = GetHitsPerPageOutputBody;
+
 export type GetSessionsPerDayData = GetSessionsPerDayOutputBody;
+
+export type GetTopReferrersData = GetTopReferrersOutputBody;
+
+export type GetUniqueSessionsByCountryData = GetUniqueSessionsByCountryOutputBody;
+
+export type GetUniqueSessionsPerPageData = GetUniqueSessionsPerPageOutputBody;
 
 export type GetGreetingByNameData = GreetingOutputBody;

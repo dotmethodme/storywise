@@ -1,38 +1,12 @@
 import { Admin } from "@/generated/Admin";
 import { CountByKeyValue } from "@/generated/data-contracts";
 import type { App } from "@shared/app";
-import type {
-  CountByCountry,
-  CountByReferrer,
-  CountHitsPerPage,
-  HasEvents,
-  SiteConfig,
-  Stats,
-  UtmTagKey,
-} from "@shared/types";
+import type { CountHitsPerPage, HasEvents, SiteConfig, Stats, UtmTagKey } from "@shared/types";
 import axios from "axios";
 
 export async function getUniqueSessionsPerPage(appId: string, days = 30) {
   const url = `/admin/api/unique_sessions_per_page?days=${days}&app_id=${appId}`;
   const res = await axios.get<CountHitsPerPage[]>(url);
-  return res.data;
-}
-
-export async function getHitsPerPage(appId: string, days = 30) {
-  const url = `/admin/api/hits_per_page?days=${days}&app_id=${appId}`;
-  const res = await axios.get<CountHitsPerPage[]>(url);
-  return res.data;
-}
-
-export async function getTopReferrers(appId: string, days = 30) {
-  const url = `/admin/api/top_referrers?days=${days}&app_id=${appId}`;
-  const res = await axios.get<CountByReferrer[]>(url);
-  return res.data;
-}
-
-export async function getUniqueVisitorsByCountry(appId: string, days = 30) {
-  const url = `/admin/api/unique_sessions_by_country?days=${days}&app_id=${appId}`;
-  const res = await axios.get<CountByCountry[]>(url);
   return res.data;
 }
 

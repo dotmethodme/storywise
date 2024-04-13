@@ -1,18 +1,6 @@
-export type SessionItem = {
-  count: number;
-  year: number;
-  month: number;
-  day: number;
-};
-
 export type CountHitsPerPage = {
   count: number;
   path: string;
-};
-
-export type CountByReferrer = {
-  count: number;
-  referrer: string;
 };
 
 export type CountByCountry = {
