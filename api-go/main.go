@@ -317,8 +317,11 @@ func main() {
 	if os.Getenv("ENV") == "local" {
 		app.Get("/admin", proxy.Forward("http://localhost:5173/admin"))
 		app.Get("/admin/*", func(c *fiber.Ctx) error {
-			log.Println(c.Path())
-			return proxy.Forward("http://localhost:5173" + c.Path())(c)
+			path := c.Path()
+			query := c.Request().URI().QueryString()
+			queryString := string(query)
+
+			return proxy.Forward("http://localhost:5173" + path + "?" + queryString)(c)
 		})
 	} else {
 		app.Static("/admin", "dist-frontend")

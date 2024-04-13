@@ -64,7 +64,6 @@ const viewingMore = ref(false);
 .table {
   table-layout: fixed;
   width: 100%;
-  background: blue;
 }
 
 th:first-child,
@@ -72,7 +71,6 @@ td:first-child {
   width: 90%;
   overflow: hidden;
   text-overflow: ellipsis;
-  background: red !important;
 }
 
 th:last-child,
