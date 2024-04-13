@@ -17,6 +17,21 @@ export interface App {
   urls: string | null;
 }
 
+export interface Config {
+  allowedOrigin: string;
+  apiBaseUrl: string;
+  hasEvents: boolean;
+}
+
+export interface ConfigResponseBody {
+  /**
+   * A URL to the JSON Schema for this object.
+   * @format uri
+   */
+  $schema?: string;
+  config: Config;
+}
+
 export interface CountByCountry {
   count: string | null;
   country: string | null;
@@ -77,7 +92,7 @@ export interface ErrorModel {
   type?: string;
 }
 
-export interface GetAppsOutputBody {
+export interface GetAppsResponseBody {
   /**
    * A URL to the JSON Schema for this object.
    * @format uri
@@ -86,7 +101,7 @@ export interface GetAppsOutputBody {
   items: App[];
 }
 
-export interface GetCountSessionsByUserAgentOutputBody {
+export interface GetCountSessionsByUserAgentResponseBody {
   /**
    * A URL to the JSON Schema for this object.
    * @format uri
@@ -95,7 +110,7 @@ export interface GetCountSessionsByUserAgentOutputBody {
   items: CountByKeyValue[];
 }
 
-export interface GetCountSessionsByUtmOutputBody {
+export interface GetCountSessionsByUtmResponseBody {
   /**
    * A URL to the JSON Schema for this object.
    * @format uri
@@ -104,7 +119,7 @@ export interface GetCountSessionsByUtmOutputBody {
   items: CountByKeyValue[];
 }
 
-export interface GetHasEventsOutputBody {
+export interface GetHasEventsResponseBody {
   /**
    * A URL to the JSON Schema for this object.
    * @format uri
@@ -113,7 +128,7 @@ export interface GetHasEventsOutputBody {
   hasEvents: boolean;
 }
 
-export interface GetHitsPerPageOutputBody {
+export interface GetHitsPerPageResponseBody {
   /**
    * A URL to the JSON Schema for this object.
    * @format uri
@@ -122,7 +137,7 @@ export interface GetHitsPerPageOutputBody {
   items: CountHitsPerPage[];
 }
 
-export interface GetSessionsPerDayOutputBody {
+export interface GetSessionsPerDayResponseBody {
   /**
    * A URL to the JSON Schema for this object.
    * @format uri
@@ -131,7 +146,7 @@ export interface GetSessionsPerDayOutputBody {
   items: SessionItem[];
 }
 
-export interface GetStatsOutputBody {
+export interface GetStatsResponseBody {
   /**
    * A URL to the JSON Schema for this object.
    * @format uri
@@ -140,7 +155,7 @@ export interface GetStatsOutputBody {
   item: Stats;
 }
 
-export interface GetTopReferrersOutputBody {
+export interface GetTopReferrersResponseBody {
   /**
    * A URL to the JSON Schema for this object.
    * @format uri
@@ -149,7 +164,7 @@ export interface GetTopReferrersOutputBody {
   items: CountByReferrer[];
 }
 
-export interface GetUniqueSessionsByCountryOutputBody {
+export interface GetUniqueSessionsByCountryResponseBody {
   /**
    * A URL to the JSON Schema for this object.
    * @format uri
@@ -158,23 +173,13 @@ export interface GetUniqueSessionsByCountryOutputBody {
   items: CountByCountry[];
 }
 
-export interface GetUniqueSessionsPerPageOutputBody {
+export interface GetUniqueSessionsPerPageResponseBody {
   /**
    * A URL to the JSON Schema for this object.
    * @format uri
    */
   $schema?: string;
   items: CountHitsPerPage[];
-}
-
-export interface GreetingOutputBody {
-  /**
-   * A URL to the JSON Schema for this object.
-   * @format uri
-   */
-  $schema?: string;
-  /** Greeting message */
-  message: string;
 }
 
 export interface SessionItem {
@@ -190,24 +195,24 @@ export interface Stats {
   viewsPerVisitor: string | null;
 }
 
-export type GetAppsData = GetAppsOutputBody;
+export type GetAppsData = GetAppsResponseBody;
 
-export type GetCountSessionsByUserAgentData = GetCountSessionsByUserAgentOutputBody;
+export type GetConfigData = ConfigResponseBody;
 
-export type GetCountSessionsByUtmData = GetCountSessionsByUtmOutputBody;
+export type GetCountSessionsByUserAgentData = GetCountSessionsByUserAgentResponseBody;
 
-export type GetHasEventsData = GetHasEventsOutputBody;
+export type GetCountSessionsByUtmData = GetCountSessionsByUtmResponseBody;
 
-export type GetHitsPerPageData = GetHitsPerPageOutputBody;
+export type GetHasEventsData = GetHasEventsResponseBody;
 
-export type GetSessionsPerDayData = GetSessionsPerDayOutputBody;
+export type GetHitsPerPageData = GetHitsPerPageResponseBody;
 
-export type GetStatsData = GetStatsOutputBody;
+export type GetSessionsPerDayData = GetSessionsPerDayResponseBody;
 
-export type GetTopReferrersData = GetTopReferrersOutputBody;
+export type GetStatsData = GetStatsResponseBody;
 
-export type GetUniqueSessionsByCountryData = GetUniqueSessionsByCountryOutputBody;
+export type GetTopReferrersData = GetTopReferrersResponseBody;
 
-export type GetUniqueSessionsPerPageData = GetUniqueSessionsPerPageOutputBody;
+export type GetUniqueSessionsByCountryData = GetUniqueSessionsByCountryResponseBody;
 
-export type GetGreetingByNameData = GreetingOutputBody;
+export type GetUniqueSessionsPerPageData = GetUniqueSessionsPerPageResponseBody;

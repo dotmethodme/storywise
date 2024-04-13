@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -19,12 +18,6 @@ import (
 	"joinstorywise.com/api/migrations"
 	"joinstorywise.com/api/models"
 )
-
-type GreetingOutput struct {
-	Body struct {
-		Message string `json:"message" example:"Hello, world!" doc:"Greeting message"`
-	}
-}
 
 func main() {
 
@@ -47,32 +40,13 @@ func main() {
 	app.Use("/admin/*", middlewares.AuthMiddleware)
 	app.Use("/admin/jwt/:token", middlewares.JwtAuthMiddleware)
 
-	// Register GET /greeting/{name} handler.
-	huma.Get(api, "/greeting/{name}", func(ctx context.Context, input *struct {
-		Name string `path:"name" maxLength:"30" example:"world" doc:"Name to greet"`
-	}) (*GreetingOutput, error) {
-		resp := &GreetingOutput{}
-		resp.Body.Message = fmt.Sprintf("Hello, %s!", input.Name)
-		return resp, nil
-	})
-
-	type GetCountSessionsByUserAgentOutput struct {
-		Body struct {
-			Items []models.CountByKeyValue `json:"items"`
-		}
-	}
-
 	huma.Register(api, huma.Operation{
 		OperationID: "GetCountSessionsByUserAgent",
 		Path:        "/admin/api/count_sessions_by_user_agent",
 		Method:      http.MethodGet,
 		Summary:     "Get count of sessions by user agent",
-	}, func(ctx context.Context, input *struct {
-		AppId string `query:"app_id" default:"default" doc:"App ID"`
-		Key   string `query:"key" default:"user_agent" doc:"Key"`
-		Days  int    `query:"days" default:"30" doc:"Days"`
-	}) (*GetCountSessionsByUserAgentOutput, error) {
-		response := &GetCountSessionsByUserAgentOutput{}
+	}, func(ctx context.Context, input *models.GenericInputWithKey) (*models.GetCountSessionsByUserAgentResponse, error) {
+		response := &models.GetCountSessionsByUserAgentResponse{}
 
 		result, err := pg.GetSessionCountByUserAgent(input.AppId, input.Key, input.Days)
 		if err != nil {
@@ -83,19 +57,13 @@ func main() {
 		return response, nil
 	})
 
-	type GetSessionsPerDayOutput struct {
-		Body struct {
-			Items []models.SessionItem `json:"items"`
-		}
-	}
-
 	huma.Register(api, huma.Operation{
 		OperationID: "GetSessionsPerDay",
 		Path:        "/admin/api/sessions_per_day",
 		Method:      http.MethodGet,
 		Summary:     "Get sessions per day",
-	}, func(ctx context.Context, input *models.GenericInput) (*GetSessionsPerDayOutput, error) {
-		response := &GetSessionsPerDayOutput{}
+	}, func(ctx context.Context, input *models.GenericInput) (*models.GetSessionsPerDayResponse, error) {
+		response := &models.GetSessionsPerDayResponse{}
 
 		result, err := pg.GetSessionsPerDay(input.AppId, input.Days)
 		if err != nil {
@@ -106,19 +74,13 @@ func main() {
 		return response, nil
 	})
 
-	type GetTopReferrersOutput struct {
-		Body struct {
-			Items []models.CountByReferrer `json:"items"`
-		}
-	}
-
 	huma.Register(api, huma.Operation{
 		OperationID: "GetTopReferrers",
 		Path:        "/admin/api/top_referrers",
 		Method:      http.MethodGet,
 		Summary:     "Get top referrers",
-	}, func(ctx context.Context, input *models.GenericInput) (*GetTopReferrersOutput, error) {
-		response := &GetTopReferrersOutput{}
+	}, func(ctx context.Context, input *models.GenericInput) (*models.GetTopReferrersResponse, error) {
+		response := &models.GetTopReferrersResponse{}
 
 		result, err := pg.GetTopReferrers(input.AppId, input.Days)
 		if err != nil {
@@ -129,19 +91,13 @@ func main() {
 		return response, nil
 	})
 
-	type GetHitsPerPageOutput struct {
-		Body struct {
-			Items []models.CountHitsPerPage `json:"items"`
-		}
-	}
-
 	huma.Register(api, huma.Operation{
 		OperationID: "GetHitsPerPage",
 		Path:        "/admin/api/hits_per_page",
 		Method:      http.MethodGet,
 		Summary:     "Get hits per page",
-	}, func(ctx context.Context, input *models.GenericInput) (*GetHitsPerPageOutput, error) {
-		response := &GetHitsPerPageOutput{}
+	}, func(ctx context.Context, input *models.GenericInput) (*models.GetHitsPerPageResponse, error) {
+		response := &models.GetHitsPerPageResponse{}
 
 		result, err := pg.GetHitsPerPage(input.AppId, input.Days)
 		if err != nil {
@@ -152,19 +108,13 @@ func main() {
 		return response, nil
 	})
 
-	type GetUniqueSessionsPerPageOutput struct {
-		Body struct {
-			Items []models.CountHitsPerPage `json:"items"`
-		}
-	}
-
 	huma.Register(api, huma.Operation{
 		OperationID: "GetUniqueSessionsPerPage",
 		Path:        "/admin/api/unique_sessions_per_page",
 		Method:      http.MethodGet,
 		Summary:     "Get unique sessions per page",
-	}, func(ctx context.Context, input *models.GenericInput) (*GetUniqueSessionsPerPageOutput, error) {
-		response := &GetUniqueSessionsPerPageOutput{}
+	}, func(ctx context.Context, input *models.GenericInput) (*models.GetUniqueSessionsPerPageResponse, error) {
+		response := &models.GetUniqueSessionsPerPageResponse{}
 
 		result, err := pg.GetUniqueSessionsPerPage(input.AppId, input.Days)
 		if err != nil {
@@ -175,19 +125,13 @@ func main() {
 		return response, nil
 	})
 
-	type GetUniqueSessionsByCountryOutput struct {
-		Body struct {
-			Items []models.CountByCountry `json:"items"`
-		}
-	}
-
 	huma.Register(api, huma.Operation{
 		OperationID: "GetUniqueSessionsByCountry",
 		Path:        "/admin/api/unique_sessions_by_country",
 		Method:      http.MethodGet,
 		Summary:     "Get unique sessions by country",
-	}, func(ctx context.Context, input *models.GenericInput) (*GetUniqueSessionsByCountryOutput, error) {
-		response := &GetUniqueSessionsByCountryOutput{}
+	}, func(ctx context.Context, input *models.GenericInput) (*models.GetUniqueSessionsByCountryResponse, error) {
+		response := &models.GetUniqueSessionsByCountryResponse{}
 
 		result, err := pg.GetUniqueSessionsByCountry(input.AppId, input.Days)
 		if err != nil {
@@ -198,19 +142,13 @@ func main() {
 		return response, nil
 	})
 
-	type GetStatsOutput struct {
-		Body struct {
-			Item models.Stats `json:"item"`
-		}
-	}
-
 	huma.Register(api, huma.Operation{
 		OperationID: "GetStats",
 		Path:        "/admin/api/stats",
 		Method:      http.MethodGet,
 		Summary:     "Get stats",
-	}, func(ctx context.Context, input *models.GenericInput) (*GetStatsOutput, error) {
-		response := &GetStatsOutput{}
+	}, func(ctx context.Context, input *models.GenericInput) (*models.GetStatsResponse, error) {
+		response := &models.GetStatsResponse{}
 
 		result, err := pg.GetStats(input.AppId, input.Days)
 		if err != nil {
@@ -221,19 +159,13 @@ func main() {
 		return response, nil
 	})
 
-	type GetAppsOutput struct {
-		Body struct {
-			Items []models.App `json:"items"`
-		}
-	}
-
 	huma.Register(api, huma.Operation{
 		OperationID: "GetApps",
 		Path:        "/admin/api/apps",
 		Method:      http.MethodGet,
 		Summary:     "Get apps",
-	}, func(ctx context.Context, input *struct{}) (*GetAppsOutput, error) {
-		response := &GetAppsOutput{}
+	}, func(ctx context.Context, input *struct{}) (*models.GetAppsResponse, error) {
+		response := &models.GetAppsResponse{}
 
 		result, err := pg.ListApps()
 		if err != nil {
@@ -244,12 +176,6 @@ func main() {
 		return response, nil
 	})
 
-	type GetHasEventsOutput struct {
-		Body struct {
-			HasEvents bool `json:"hasEvents"`
-		}
-	}
-
 	huma.Register(api, huma.Operation{
 		OperationID: "GetHasEvents",
 		Path:        "/admin/api/has-events",
@@ -257,8 +183,8 @@ func main() {
 		Summary:     "Get has events",
 	}, func(ctx context.Context, input *struct {
 		AppId string `query:"app_id" default:"default" doc:"App ID"`
-	}) (*GetHasEventsOutput, error) {
-		response := &GetHasEventsOutput{}
+	}) (*models.GetHasEventsResponse, error) {
+		response := &models.GetHasEventsResponse{}
 
 		result, err := pg.HasAnyEvents(input.AppId)
 		if err != nil {
@@ -269,23 +195,13 @@ func main() {
 		return response, nil
 	})
 
-	type GetCountSessionsByUtmOutput struct {
-		Body struct {
-			Items []models.CountByKeyValue `json:"items"`
-		}
-	}
-
 	huma.Register(api, huma.Operation{
 		OperationID: "GetCountSessionsByUtm",
 		Path:        "/admin/api/count_sessions_by_utm",
 		Method:      http.MethodGet,
 		Summary:     "Get count of sessions by utm",
-	}, func(ctx context.Context, input *struct {
-		AppId string `query:"app_id" default:"default" doc:"App ID"`
-		Key   string `query:"key" default:"utm_source" doc:"Key"`
-		Days  int    `query:"days" default:"30" doc:"Days"`
-	}) (*GetCountSessionsByUtmOutput, error) {
-		response := &GetCountSessionsByUtmOutput{}
+	}, func(ctx context.Context, input *models.GenericInputWithKey) (*models.GetCountSessionsByUtmResponse, error) {
+		response := &models.GetCountSessionsByUtmResponse{}
 
 		result, err := pg.GetSessionCountByUtmTag(input.AppId, input.Key, input.Days)
 		if err != nil {
@@ -296,19 +212,33 @@ func main() {
 		return response, nil
 	})
 
-	app.Get("/admin/api/config", func(c *fiber.Ctx) error {
+	huma.Register(api, huma.Operation{
+		OperationID: "GetConfig",
+		Path:        "/admin/api/config",
+		Method:      http.MethodGet,
+		Summary:     "Get config",
+	}, func(ctx context.Context, input *struct{}) (*models.ConfigResponse, error) {
+		config := &models.ConfigResponse{}
 		hasEvents, err := pg.HasAnyEvents("")
 		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-				"error": err.Error(),
-			})
+			return nil, err
 		}
 
-		return c.JSON(fiber.Map{
-			"hasEvents":     hasEvents,
-			"allowedOrigin": "http://localhost:" + port,
-			"apiBaseUrl":    "http://localhost:" + port,
-		})
+		config.Body.Config = models.Config{
+			HasEvents:     hasEvents,
+			AllowedOrigin: os.Getenv("ALLOWED_ORIGIN"),
+			ApiBaseUrl:    os.Getenv("API_BASE_URL"),
+		}
+
+		if config.Body.Config.AllowedOrigin == "" {
+			config.Body.Config.AllowedOrigin = "*"
+		}
+
+		if config.Body.Config.ApiBaseUrl == "" {
+			config.Body.Config.ApiBaseUrl = "http://localhost:" + port
+		}
+
+		return config, nil
 	})
 
 	if os.Getenv("ENV") == "local" {

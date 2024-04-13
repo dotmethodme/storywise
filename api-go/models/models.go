@@ -86,3 +86,9 @@ type App struct {
 type HasAnyEvents struct {
 	HasEvents bool `json:"hasEvents"`
 }
+
+type Config struct {
+	HasEvents     bool   `json:"hasEvents"`
+	AllowedOrigin string `json:"allowedOrigin"`
+	ApiBaseUrl    string `json:"apiBaseUrl"`
+}

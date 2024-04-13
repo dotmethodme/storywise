@@ -12,6 +12,7 @@
 import {
   ErrorModel,
   GetAppsData,
+  GetConfigData,
   GetCountSessionsByUserAgentData,
   GetCountSessionsByUtmData,
   GetHasEventsData,
@@ -35,6 +36,19 @@ export class Admin<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
   getApps = (params: RequestParams = {}) =>
     this.request<GetAppsData, ErrorModel>({
       path: `/admin/api/apps`,
+      method: "GET",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @name GetConfig
+   * @summary Get config
+   * @request GET:/admin/api/config
+   */
+  getConfig = (params: RequestParams = {}) =>
+    this.request<GetConfigData, ErrorModel>({
+      path: `/admin/api/config`,
       method: "GET",
       ...params,
     });
@@ -88,7 +102,7 @@ export class Admin<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
       app_id?: string;
       /**
        * Key
-       * @default "utm_source"
+       * @default "user_agent"
        */
       key?: string;
       /**
