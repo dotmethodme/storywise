@@ -1,22 +1,16 @@
-import axios from "axios";
+import { Admin } from "@/generated/Admin";
+import { CountByKeyValue } from "@/generated/data-contracts";
+import type { App } from "@shared/app";
 import type {
-  SessionItem,
-  CountHitsPerPage,
-  CountByReferrer,
-  Stats,
-  SiteConfig,
   CountByCountry,
-  UserAgentQueryKeys,
-  CountByKeyValue,
+  CountByReferrer,
+  CountHitsPerPage,
   HasEvents,
+  SiteConfig,
+  Stats,
   UtmTagKey,
 } from "@shared/types";
-import type { App } from "@shared/app";
-
-export async function getSessions(appId: string, days = 30) {
-  const res = await axios.get<SessionItem[]>(`/admin/api/sessions_per_day?days=${days}&app_id=${appId}`);
-  return res.data;
-}
+import axios from "axios";
 
 export async function getUniqueSessionsPerPage(appId: string, days = 30) {
   const url = `/admin/api/unique_sessions_per_page?days=${days}&app_id=${appId}`;
@@ -45,12 +39,6 @@ export async function getUniqueVisitorsByCountry(appId: string, days = 30) {
 export async function getStats(appId: string, days = 30) {
   const url = `/admin/api/stats?days=${days}&app_id=${appId}`;
   const res = await axios.get<Stats>(url);
-  return res.data;
-}
-
-export async function getSessionCountByUserAgent(appId: string, key: UserAgentQueryKeys, days = 30) {
-  const url = `/admin/api/count_sessions_by_user_agent?days=${days}&app_id=${appId}&key=${key}`;
-  const res = await axios.get<CountByKeyValue[]>(url);
   return res.data;
 }
 
@@ -99,3 +87,5 @@ export async function listDataIo() {
 export async function deleteDataIo(id: string) {
   await axios.delete(`/admin/api/data_io/${id}`);
 }
+
+export const generatedApi = new Admin({});

@@ -20,9 +20,9 @@ func (s NullableString) MarshalJSON() ([]byte, error) {
 }
 
 type CountByKeyValue struct {
-	Key   NullableString `json:"key"`
-	Value NullableString `json:"value"`
-	Count NullableString `json:"count"`
+	Key   *string `json:"key"`
+	Value *string `json:"value"`
+	Count *string `json:"count"`
 }
 
 type CountHitsPerPage struct {

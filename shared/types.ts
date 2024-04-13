@@ -20,12 +20,6 @@ export type CountByCountry = {
   country: string;
 };
 
-export type CountByKeyValue = {
-  count: number;
-  key: string;
-  value: string;
-};
-
 export type Stats = {
   uniqueVisitors: number;
   totalPageviews: number;
