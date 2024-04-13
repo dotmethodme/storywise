@@ -9,6 +9,14 @@
  * ---------------------------------------------------------------
  */
 
+export interface App {
+  created_at: string | null;
+  id: string | null;
+  name: string | null;
+  updated_at: string | null;
+  urls: string | null;
+}
+
 export interface CountByCountry {
   count: string | null;
   country: string | null;
@@ -69,6 +77,15 @@ export interface ErrorModel {
   type?: string;
 }
 
+export interface GetAppsOutputBody {
+  /**
+   * A URL to the JSON Schema for this object.
+   * @format uri
+   */
+  $schema?: string;
+  items: App[];
+}
+
 export interface GetCountSessionsByUserAgentOutputBody {
   /**
    * A URL to the JSON Schema for this object.
@@ -76,6 +93,24 @@ export interface GetCountSessionsByUserAgentOutputBody {
    */
   $schema?: string;
   items: CountByKeyValue[];
+}
+
+export interface GetCountSessionsByUtmOutputBody {
+  /**
+   * A URL to the JSON Schema for this object.
+   * @format uri
+   */
+  $schema?: string;
+  items: CountByKeyValue[];
+}
+
+export interface GetHasEventsOutputBody {
+  /**
+   * A URL to the JSON Schema for this object.
+   * @format uri
+   */
+  $schema?: string;
+  hasEvents: boolean;
 }
 
 export interface GetHitsPerPageOutputBody {
@@ -94,6 +129,15 @@ export interface GetSessionsPerDayOutputBody {
    */
   $schema?: string;
   items: SessionItem[];
+}
+
+export interface GetStatsOutputBody {
+  /**
+   * A URL to the JSON Schema for this object.
+   * @format uri
+   */
+  $schema?: string;
+  item: Stats;
 }
 
 export interface GetTopReferrersOutputBody {
@@ -140,11 +184,25 @@ export interface SessionItem {
   year: string;
 }
 
+export interface Stats {
+  totalPageviews: string | null;
+  uniqueVisitors: string | null;
+  viewsPerVisitor: string | null;
+}
+
+export type GetAppsData = GetAppsOutputBody;
+
 export type GetCountSessionsByUserAgentData = GetCountSessionsByUserAgentOutputBody;
+
+export type GetCountSessionsByUtmData = GetCountSessionsByUtmOutputBody;
+
+export type GetHasEventsData = GetHasEventsOutputBody;
 
 export type GetHitsPerPageData = GetHitsPerPageOutputBody;
 
 export type GetSessionsPerDayData = GetSessionsPerDayOutputBody;
+
+export type GetStatsData = GetStatsOutputBody;
 
 export type GetTopReferrersData = GetTopReferrersOutputBody;
 

@@ -1,18 +1,11 @@
 import { Admin } from "@/generated/Admin";
 import { CountByKeyValue } from "@/generated/data-contracts";
-import type { App } from "@shared/app";
 import type { CountHitsPerPage, HasEvents, SiteConfig, Stats, UtmTagKey } from "@shared/types";
 import axios from "axios";
 
 export async function getUniqueSessionsPerPage(appId: string, days = 30) {
   const url = `/admin/api/unique_sessions_per_page?days=${days}&app_id=${appId}`;
   const res = await axios.get<CountHitsPerPage[]>(url);
-  return res.data;
-}
-
-export async function getStats(appId: string, days = 30) {
-  const url = `/admin/api/stats?days=${days}&app_id=${appId}`;
-  const res = await axios.get<Stats>(url);
   return res.data;
 }
 
@@ -24,16 +17,6 @@ export async function getSessionCountByUtmTag(appId: string, key: UtmTagKey, day
 
 export async function getSiteConfig() {
   const res = await axios.get<SiteConfig>(`/admin/api/config`);
-  return res.data;
-}
-
-export async function hasEvents(appId?: string) {
-  const res = await axios.get<HasEvents>(`/admin/api/has-events${appId ? `?app_id=${appId}` : ""}`);
-  return res.data;
-}
-
-export async function getApps() {
-  const res = await axios.get<App[]>(`/admin/api/apps`);
   return res.data;
 }
 

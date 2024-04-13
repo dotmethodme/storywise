@@ -4,10 +4,10 @@ import SessionsOverTime from "@/components/SessionsOverTime.vue";
 import Stats from "@/components/Stats.vue";
 import Sessions from "@/components/UniqueSessions.vue";
 import PeriodSelector from "@/components/PeriodSelector.vue";
-import { hasEvents } from "@/service/data";
 import { useGlobalStore } from "@/stores/global";
 import { storeToRefs } from "pinia";
 import { ref, watch } from "vue";
+import { generatedApi } from "@/service/data";
 
 const store = useGlobalStore();
 const { activeAppId } = storeToRefs(store);
@@ -18,8 +18,10 @@ const doesAppHaveEvents = ref(false);
 async function fetchHasEvents() {
   if (!activeAppId.value) return;
   hasEventsLoading.value = true;
-  const result = await hasEvents(activeAppId.value);
-  doesAppHaveEvents.value = result.hasEvents;
+  const result = await generatedApi.getHasEvents({
+    app_id: activeAppId.value,
+  });
+  doesAppHaveEvents.value = result.data.hasEvents;
   hasEventsLoading.value = false;
 }
 

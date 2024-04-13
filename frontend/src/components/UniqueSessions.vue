@@ -36,14 +36,10 @@ async function fetchData(activeAppId: string, days: number) {
     generatedApi.getCountSessionsByUserAgent({ app_id: activeAppId, key: "client_name", days }),
     generatedApi.getCountSessionsByUserAgent({ app_id: activeAppId, key: "os_name", days }),
     generatedApi.getCountSessionsByUserAgent({ app_id: activeAppId, key: "device_type", days }),
-    generatedApi.getCountSessionsByUserAgent({
-      app_id: activeAppId,
-      key: "device_brand",
-      days,
-    }),
-    getSessionCountByUtmTag(activeAppId, "utm_source", days),
-    getSessionCountByUtmTag(activeAppId, "utm_medium", days),
-    getSessionCountByUtmTag(activeAppId, "utm_campaign", days),
+    generatedApi.getCountSessionsByUserAgent({ app_id: activeAppId, key: "device_brand", days }),
+    generatedApi.getCountSessionsByUtm({ app_id: activeAppId, key: "utm_source", days }),
+    generatedApi.getCountSessionsByUtm({ app_id: activeAppId, key: "utm_medium", days }),
+    generatedApi.getCountSessionsByUtm({ app_id: activeAppId, key: "utm_campaign", days }),
   ]);
   sessions.value = results[0].data.items;
   hits.value = results[1].data.items;
@@ -53,9 +49,9 @@ async function fetchData(activeAppId: string, days: number) {
   countByOsName.value = results[5].data.items;
   countByDeviceType.value = results[6].data.items;
   countByDeviceBrand.value = results[7].data.items;
-  countByUtmSource.value = results[8];
-  countByUtmMedium.value = results[9];
-  countByUtmCampaign.value = results[10];
+  countByUtmSource.value = results[8].data.items;
+  countByUtmMedium.value = results[9].data.items;
+  countByUtmCampaign.value = results[10].data.items;
 }
 
 const tableSessions = computed(() => sessions.value.map((x) => ({ key: x.path, value: x.count })));

@@ -41,9 +41,9 @@ type CountByCountry struct {
 }
 
 type Stats struct {
-	UniqueVisitors  string  `json:"uniqueVisitors"`
-	TotalPageviews  string  `json:"totalPageviews"`
-	ViewsPerVisitor float32 `json:"viewsPerVisitor"`
+	UniqueVisitors  *string `json:"uniqueVisitors"`
+	TotalPageviews  *string `json:"totalPageviews"`
+	ViewsPerVisitor *string `json:"viewsPerVisitor"`
 }
 
 type WebEvent struct {
@@ -76,11 +76,11 @@ type SessionItem struct {
 }
 
 type App struct {
-	ID        string `json:"id"`
-	Name      string `json:"name"`
-	URLs      string `json:"urls"`
-	CreatedAt string `json:"created_at"`
-	UpdatedAt string `json:"updated_at"`
+	ID        *string `json:"id"`
+	Name      *string `json:"name"`
+	URLs      *string `json:"urls"`
+	CreatedAt *string `json:"created_at"`
+	UpdatedAt *string `json:"updated_at"`
 }
 
 type HasAnyEvents struct {

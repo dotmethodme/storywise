@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { getStats } from "@/service/data";
+import { Stats } from "@/generated/data-contracts";
+import { generatedApi } from "@/service/data";
 import { useGlobalStore } from "@/stores/global";
-import type { Stats } from "@shared/types";
 import { storeToRefs } from "pinia";
 import { onMounted, ref, watch } from "vue";
 
@@ -10,7 +10,12 @@ const store = useGlobalStore();
 const { activeAppId, selectedDays } = storeToRefs(store);
 
 async function fetchData(activeAppId: string, days: number) {
-  stats.value = await getStats(activeAppId, days);
+  const result = await generatedApi.getStats({
+    app_id: activeAppId,
+    days,
+  });
+
+  stats.value = result.data.item;
 }
 
 onMounted(() => fetchData(store.activeAppId, store.selectedDays));

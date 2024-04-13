@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/adapters/humafiber"
@@ -176,26 +175,6 @@ func main() {
 		return response, nil
 	})
 
-	// app.Get("/admin/api/unique_sessions_by_country", func(c *fiber.Ctx) error {
-	// 	app_id := c.Query("app_id", "default")
-	// 	days := c.Query("days", "30")
-	// 	daysInt, err := strconv.Atoi(days)
-	// 	if err != nil {
-	// 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-	// 			"error": "days must be a number",
-	// 		})
-	// 	}
-
-	// 	result, err := pg.GetUniqueSessionsByCountry(app_id, daysInt)
-	// 	if err != nil {
-	// 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-	// 			"error": err.Error(),
-	// 		})
-	// 	}
-
-	// 	return c.JSON(result)
-	// })
-
 	type GetUniqueSessionsByCountryOutput struct {
 		Body struct {
 			Items []models.CountByCountry `json:"items"`
@@ -219,49 +198,102 @@ func main() {
 		return response, nil
 	})
 
-	app.Get("/admin/api/stats", func(c *fiber.Ctx) error {
-		app_id := c.Query("app_id", "default")
-		days := c.Query("days", "30")
-		daysInt, err := strconv.Atoi(days)
+	type GetStatsOutput struct {
+		Body struct {
+			Item models.Stats `json:"item"`
+		}
+	}
+
+	huma.Register(api, huma.Operation{
+		OperationID: "GetStats",
+		Path:        "/admin/api/stats",
+		Method:      http.MethodGet,
+		Summary:     "Get stats",
+	}, func(ctx context.Context, input *models.GenericInput) (*GetStatsOutput, error) {
+		response := &GetStatsOutput{}
+
+		result, err := pg.GetStats(input.AppId, input.Days)
 		if err != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"error": "days must be a number",
-			})
+			return nil, err
 		}
 
-		result, err := pg.GetStats(app_id, daysInt)
-		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-				"error": err.Error(),
-			})
-		}
-
-		return c.JSON(result)
+		response.Body.Item = result
+		return response, nil
 	})
 
-	app.Get("/admin/api/apps", func(c *fiber.Ctx) error {
+	type GetAppsOutput struct {
+		Body struct {
+			Items []models.App `json:"items"`
+		}
+	}
+
+	huma.Register(api, huma.Operation{
+		OperationID: "GetApps",
+		Path:        "/admin/api/apps",
+		Method:      http.MethodGet,
+		Summary:     "Get apps",
+	}, func(ctx context.Context, input *struct{}) (*GetAppsOutput, error) {
+		response := &GetAppsOutput{}
+
 		result, err := pg.ListApps()
 		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-				"error": err.Error(),
-			})
+			return nil, err
 		}
 
-		return c.JSON(result)
+		response.Body.Items = result
+		return response, nil
 	})
 
-	app.Get("/admin/api/has-events", func(c *fiber.Ctx) error {
-		app_id := c.Query("app_id", "default")
-		result, err := pg.HasAnyEvents(app_id)
+	type GetHasEventsOutput struct {
+		Body struct {
+			HasEvents bool `json:"hasEvents"`
+		}
+	}
+
+	huma.Register(api, huma.Operation{
+		OperationID: "GetHasEvents",
+		Path:        "/admin/api/has-events",
+		Method:      http.MethodGet,
+		Summary:     "Get has events",
+	}, func(ctx context.Context, input *struct {
+		AppId string `query:"app_id" default:"default" doc:"App ID"`
+	}) (*GetHasEventsOutput, error) {
+		response := &GetHasEventsOutput{}
+
+		result, err := pg.HasAnyEvents(input.AppId)
 		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-				"error": err.Error(),
-			})
+			return nil, err
 		}
 
-		return c.JSON(models.HasAnyEvents{
-			HasEvents: result,
-		})
+		response.Body.HasEvents = result
+		return response, nil
+	})
+
+	type GetCountSessionsByUtmOutput struct {
+		Body struct {
+			Items []models.CountByKeyValue `json:"items"`
+		}
+	}
+
+	huma.Register(api, huma.Operation{
+		OperationID: "GetCountSessionsByUtm",
+		Path:        "/admin/api/count_sessions_by_utm",
+		Method:      http.MethodGet,
+		Summary:     "Get count of sessions by utm",
+	}, func(ctx context.Context, input *struct {
+		AppId string `query:"app_id" default:"default" doc:"App ID"`
+		Key   string `query:"key" default:"utm_source" doc:"Key"`
+		Days  int    `query:"days" default:"30" doc:"Days"`
+	}) (*GetCountSessionsByUtmOutput, error) {
+		response := &GetCountSessionsByUtmOutput{}
+
+		result, err := pg.GetSessionCountByUtmTag(input.AppId, input.Key, input.Days)
+		if err != nil {
+			return nil, err
+		}
+
+		response.Body.Items = result
+		return response, nil
 	})
 
 	app.Get("/admin/api/config", func(c *fiber.Ctx) error {
@@ -277,27 +309,6 @@ func main() {
 			"allowedOrigin": "http://localhost:" + port,
 			"apiBaseUrl":    "http://localhost:" + port,
 		})
-	})
-
-	app.Get("/admin/api/count_sessions_by_utm", func(c *fiber.Ctx) error {
-		app_id := c.Query("app_id", "default")
-		key := c.Query("key", "utm_source")
-		days := c.Query("days", "30")
-		daysInt, err := strconv.Atoi(days)
-		if err != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"error": "days must be a number",
-			})
-		}
-
-		result, err := pg.GetSessionCountByUtmTag(app_id, key, daysInt)
-		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-				"error": err.Error(),
-			})
-		}
-
-		return c.JSON(result)
 	})
 
 	if os.Getenv("ENV") == "local" {

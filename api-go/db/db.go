@@ -266,8 +266,6 @@ func (repo *PostgresRepo) GetStats(appId string, numberOfDays int) (models.Stats
 		return result, err
 	}
 
-	result.ViewsPerVisitor = float32(int(result.ViewsPerVisitor*100)) / 100
-
 	return result, nil
 }
 

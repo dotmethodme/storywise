@@ -1,5 +1,5 @@
-import { getApps } from "@/service/data";
-import type { App } from "@shared/app";
+import { App } from "@/generated/data-contracts";
+import { generatedApi } from "@/service/data";
 import type { SiteConfig } from "@shared/types";
 import { defineStore } from "pinia";
 import { computed, ref, watch } from "vue";
@@ -21,7 +21,8 @@ export const useGlobalStore = defineStore("global", () => {
   });
 
   async function fetchApps() {
-    apps.value = await getApps();
+    const result = await generatedApi.getApps();
+    apps.value = result.data.items;
   }
 
   return { selectedDays, siteConfig, apps, fetchApps, activeApp, activeAppId };

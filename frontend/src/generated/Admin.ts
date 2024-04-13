@@ -11,9 +11,13 @@
 
 import {
   ErrorModel,
+  GetAppsData,
   GetCountSessionsByUserAgentData,
+  GetCountSessionsByUtmData,
+  GetHasEventsData,
   GetHitsPerPageData,
   GetSessionsPerDayData,
+  GetStatsData,
   GetTopReferrersData,
   GetUniqueSessionsByCountryData,
   GetUniqueSessionsPerPageData,
@@ -21,6 +25,19 @@ import {
 import { HttpClient, RequestParams } from "./http-client";
 
 export class Admin<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+  /**
+   * No description
+   *
+   * @name GetApps
+   * @summary Get apps
+   * @request GET:/admin/api/apps
+   */
+  getApps = (params: RequestParams = {}) =>
+    this.request<GetAppsData, ErrorModel>({
+      path: `/admin/api/apps`,
+      method: "GET",
+      ...params,
+    });
   /**
    * No description
    *
@@ -51,6 +68,63 @@ export class Admin<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
   ) =>
     this.request<GetCountSessionsByUserAgentData, ErrorModel>({
       path: `/admin/api/count_sessions_by_user_agent`,
+      method: "GET",
+      query: query,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @name GetCountSessionsByUtm
+   * @summary Get count of sessions by utm
+   * @request GET:/admin/api/count_sessions_by_utm
+   */
+  getCountSessionsByUtm = (
+    query?: {
+      /**
+       * App ID
+       * @default "default"
+       */
+      app_id?: string;
+      /**
+       * Key
+       * @default "utm_source"
+       */
+      key?: string;
+      /**
+       * Days
+       * @format int64
+       * @default 30
+       */
+      days?: number;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<GetCountSessionsByUtmData, ErrorModel>({
+      path: `/admin/api/count_sessions_by_utm`,
+      method: "GET",
+      query: query,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @name GetHasEvents
+   * @summary Get has events
+   * @request GET:/admin/api/has-events
+   */
+  getHasEvents = (
+    query?: {
+      /**
+       * App ID
+       * @default "default"
+       */
+      app_id?: string;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<GetHasEventsData, ErrorModel>({
+      path: `/admin/api/has-events`,
       method: "GET",
       query: query,
       ...params,
@@ -109,6 +183,35 @@ export class Admin<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
   ) =>
     this.request<GetSessionsPerDayData, ErrorModel>({
       path: `/admin/api/sessions_per_day`,
+      method: "GET",
+      query: query,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @name GetStats
+   * @summary Get stats
+   * @request GET:/admin/api/stats
+   */
+  getStats = (
+    query?: {
+      /**
+       * App ID
+       * @default "default"
+       */
+      app_id?: string;
+      /**
+       * Days
+       * @format int64
+       * @default 30
+       */
+      days?: number;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<GetStatsData, ErrorModel>({
+      path: `/admin/api/stats`,
       method: "GET",
       query: query,
       ...params,
