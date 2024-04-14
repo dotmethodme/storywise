@@ -23,15 +23,6 @@ export interface Config {
   hasEvents: boolean;
 }
 
-export interface ConfigResponseBody {
-  /**
-   * A URL to the JSON Schema for this object.
-   * @format uri
-   */
-  $schema?: string;
-  config: Config;
-}
-
 export interface CountByCountry {
   count: string | null;
   country: string | null;
@@ -51,6 +42,16 @@ export interface CountByReferrer {
 export interface CountHitsPerPage {
   count: string | null;
   path: string | null;
+}
+
+export interface DataIo {
+  created_at: string | null;
+  data: string | null;
+  file_path: string | null;
+  id: string | null;
+  status: string | null;
+  type: string | null;
+  updated_at: string | null;
 }
 
 export interface ErrorDetail {
@@ -101,6 +102,15 @@ export interface GetAppsResponseBody {
   items: App[];
 }
 
+export interface GetConfigResponseBody {
+  /**
+   * A URL to the JSON Schema for this object.
+   * @format uri
+   */
+  $schema?: string;
+  config: Config;
+}
+
 export interface GetCountSessionsByUserAgentResponseBody {
   /**
    * A URL to the JSON Schema for this object.
@@ -117,6 +127,15 @@ export interface GetCountSessionsByUtmResponseBody {
    */
   $schema?: string;
   items: CountByKeyValue[];
+}
+
+export interface GetDataIoResponseBody {
+  /**
+   * A URL to the JSON Schema for this object.
+   * @format uri
+   */
+  $schema?: string;
+  items: DataIo[];
 }
 
 export interface GetHasEventsResponseBody {
@@ -197,11 +216,13 @@ export interface Stats {
 
 export type GetAppsData = GetAppsResponseBody;
 
-export type GetConfigData = ConfigResponseBody;
+export type GetConfigData = GetConfigResponseBody;
 
 export type GetCountSessionsByUserAgentData = GetCountSessionsByUserAgentResponseBody;
 
 export type GetCountSessionsByUtmData = GetCountSessionsByUtmResponseBody;
+
+export type GetDataIoData = GetDataIoResponseBody;
 
 export type GetHasEventsData = GetHasEventsResponseBody;
 

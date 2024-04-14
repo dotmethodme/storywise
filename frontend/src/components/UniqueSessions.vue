@@ -1,16 +1,16 @@
 <script lang="ts" setup>
-import { getSessionCountByUtmTag, generatedApi } from "@/service/data";
-import { useGlobalStore } from "@/stores/global";
-import { countryMap } from "@/utils/countries";
-import { computed, onMounted, ref, watch } from "vue";
-import TableBlock from "./TableBlock.vue";
-import { storeToRefs } from "pinia";
 import {
   CountByCountry,
   CountByKeyValue,
   CountByReferrer,
   CountHitsPerPage,
 } from "@/generated/data-contracts";
+import { generatedApi } from "@/service/data";
+import { useGlobalStore } from "@/stores/global";
+import { countryMap } from "@/utils/countries";
+import { storeToRefs } from "pinia";
+import { computed, onMounted, ref, watch } from "vue";
+import TableBlock from "./TableBlock.vue";
 
 const store = useGlobalStore();
 const { activeAppId, selectedDays } = storeToRefs(store);

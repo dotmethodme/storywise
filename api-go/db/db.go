@@ -1,18 +1,18 @@
 package db
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"os"
 	"time"
 
+	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"joinstorywise.com/api/models"
 )
 
 type PostgresRepo struct {
-	Db *sql.DB
+	Db *sqlx.DB
 }
 
 func IsTimescaleEnabled() bool {
@@ -25,7 +25,7 @@ func NewPostgresRepo() *PostgresRepo {
 		log.Fatal("POSTGRES_URL is not set")
 	}
 
-	db, err := sql.Open("postgres", dbUrl)
+	db, err := sqlx.Connect("postgres", dbUrl)
 	if err != nil {
 		log.Fatalf("Failed to open database: %v", err)
 	}
@@ -51,8 +51,6 @@ var allowedKeysUserAgent = map[string]string{
 }
 
 func (repo *PostgresRepo) GetSessionCountByUserAgent(appId string, key string, numberOfDays int) ([]models.CountByKeyValue, error) {
-	results := []models.CountByKeyValue{}
-
 	column, ok := allowedKeysUserAgent[key]
 	if !ok {
 		log.Printf("Invalid key provided: %s", key)
@@ -66,27 +64,12 @@ func (repo *PostgresRepo) GetSessionCountByUserAgent(appId string, key string, n
         AND app_id = $2
         GROUP BY %s
         ORDER BY count DESC, value ASC`, column, column, column)
-
-	rows, err := repo.Db.Query(query, getDaysAgo(numberOfDays), appId)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var result models.CountByKeyValue
-		if err := rows.Scan(&result.Key, &result.Value, &result.Count); err != nil {
-			return nil, err
-		}
-		results = append(results, result)
-	}
-
+	results := []models.CountByKeyValue{}
+	repo.Db.Select(&results, query, getDaysAgo(numberOfDays), appId)
 	return results, nil
 }
 
 func (repo *PostgresRepo) GetSessionsPerDay(appId string, numberOfDays int) ([]models.SessionItem, error) {
-	results := []models.SessionItem{}
-
 	query := `
 		SELECT
 			EXTRACT(YEAR FROM timestamp) as year,
@@ -99,28 +82,12 @@ func (repo *PostgresRepo) GetSessionsPerDay(appId string, numberOfDays int) ([]m
 		GROUP BY year, month, day
 		ORDER BY year, month, day;
 	`
-
-	rows, err := repo.Db.Query(query, getDaysAgo(numberOfDays), appId)
-
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var result models.SessionItem
-		if err := rows.Scan(&result.Year, &result.Month, &result.Day, &result.Count); err != nil {
-			return nil, err
-		}
-		results = append(results, result)
-	}
-
+	results := []models.SessionItem{}
+	repo.Db.Select(&results, query, getDaysAgo(numberOfDays), appId)
 	return results, nil
 }
 
 func (repo *PostgresRepo) GetTopReferrers(appId string, numberOfDays int) ([]models.CountByReferrer, error) {
-	results := []models.CountByReferrer{}
-
 	query := `
 		SELECT referrer, COUNT(*) as count
 		FROM events
@@ -129,27 +96,12 @@ func (repo *PostgresRepo) GetTopReferrers(appId string, numberOfDays int) ([]mod
 		GROUP BY referrer
 		ORDER BY count DESC, referrer ASC
 	`
-
-	rows, err := repo.Db.Query(query, getDaysAgo(numberOfDays), appId)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var result models.CountByReferrer
-		if err := rows.Scan(&result.Referrer, &result.Count); err != nil {
-			return nil, err
-		}
-		results = append(results, result)
-	}
-
+	results := []models.CountByReferrer{}
+	repo.Db.Select(&results, query, getDaysAgo(numberOfDays), appId)
 	return results, nil
 }
 
 func (repo *PostgresRepo) GetHitsPerPage(appId string, numberOfDays int) ([]models.CountHitsPerPage, error) {
-	results := []models.CountHitsPerPage{}
-
 	query := `
 		SELECT path, COUNT(*) as count
 		FROM events
@@ -158,26 +110,12 @@ func (repo *PostgresRepo) GetHitsPerPage(appId string, numberOfDays int) ([]mode
 		GROUP BY path
 		ORDER BY count DESC, path ASC
 	`
-
-	rows, err := repo.Db.Query(query, getDaysAgo(numberOfDays), appId)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var result models.CountHitsPerPage
-		if err := rows.Scan(&result.Path, &result.Count); err != nil {
-			return nil, err
-		}
-		results = append(results, result)
-	}
-
+	results := []models.CountHitsPerPage{}
+	repo.Db.Select(&results, query, getDaysAgo(numberOfDays), appId)
 	return results, nil
 }
 
 func (repo *PostgresRepo) GetUniqueSessionsPerPage(appId string, numberOfDays int) ([]models.CountHitsPerPage, error) {
-	results := []models.CountHitsPerPage{}
 
 	query := `
 		SELECT path, COUNT(DISTINCT session_id) as count
@@ -187,27 +125,12 @@ func (repo *PostgresRepo) GetUniqueSessionsPerPage(appId string, numberOfDays in
 		GROUP BY path
 		ORDER BY count DESC, path ASC
 	`
-
-	rows, err := repo.Db.Query(query, getDaysAgo(numberOfDays), appId)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var result models.CountHitsPerPage
-		if err := rows.Scan(&result.Path, &result.Count); err != nil {
-			return nil, err
-		}
-		results = append(results, result)
-	}
-
+	results := []models.CountHitsPerPage{}
+	repo.Db.Select(&results, query, getDaysAgo(numberOfDays), appId)
 	return results, nil
 }
 
 func (repo *PostgresRepo) GetUniqueSessionsByCountry(appId string, numberOfDays int) ([]models.CountByCountry, error) {
-	results := []models.CountByCountry{}
-
 	query := `
 		SELECT country, COUNT(DISTINCT session_id) as count
 		FROM events
@@ -216,27 +139,12 @@ func (repo *PostgresRepo) GetUniqueSessionsByCountry(appId string, numberOfDays 
 		GROUP BY country
 		ORDER BY count DESC, country ASC
 	`
-
-	rows, err := repo.Db.Query(query, getDaysAgo(numberOfDays), appId)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var result models.CountByCountry
-		if err := rows.Scan(&result.Country, &result.Count); err != nil {
-			return nil, err
-		}
-		results = append(results, result)
-	}
-
+	results := []models.CountByCountry{}
+	repo.Db.Select(&results, query, getDaysAgo(numberOfDays), appId)
 	return results, nil
 }
 
 func (repo *PostgresRepo) GetStats(appId string, numberOfDays int) (models.Stats, error) {
-	var result models.Stats
-
 	query := `
 		SELECT 
 		(
@@ -260,7 +168,7 @@ func (repo *PostgresRepo) GetStats(appId string, numberOfDays int) (models.Stats
 			) as subq
 		) as "viewsPerVisitor"
 	`
-
+	var result models.Stats
 	err := repo.Db.QueryRow(query, getDaysAgo(numberOfDays), appId).Scan(&result.UniqueVisitors, &result.TotalPageviews, &result.ViewsPerVisitor)
 	if err != nil {
 		return result, err
@@ -271,24 +179,8 @@ func (repo *PostgresRepo) GetStats(appId string, numberOfDays int) (models.Stats
 
 func (repo *PostgresRepo) ListApps() ([]models.App, error) {
 	results := []models.App{}
-
 	query := `SELECT * FROM apps`
-
-	rows, err := repo.Db.Query(query)
-	if err != nil {
-		return nil, err
-	}
-
-	defer rows.Close()
-
-	for rows.Next() {
-		var result models.App
-		if err := rows.Scan(&result.ID, &result.Name, &result.URLs, &result.CreatedAt, &result.UpdatedAt); err != nil {
-			return nil, err
-		}
-		results = append(results, result)
-	}
-
+	repo.Db.Select(&results, query)
 	return results, nil
 }
 
@@ -300,7 +192,6 @@ func (repo *PostgresRepo) HasAnyEvents(appId string) (bool, error) {
 			return false, err
 		}
 		defer rows.Close()
-
 		return rows.Next(), nil
 	} else {
 		query := "select 1 from events limit 1"
@@ -309,7 +200,6 @@ func (repo *PostgresRepo) HasAnyEvents(appId string) (bool, error) {
 			return false, err
 		}
 		defer rows.Close()
-
 		return rows.Next(), nil
 	}
 
@@ -322,14 +212,12 @@ var allowedKeysUtm = map[string]string{
 }
 
 func (repo *PostgresRepo) GetSessionCountByUtmTag(appId string, key string, numberOfDays int) ([]models.CountByKeyValue, error) {
-	results := []models.CountByKeyValue{}
 
 	column, ok := allowedKeysUtm[key]
 	if !ok {
 		log.Printf("Invalid key provided: %s", key)
 		return nil, fmt.Errorf("invalid key provided")
 	}
-
 	query := fmt.Sprintf(`
 		SELECT '%s' AS key, %s as value, COUNT(DISTINCT session_id) AS count
 		FROM events
@@ -337,20 +225,42 @@ func (repo *PostgresRepo) GetSessionCountByUtmTag(appId string, key string, numb
 		AND app_id = $2
 		GROUP BY %s
 		ORDER BY count DESC, value ASC`, column, column, column)
+	results := []models.CountByKeyValue{}
+	repo.Db.Select(&results, query, getDaysAgo(numberOfDays), appId)
+	return results, nil
+}
 
-	rows, err := repo.Db.Query(query, getDaysAgo(numberOfDays), appId)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
+// Javascript version that I'm migrating away from:
+// async listDataIo() {
+//     const results: DataIo[] = await this.sql`select * from data_io`;
+//     return results;
+//   }
 
-	for rows.Next() {
-		var result models.CountByKeyValue
-		if err := rows.Scan(&result.Key, &result.Value, &result.Count); err != nil {
-			return nil, err
-		}
-		results = append(results, result)
-	}
+//   async deleteDataIo(id: string) {
+//     await this.sql`delete from data_io where id = ${id}`;
+//   }
 
+//   public async listApps() {
+//     const result: App[] = await this.sql`select * from apps`;
+//     return result;
+//   }
+
+//   public async createApp(name: string) {
+//     const id = this.uid.randomUUID();
+//     await this.sql`insert into apps (id, name, urls) values (${id}, ${name}, ${""})`;
+//   }
+
+//   public async updateApp(id: string, name: string) {
+//     await this.sql`update apps set name = ${name} where id = ${id}`;
+//   }
+
+//   public async deleteApp(id: string) {
+//     await this.sql`delete from apps where id = ${id}`;
+//   }
+
+func (repo *PostgresRepo) ListDataIo() ([]models.DataIo, error) {
+	results := []models.DataIo{}
+	query := `SELECT * FROM data_io`
+	repo.Db.Select(&results, query)
 	return results, nil
 }

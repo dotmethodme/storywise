@@ -92,3 +92,13 @@ type Config struct {
 	AllowedOrigin string `json:"allowedOrigin"`
 	ApiBaseUrl    string `json:"apiBaseUrl"`
 }
+
+type DataIo struct {
+	ID        *string `json:"id"`
+	Type      *string `json:"type"`
+	Status    *string `json:"status"`
+	FilePath  *string `json:"file_path"`
+	CreatedAt *string `json:"created_at"`
+	UpdatedAt *string `json:"updated_at"`
+	Data      *string `json:"data"`
+}

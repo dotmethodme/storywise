@@ -17,11 +17,6 @@ export async function startExport() {
   await axios.get(`/admin/api/export/start`);
 }
 
-export async function listDataIo() {
-  const res = await axios.get(`/admin/api/data_io/list`);
-  return res.data;
-}
-
 export async function deleteDataIo(id: string) {
   await axios.delete(`/admin/api/data_io/${id}`);
 }

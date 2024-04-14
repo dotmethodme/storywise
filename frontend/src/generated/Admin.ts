@@ -15,6 +15,7 @@ import {
   GetConfigData,
   GetCountSessionsByUserAgentData,
   GetCountSessionsByUtmData,
+  GetDataIoData,
   GetHasEventsData,
   GetHitsPerPageData,
   GetSessionsPerDayData,
@@ -118,6 +119,19 @@ export class Admin<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
       path: `/admin/api/count_sessions_by_utm`,
       method: "GET",
       query: query,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @name GetDataIo
+   * @summary Get data io
+   * @request GET:/admin/api/data-io
+   */
+  getDataIo = (params: RequestParams = {}) =>
+    this.request<GetDataIoData, ErrorModel>({
+      path: `/admin/api/data-io`,
+      method: "GET",
       ...params,
     });
   /**

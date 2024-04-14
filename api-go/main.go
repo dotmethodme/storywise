@@ -217,8 +217,8 @@ func main() {
 		Path:        "/admin/api/config",
 		Method:      http.MethodGet,
 		Summary:     "Get config",
-	}, func(ctx context.Context, input *struct{}) (*models.ConfigResponse, error) {
-		config := &models.ConfigResponse{}
+	}, func(ctx context.Context, input *struct{}) (*models.GetConfigResponse, error) {
+		config := &models.GetConfigResponse{}
 		hasEvents, err := pg.HasAnyEvents("")
 		if err != nil {
 			return nil, err
@@ -239,6 +239,23 @@ func main() {
 		}
 
 		return config, nil
+	})
+
+	huma.Register(api, huma.Operation{
+		OperationID: "GetDataIo",
+		Path:        "/admin/api/data-io",
+		Method:      http.MethodGet,
+		Summary:     "Get data io",
+	}, func(ctx context.Context, input *struct{}) (*models.GetDataIoResponse, error) {
+		response := &models.GetDataIoResponse{}
+
+		result, err := pg.ListDataIo()
+		if err != nil {
+			return nil, err
+		}
+
+		response.Body.Items = result
+		return response, nil
 	})
 
 	if os.Getenv("ENV") == "local" {

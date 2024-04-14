@@ -59,8 +59,14 @@ type GetCountSessionsByUtmResponse struct {
 	}
 }
 
-type ConfigResponse struct {
+type GetConfigResponse struct {
 	Body struct {
 		Config Config `json:"config"`
+	}
+}
+
+type GetDataIoResponse struct {
+	Body struct {
+		Items []DataIo `json:"items"`
 	}
 }
