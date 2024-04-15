@@ -70,3 +70,7 @@ type GetDataIoResponse struct {
 		Items []DataIo `json:"items"`
 	}
 }
+
+type MessageResponse struct {
+	Message string `json:"message"`
+}

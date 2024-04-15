@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import CodePreview from "@/components/CodePreview.vue";
-import { deleteApp, deleteDataIo, generatedApi, startExport, updateApp } from "@/service/data";
+import { generatedApi } from "@/service/data";
 import { useGlobalStore } from "@/stores/global";
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref } from "vue";
@@ -18,7 +18,7 @@ const deleting = ref(false);
 
 async function deleteAppHandler() {
   deleting.value = true;
-  await deleteApp(activeAppId.value);
+  await generatedApi.deleteApp(activeAppId.value);
   await store.fetchApps();
   deleting.value = false;
   deleteDialog.value = false;
@@ -32,7 +32,7 @@ const updateName = ref("");
 
 async function updateAppHandler() {
   updating.value = true;
-  await updateApp(activeAppId.value, updateName.value);
+  await generatedApi.updateApp(activeAppId.value, { name: updateName.value });
   await store.fetchApps();
   updating.value = false;
 }
@@ -49,7 +49,7 @@ async function fetchDataIo() {
 }
 
 async function createExportHander() {
-  await startExport();
+  await generatedApi.startExport();
   await fetchDataIo();
 }
 
@@ -59,7 +59,7 @@ function downloadFile(filePath: string) {
 }
 
 async function deleteDataIoHandler(id: string) {
-  await deleteDataIo(id);
+  await generatedApi.deleteDataIo(id);
   await fetchDataIo();
 }
 

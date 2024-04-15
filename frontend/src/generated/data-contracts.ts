@@ -44,6 +44,16 @@ export interface CountHitsPerPage {
   path: string | null;
 }
 
+export interface CreateAppInputBody {
+  /**
+   * A URL to the JSON Schema for this object.
+   * @format uri
+   */
+  $schema?: string;
+  /** App name */
+  name: string;
+}
+
 export interface DataIo {
   created_at: string | null;
   data: string | null;
@@ -214,7 +224,23 @@ export interface Stats {
   viewsPerVisitor: string | null;
 }
 
+export interface UpdateAppInputBody {
+  /**
+   * A URL to the JSON Schema for this object.
+   * @format uri
+   */
+  $schema?: string;
+  /** App name */
+  name: string;
+}
+
 export type GetAppsData = GetAppsResponseBody;
+
+export type CreateAppData = any;
+
+export type DeleteAppData = any;
+
+export type UpdateAppData = any;
 
 export type GetConfigData = GetConfigResponseBody;
 
@@ -223,6 +249,10 @@ export type GetCountSessionsByUserAgentData = GetCountSessionsByUserAgentRespons
 export type GetCountSessionsByUtmData = GetCountSessionsByUtmResponseBody;
 
 export type GetDataIoData = GetDataIoResponseBody;
+
+export type StartExportData = any;
+
+export type DeleteDataIoData = any;
 
 export type GetHasEventsData = GetHasEventsResponseBody;
 

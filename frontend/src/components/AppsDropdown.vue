@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import router from "@/router";
-import { createApp } from "@/service/data";
+import { generatedApi } from "@/service/data";
 import { useGlobalStore } from "@/stores/global";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
@@ -16,7 +16,7 @@ const deleteName = ref("");
 
 async function createAppHandler() {
   creating.value = true;
-  await createApp(deleteName.value);
+  await generatedApi.createApp({ name: deleteName.value });
   await store.fetchApps();
   creating.value = false;
   showDialog.value = false;
@@ -47,7 +47,7 @@ function changeApp(appId: string) {
     </label>
     <ul tabindex="0" class="dropdown-content z-10 menu p-2 shadow bg-base-100 rounded-box w-52">
       <li v-for="item in apps">
-        <button :class="{ focus: route.params.appId === item.id }" @click="() => changeApp(item.id)">
+        <button :class="{ focus: route.params.appId === item.id }" @click="() => changeApp(item.id!)">
           {{ item.name }}
         </button>
       </li>

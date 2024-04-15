@@ -47,25 +47,25 @@ type Stats struct {
 }
 
 type WebEvent struct {
-	AppID          string
-	SessionID      string
-	Path           string
+	AppID          *string
+	SessionID      *string
+	Path           *string
 	Timestamp      time.Time
-	IP             string // Optional fields are pointers
-	UserAgent      string
-	Referrer       string
-	Language       string
-	Country        string
-	ScreenWidth    int
-	ScreenHeight   int
-	WindowWidth    int
-	WindowHeight   int
+	IP             *string
+	UserAgent      *string
+	Referrer       *string
+	Language       *string
+	Country        *string
+	ScreenWidth    *int
+	ScreenHeight   *int
+	WindowWidth    *int
+	WindowHeight   *int
 	DeviceDetector *devicedetector.DeviceInfo
-	UtmSource      string
-	UtmMedium      string
-	UtmCampaign    string
-	UtmTerm        string
-	UtmContent     string
+	UtmSource      *string
+	UtmMedium      *string
+	UtmCampaign    *string
+	UtmTerm        *string
+	UtmContent     *string
 }
 
 type SessionItem struct {
@@ -76,11 +76,11 @@ type SessionItem struct {
 }
 
 type App struct {
-	ID        *string `json:"id"`
-	Name      *string `json:"name"`
-	URLs      *string `json:"urls"`
-	CreatedAt *string `json:"created_at"`
-	UpdatedAt *string `json:"updated_at"`
+	ID        *string `json:"id" db:"id" path:"id"`
+	Name      *string `json:"name" db:"name"`
+	URLs      *string `json:"urls" db:"urls"`
+	CreatedAt *string `json:"created_at" db:"created_at"`
+	UpdatedAt *string `json:"updated_at" db:"updated_at"`
 }
 
 type HasAnyEvents struct {

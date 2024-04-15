@@ -10,6 +10,10 @@
  */
 
 import {
+  CreateAppData,
+  CreateAppInputBody,
+  DeleteAppData,
+  DeleteDataIoData,
   ErrorModel,
   GetAppsData,
   GetConfigData,
@@ -23,8 +27,11 @@ import {
   GetTopReferrersData,
   GetUniqueSessionsByCountryData,
   GetUniqueSessionsPerPageData,
+  StartExportData,
+  UpdateAppData,
+  UpdateAppInputBody,
 } from "./data-contracts";
-import { HttpClient, RequestParams } from "./http-client";
+import { ContentType, HttpClient, RequestParams } from "./http-client";
 
 export class Admin<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
   /**
@@ -38,6 +45,49 @@ export class Admin<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
     this.request<GetAppsData, ErrorModel>({
       path: `/admin/api/apps`,
       method: "GET",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @name CreateApp
+   * @summary Create app
+   * @request POST:/admin/api/apps
+   */
+  createApp = (data: CreateAppInputBody, params: RequestParams = {}) =>
+    this.request<CreateAppData, ErrorModel>({
+      path: `/admin/api/apps`,
+      method: "POST",
+      body: data,
+      type: ContentType.Json,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @name DeleteApp
+   * @summary Delete app
+   * @request DELETE:/admin/api/apps/{id}
+   */
+  deleteApp = (id: string, params: RequestParams = {}) =>
+    this.request<DeleteAppData, ErrorModel>({
+      path: `/admin/api/apps/${id}`,
+      method: "DELETE",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @name UpdateApp
+   * @summary Update app
+   * @request PUT:/admin/api/apps/{id}
+   */
+  updateApp = (id: string, data: UpdateAppInputBody, params: RequestParams = {}) =>
+    this.request<UpdateAppData, ErrorModel>({
+      path: `/admin/api/apps/${id}`,
+      method: "PUT",
+      body: data,
+      type: ContentType.Json,
       ...params,
     });
   /**
@@ -132,6 +182,32 @@ export class Admin<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
     this.request<GetDataIoData, ErrorModel>({
       path: `/admin/api/data-io`,
       method: "GET",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @name StartExport
+   * @summary Start export
+   * @request POST:/admin/api/data-io/start-export
+   */
+  startExport = (params: RequestParams = {}) =>
+    this.request<StartExportData, ErrorModel>({
+      path: `/admin/api/data-io/start-export`,
+      method: "POST",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @name DeleteDataIo
+   * @summary Delete data io
+   * @request DELETE:/admin/api/data-io/{id}
+   */
+  deleteDataIo = (id: string, params: RequestParams = {}) =>
+    this.request<DeleteDataIoData, ErrorModel>({
+      path: `/admin/api/data-io/${id}`,
+      method: "DELETE",
       ...params,
     });
   /**
