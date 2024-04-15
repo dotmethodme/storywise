@@ -37,7 +37,7 @@ func main() {
 	// Routes
 	routes.RegisterStatsRoutes(api, pg)
 	routes.RegisterAppsRoutes(api, pg)
-	routes.RegisterDataIoRoutes(api, pg)
+	routes.RegisterDataIoRoutes(api, pg, app)
 	routes.RegisterConfigRoutes(api, pg)
 
 	// Serve frontend

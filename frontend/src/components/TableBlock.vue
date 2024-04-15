@@ -60,7 +60,7 @@ const viewingMore = ref(false);
   </dialog>
 </template>
 
-<style>
+<style scoped>
 .table {
   table-layout: fixed;
   width: 100%;

@@ -3,13 +3,15 @@ package routes
 import (
 	"context"
 	"net/http"
+	"os"
 
 	"github.com/danielgtaylor/huma/v2"
+	"github.com/gofiber/fiber/v2"
 	"joinstorywise.com/api/db"
 	"joinstorywise.com/api/models"
 )
 
-func RegisterDataIoRoutes(api huma.API, pg *db.PostgresRepo) {
+func RegisterDataIoRoutes(api huma.API, pg *db.PostgresRepo, app *fiber.App) {
 	huma.Register(api, huma.Operation{
 		OperationID: "GetDataIo",
 		Path:        "/admin/api/data-io",
@@ -56,4 +58,34 @@ func RegisterDataIoRoutes(api huma.API, pg *db.PostgresRepo) {
 
 		return &models.MessageResponse{Message: "Success"}, nil
 	})
+
+	app.Get("/admin/api/data-io/download-file", func(c *fiber.Ctx) error {
+		// Extract the file_path query parameter
+		filePath := c.Query("file_path")
+		if filePath == "" {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Missing file_path"})
+		}
+
+		// Optional: Perform security checks on filePath here to prevent directory traversal attacks
+		if !isValidPath(filePath) {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Invalid file_path"})
+		}
+
+		// Serve the file
+		return c.SendFile("./" + filePath)
+	})
+}
+
+func isValidPath(filePath string) bool {
+	res, err := os.Stat(filePath)
+	if err != nil {
+		return false
+	}
+
+	// Check if the file is a regular file
+	if res.Mode().IsRegular() {
+		return true
+	}
+
+	return false
 }

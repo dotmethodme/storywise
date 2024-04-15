@@ -54,8 +54,7 @@ async function createExportHander() {
 }
 
 function downloadFile(filePath: string) {
-  const iframe = document.getElementById("downloadIframe") as HTMLIFrameElement;
-  iframe.src = `/admin/api/data_io/storywise_export.jsonl?file_path=${filePath}`;
+  window.open(`/admin/api/data-io/download-file?file_path=` + filePath, "_blank");
 }
 
 async function deleteDataIoHandler(id: string) {
@@ -83,7 +82,7 @@ onMounted(() => {
         <tr>
           <th>Created</th>
           <th>Status</th>
-          <th class="text-right">Actions</th>
+          <th class="text-right w-30">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -92,7 +91,7 @@ onMounted(() => {
           <td>
             {{ item.status }}
           </td>
-          <td class="text-right">
+          <td class="text-right w-30">
             <template v-if="item.status === 'complete'">
               <button class="btn btn-ghost btn-sm" @click="() => downloadFile(item.file_path!)">
                 Download
@@ -108,8 +107,6 @@ onMounted(() => {
         </tr>
       </tbody>
     </table>
-
-    <iframe id="downloadIframe" style="display: none"></iframe>
   </div>
 
   <div class="w-full mt-4">

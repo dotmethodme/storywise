@@ -47,25 +47,25 @@ type Stats struct {
 }
 
 type WebEvent struct {
-	AppID          *string
-	SessionID      *string
-	Path           *string
-	Timestamp      time.Time
-	IP             *string
-	UserAgent      *string
-	Referrer       *string
-	Language       *string
-	Country        *string
-	ScreenWidth    *int
-	ScreenHeight   *int
-	WindowWidth    *int
-	WindowHeight   *int
-	DeviceDetector *devicedetector.DeviceInfo
-	UtmSource      *string
-	UtmMedium      *string
-	UtmCampaign    *string
-	UtmTerm        *string
-	UtmContent     *string
+	AppID          *string                    `json:"appId" db:"app_id"`
+	SessionID      *string                    `json:"sessionId" db:"session_id"`
+	Path           *string                    `json:"path" db:"path"`
+	Timestamp      time.Time                  `json:"timestamp" db:"timestamp"`
+	IP             *string                    `json:"ip" db:"ip"`
+	UserAgent      *string                    `json:"userAgent" db:"user_agent"`
+	Referrer       *string                    `json:"referrer" db:"referrer"`
+	Language       *string                    `json:"language" db:"language"`
+	Country        *string                    `json:"country" db:"country"`
+	ScreenWidth    *int                       `json:"screenWidth" db:"screen_width"`
+	ScreenHeight   *int                       `json:"screenHeight" db:"screen_height"`
+	WindowWidth    *int                       `json:"windowWidth" db:"window_width"`
+	WindowHeight   *int                       `json:"windowHeight" db:"window_height"`
+	DeviceDetector *devicedetector.DeviceInfo `json:"deviceDetector" db:"device_detector"`
+	UtmSource      *string                    `json:"utmSource" db:"utm_source"`
+	UtmMedium      *string                    `json:"utmMedium" db:"utm_medium"`
+	UtmCampaign    *string                    `json:"utmCampaign" db:"utm_campaign"`
+	UtmTerm        *string                    `json:"utmTerm" db:"utm_term"`
+	UtmContent     *string                    `json:"utmContent" db:"utm_content"`
 }
 
 type SessionItem struct {
@@ -94,11 +94,11 @@ type Config struct {
 }
 
 type DataIo struct {
-	ID        *string `json:"id"`
-	Type      *string `json:"type"`
-	Status    *string `json:"status"`
-	FilePath  *string `json:"file_path"`
-	CreatedAt *string `json:"created_at"`
-	UpdatedAt *string `json:"updated_at"`
-	Data      *string `json:"data"`
+	ID        *string `json:"id" db:"id" path:"id"`
+	Type      *string `json:"type" db:"type"`
+	Status    *string `json:"status" db:"status"`
+	FilePath  *string `json:"file_path" db:"file_path"`
+	CreatedAt *string `json:"created_at" db:"created_at"`
+	UpdatedAt *string `json:"updated_at" db:"updated_at"`
+	Data      *string `json:"data" db:"data"`
 }

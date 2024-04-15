@@ -288,6 +288,7 @@ func (repo *PostgresRepo) StartExport() error {
 }
 
 func (repo *PostgresRepo) performExport(filePath string, id string) {
+	log.Println("Starting export")
 	const limit = 5000
 
 	log.Printf("Starting export to %s\n", filePath)
