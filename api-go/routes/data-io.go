@@ -42,7 +42,9 @@ func RegisterDataIoRoutes(api huma.API, pg *db.PostgresRepo, app *fiber.App) {
 			return nil, err
 		}
 
-		return &models.MessageResponse{Message: "Success"}, nil
+		response := &models.MessageResponse{}
+		response.Body.Message = "Success"
+		return response, nil
 	})
 
 	huma.Register(api, huma.Operation{
@@ -56,7 +58,9 @@ func RegisterDataIoRoutes(api huma.API, pg *db.PostgresRepo, app *fiber.App) {
 			return nil, err
 		}
 
-		return &models.MessageResponse{Message: "Success"}, nil
+		response := &models.MessageResponse{}
+		response.Body.Message = "Success"
+		return response, nil
 	})
 
 	app.Get("/admin/api/data-io/download-file", func(c *fiber.Ctx) error {

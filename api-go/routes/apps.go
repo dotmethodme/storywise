@@ -38,7 +38,9 @@ func RegisterAppsRoutes(api huma.API, pg *db.PostgresRepo) {
 			return nil, err
 		}
 
-		return &models.MessageResponse{Message: "Success"}, nil
+		response := &models.MessageResponse{}
+		response.Body.Message = "Success"
+		return response, nil
 	})
 
 	huma.Register(api, huma.Operation{
@@ -52,7 +54,9 @@ func RegisterAppsRoutes(api huma.API, pg *db.PostgresRepo) {
 			return nil, err
 		}
 
-		return &models.MessageResponse{Message: "Success"}, nil
+		response := &models.MessageResponse{}
+		response.Body.Message = "Success"
+		return response, nil
 	})
 
 	huma.Register(api, huma.Operation{
@@ -68,7 +72,9 @@ func RegisterAppsRoutes(api huma.API, pg *db.PostgresRepo) {
 			return nil, err
 		}
 
-		return &models.MessageResponse{Message: "Success"}, nil
+		response := &models.MessageResponse{}
+		response.Body.Message = "Success"
+		return response, nil
 	})
 
 }

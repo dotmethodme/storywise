@@ -41,4 +41,18 @@ func RegisterConfigRoutes(api huma.API, pg *db.PostgresRepo) {
 
 		return config, nil
 	})
+
+	// health check
+
+	huma.Register(api, huma.Operation{
+		OperationID: "HealthCheck",
+		Path:        "/api/health",
+		Method:      http.MethodGet,
+		Summary:     "Health check",
+	}, func(ctx context.Context, input *struct{}) (*models.MessageResponse, error) {
+		response := &models.MessageResponse{}
+		response.Body.Message = "Success"
+		return response, nil
+	})
+
 }

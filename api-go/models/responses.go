@@ -72,5 +72,7 @@ type GetDataIoResponse struct {
 }
 
 type MessageResponse struct {
-	Message string `json:"message"`
+	Body struct {
+		Message string `json:"message"`
+	}
 }

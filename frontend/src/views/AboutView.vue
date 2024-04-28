@@ -39,6 +39,7 @@ async function updateAppHandler() {
 
 const dataIo = ref<DataIo[]>();
 const hasPendingJobs = computed(() => dataIo.value && dataIo.value.some((item) => item.status === "pending"));
+
 async function fetchDataIo() {
   const result = await generatedApi.getDataIo();
   dataIo.value = result.data.items;
