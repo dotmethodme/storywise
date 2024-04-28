@@ -5,7 +5,7 @@ import (
 )
 
 var AppsTableMigration = Migration{
-	ID: "create_apps_table_and_update_events",
+	ID: "003_apps",
 	Execute: func(repo *db.PostgresRepo) error {
 
 		_, err := repo.Db.Exec(`

@@ -2,7 +2,7 @@ package db
 
 import (
 	"bufio"
-	"encoding/json"
+	"encoding/csv"
 	"fmt"
 	"log"
 	"os"
@@ -268,7 +268,13 @@ func (repo *PostgresRepo) DeleteApp(id string) error {
 // StartExport initializes the export process by creating a new file and inserting a record into the data_io table.
 func (repo *PostgresRepo) StartExport() error {
 	newID := uuid.New().String()
-	filePath := fmt.Sprintf("%s.jsonl", newID)
+
+	// create folder if it does not exist
+	if _, err := os.Stat("exports"); os.IsNotExist(err) {
+		os.Mkdir("exports", 0755)
+	}
+
+	filePath := fmt.Sprintf("./exports/%s.csv", newID)
 	file, err := os.Create(filePath)
 	if err != nil {
 		return fmt.Errorf("failed to create file: %v", err)
@@ -292,41 +298,90 @@ func (repo *PostgresRepo) performExport(filePath string, id string) {
 	const limit = 5000
 
 	log.Printf("Starting export to %s\n", filePath)
-	cursor := getDaysAgo(365)
+	cursor := 0
+
+	// Open the file in append mode, or create it if it does not exist
+	file, err := os.OpenFile(filePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Printf("Error opening file: %v\n", err)
+		return
+	}
+	defer file.Close()
+
+	// Create a CSV writer
+	writer := csv.NewWriter(bufio.NewWriter(file))
+	defer writer.Flush()
+
+	// Write CSV header
+	headers := []string{
+		"ID",
+		"AppID", "SessionID", "Path", "Timestamp", "IP", "UserAgent", "Referrer",
+		"Language", "Country", "ScreenWidth", "ScreenHeight", "WindowWidth", "WindowHeight",
+		"BotName", "BotCategory", "BotURL", "BotProducerName", "BotProducerURL",
+		"ClientType", "ClientName", "ClientVersion", "ClientEngine", "ClientEngineVersion",
+		"DeviceType", "DeviceBrand", "DeviceModel", "OSName", "OSVersion", "OSPlatform",
+		"UtmSource", "UtmMedium", "UtmCampaign", "UtmTerm", "UtmContent",
+	}
+	if err := writer.Write(headers); err != nil {
+		log.Fatalf("Error writing headers to CSV: %v", err)
+		return
+	}
 
 	for {
 		var rows []models.WebEvent
-		query := "SELECT * FROM events WHERE timestamp > $1 ORDER BY timestamp ASC LIMIT $2"
+		query := "SELECT * FROM events WHERE id > $1 ORDER BY id ASC LIMIT $2"
 		err := repo.Db.Select(&rows, query, cursor, limit)
 		if err != nil {
 			log.Printf("Error fetching events: %v\n", err)
 			break
 		}
 
-		file, err := os.OpenFile(filePath, os.O_APPEND|os.O_WRONLY, 0644)
-		if err != nil {
-			log.Printf("Error opening file: %v\n", err)
-			break
-		}
-		writer := bufio.NewWriter(file)
-
 		for _, row := range rows {
-			jsonRow, _ := json.Marshal(row)
-			writer.WriteString(fmt.Sprintf("%s\n", jsonRow))
+			record := []string{
+				toIntString(&row.ID),
+				row.AppID, *row.SessionID, *row.Path, row.Timestamp.Format(time.RFC3339),
+				toString(row.IP), toString(row.UserAgent), toString(row.Referrer),
+				toString(row.Language), toString(row.Country), toIntString(row.ScreenWidth),
+				toIntString(row.ScreenHeight), toIntString(row.WindowWidth), toIntString(row.WindowHeight),
+				toString(row.BotName), toString(row.BotCategory), toString(row.BotURL),
+				toString(row.BotProducerName), toString(row.BotProducerURL),
+				toString(row.ClientType), toString(row.ClientName), toString(row.ClientVersion),
+				toString(row.ClientEngine), toString(row.ClientEngineVersion),
+				toString(row.DeviceType), toString(row.DeviceBrand), toString(row.DeviceModel),
+				toString(row.OSName), toString(row.OSVersion), toString(row.OSPlatform),
+				toString(row.UtmSource), toString(row.UtmMedium), toString(row.UtmCampaign),
+				toString(row.UtmTerm), toString(row.UtmContent),
+			}
+			if err := writer.Write(record); err != nil {
+				log.Printf("Error writing record to CSV: %v", err)
+			}
 		}
 		writer.Flush()
-		file.Close()
 
 		if len(rows) < limit {
 			break
 		}
-		cursor = rows[len(rows)-1].Timestamp
+		cursor = rows[len(rows)-1].ID
 	}
 
-	_, err := repo.Db.Exec("UPDATE data_io SET status = 'complete', file_path = $1 WHERE id = $2", filePath, id)
+	_, err = repo.Db.Exec("UPDATE data_io SET status = 'complete', file_path = $1 WHERE id = $2", filePath, id)
 	if err != nil {
 		log.Printf("Error updating data_io status: %v\n", err)
 		return
 	}
 	log.Println("Export complete")
+}
+
+func toString(ptr *string) string {
+	if ptr != nil {
+		return *ptr
+	}
+	return ""
+}
+
+func toIntString(ptr *int) string {
+	if ptr != nil {
+		return fmt.Sprintf("%d", *ptr)
+	}
+	return ""
 }

@@ -102,22 +102,28 @@ func main() {
 			numberOfEvents := rand.Intn(10) + 1
 
 			for j := 0; j < numberOfEvents; j++ {
+				utmSource := getRandomElement(utmSources)
+				utmMedium := getRandomElement(utmMediums)
+				utmCampaign := getRandomElement(utmCampaigns)
+				referrer := getRandomElement(referrers)
+				path := getRandomElement(paths)
+
 				event := models.WebEvent{
 					AppID:          "default",
-					SessionID:      user.SessionID,
-					Country:        user.Country,
-					UserAgent:      user.UserAgent,
-					Language:       user.Language,
-					ScreenWidth:    user.ScreenWidth,
-					ScreenHeight:   user.ScreenHeight,
+					SessionID:      &user.SessionID,
+					Country:        &user.Country,
+					UserAgent:      &user.UserAgent,
+					Language:       &user.Language,
+					ScreenWidth:    &user.ScreenWidth,
+					ScreenHeight:   &user.ScreenHeight,
 					Timestamp:      getDaysAgoRandomTime(i),
-					Path:           getRandomElement(paths),
-					Referrer:       getRandomElement(referrers),
-					UtmSource:      getRandomElement(utmSources),
-					UtmMedium:      getRandomElement(utmMediums),
-					UtmCampaign:    getRandomElement(utmCampaigns),
-					WindowWidth:    user.ScreenWidth,
-					WindowHeight:   user.ScreenHeight,
+					Path:           &path,
+					Referrer:       &referrer,
+					UtmSource:      &utmSource,
+					UtmMedium:      &utmMedium,
+					UtmCampaign:    &utmCampaign,
+					WindowWidth:    &user.ScreenWidth,
+					WindowHeight:   &user.ScreenHeight,
 					DeviceDetector: user.DeviceDetector,
 				}
 				events = append(events, event)
