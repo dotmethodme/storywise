@@ -100,6 +100,9 @@ func writeEvents(repo *db.PostgresRepo, events []models.WebEvent) {
 			"os_name",
 			"os_version",
 			"os_platform",
+			"utm_source",
+			"utm_medium",
+			"utm_campaign",
 		))
 
 	if err != nil {
@@ -187,6 +190,9 @@ func writeEvents(repo *db.PostgresRepo, events []models.WebEvent) {
 			os_name,
 			os_version,
 			os_platform,
+			event.UtmSource,
+			event.UtmMedium,
+			event.UtmCampaign,
 		)
 
 		if err != nil {
