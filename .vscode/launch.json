@@ -36,6 +36,15 @@
       "mode": "auto",
       "program": "${workspaceFolder}/api-go/main.go",
       "envFile": "${workspaceFolder}/api-go/.env"
+    },
+    {
+      "name": "Launch seed",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${workspaceFolder}/api-go/cmd/seed-run.go",
+      "envFile": "${workspaceFolder}/api-go/.env",
+      "cwd": "${workspaceFolder}/api-go"
     }
   ]
 }

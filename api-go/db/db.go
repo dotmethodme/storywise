@@ -315,12 +315,40 @@ func (repo *PostgresRepo) performExport(filePath string, id string) {
 	// Write CSV header
 	headers := []string{
 		"ID",
-		"AppID", "SessionID", "Path", "Timestamp", "IP", "UserAgent", "Referrer",
-		"Language", "Country", "ScreenWidth", "ScreenHeight", "WindowWidth", "WindowHeight",
-		"BotName", "BotCategory", "BotURL", "BotProducerName", "BotProducerURL",
-		"ClientType", "ClientName", "ClientVersion", "ClientEngine", "ClientEngineVersion",
-		"DeviceType", "DeviceBrand", "DeviceModel", "OSName", "OSVersion", "OSPlatform",
-		"UtmSource", "UtmMedium", "UtmCampaign", "UtmTerm", "UtmContent",
+		"AppID",
+		"SessionID",
+		"Path",
+		"Timestamp",
+		"IP",
+		"UserAgent",
+		"Referrer",
+		"Language",
+		"Country",
+		"ScreenWidth",
+		"ScreenHeight",
+		"WindowWidth",
+		"WindowHeight",
+		"BotName",
+		"BotCategory",
+		"BotURL",
+		"BotProducerName",
+		"BotProducerURL",
+		"ClientType",
+		"ClientName",
+		"ClientVersion",
+		"ClientEngine",
+		"ClientEngineVersion",
+		"DeviceType",
+		"DeviceBrand",
+		"DeviceModel",
+		"OSName",
+		"OSVersion",
+		"OSPlatform",
+		"UtmSource",
+		"UtmMedium",
+		"UtmCampaign",
+		"UtmTerm",
+		"UtmContent",
 	}
 	if err := writer.Write(headers); err != nil {
 		log.Fatalf("Error writing headers to CSV: %v", err)
@@ -338,19 +366,41 @@ func (repo *PostgresRepo) performExport(filePath string, id string) {
 
 		for _, row := range rows {
 			record := []string{
-				toIntString(&row.ID),
-				row.AppID, *row.SessionID, *row.Path, row.Timestamp.Format(time.RFC3339),
-				toString(row.IP), toString(row.UserAgent), toString(row.Referrer),
-				toString(row.Language), toString(row.Country), toIntString(row.ScreenWidth),
-				toIntString(row.ScreenHeight), toIntString(row.WindowWidth), toIntString(row.WindowHeight),
-				toString(row.BotName), toString(row.BotCategory), toString(row.BotURL),
-				toString(row.BotProducerName), toString(row.BotProducerURL),
-				toString(row.ClientType), toString(row.ClientName), toString(row.ClientVersion),
-				toString(row.ClientEngine), toString(row.ClientEngineVersion),
-				toString(row.DeviceType), toString(row.DeviceBrand), toString(row.DeviceModel),
-				toString(row.OSName), toString(row.OSVersion), toString(row.OSPlatform),
-				toString(row.UtmSource), toString(row.UtmMedium), toString(row.UtmCampaign),
-				toString(row.UtmTerm), toString(row.UtmContent),
+				toIntString(row.ID),
+				row.AppID,
+				row.SessionID,
+				row.Path,
+				row.Timestamp.Format(time.RFC3339),
+				row.IP,
+				row.UserAgent,
+				row.Referrer,
+				row.Language,
+				row.Country,
+				toIntString(row.ScreenWidth),
+				toIntString(row.ScreenHeight),
+				toIntString(row.WindowWidth),
+				toIntString(row.WindowHeight),
+				row.BotName,
+				row.BotCategory,
+				row.BotURL,
+				row.BotProducerName,
+				row.BotProducerURL,
+				row.ClientType,
+				row.ClientName,
+				row.ClientVersion,
+				row.ClientEngine,
+				row.ClientEngineVersion,
+				row.DeviceType,
+				row.DeviceBrand,
+				row.DeviceModel,
+				row.OSName,
+				row.OSVersion,
+				row.OSPlatform,
+				row.UtmSource,
+				row.UtmMedium,
+				row.UtmCampaign,
+				row.UtmTerm,
+				row.UtmContent,
 			}
 			if err := writer.Write(record); err != nil {
 				log.Printf("Error writing record to CSV: %v", err)
@@ -372,16 +422,9 @@ func (repo *PostgresRepo) performExport(filePath string, id string) {
 	log.Println("Export complete")
 }
 
-func toString(ptr *string) string {
-	if ptr != nil {
-		return *ptr
-	}
-	return ""
-}
-
-func toIntString(ptr *int) string {
-	if ptr != nil {
-		return fmt.Sprintf("%d", *ptr)
+func toIntString(ptr int) string {
+	if ptr != 0 {
+		return fmt.Sprintf("%d", ptr)
 	}
 	return ""
 }

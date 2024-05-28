@@ -1,7 +1,6 @@
-package main
+package scripts
 
 import (
-	"fmt"
 	"log"
 	"math/rand"
 	"time"
@@ -11,6 +10,206 @@ import (
 	"joinstorywise.com/api/db"
 	"joinstorywise.com/api/models"
 )
+
+func SeedDemo(daysCount int) {
+
+	log.Println("Seeding demo data")
+	repo := db.NewPostgresRepo()
+	users := generateUsers(200)
+
+	// Insert events into the database
+	repo.Db.Exec("TRUNCATE TABLE events")
+
+	for i := 0; i < daysCount; i++ {
+		var events []models.WebEvent
+		numberOfUsers := rand.Intn(len(users))
+		usersForDate := pickRandomUsers(users, numberOfUsers)
+
+		for _, user := range usersForDate {
+			numberOfEvents := rand.Intn(10) + 1
+
+			for j := 0; j < numberOfEvents; j++ {
+				utmSource := getRandomElement(utmSources)
+				utmMedium := getRandomElement(utmMediums)
+				utmCampaign := getRandomElement(utmCampaigns)
+				referrer := getRandomElement(referrers)
+				path := getRandomElement(paths)
+
+				event := models.WebEvent{
+					AppID:          "default",
+					SessionID:      user.SessionID,
+					Country:        user.Country,
+					UserAgent:      user.UserAgent,
+					Language:       user.Language,
+					ScreenWidth:    user.ScreenWidth,
+					ScreenHeight:   user.ScreenHeight,
+					Timestamp:      getDaysAgoRandomTime(i),
+					Path:           path,
+					Referrer:       referrer,
+					UtmSource:      utmSource,
+					UtmMedium:      utmMedium,
+					UtmCampaign:    utmCampaign,
+					WindowWidth:    user.ScreenWidth,
+					WindowHeight:   user.ScreenHeight,
+					DeviceDetector: *user.DeviceDetector,
+				}
+				events = append(events, event)
+			}
+		}
+
+		writeEvents(repo, events)
+	}
+
+	log.Println("Seeding demo data complete")
+
+}
+
+func writeEvents(repo *db.PostgresRepo, events []models.WebEvent) {
+	txn, err := repo.Db.Begin()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	stmt, err := txn.Prepare(
+		pq.CopyIn("events",
+			"session_id",
+			"path",
+			"timestamp",
+			"ip",
+			"user_agent",
+			"referrer",
+			"language",
+			"country",
+			"screen_width",
+			"screen_height",
+			"window_width",
+			"window_height",
+			"bot_name",
+			"bot_category",
+			"bot_url",
+			"bot_producer_name",
+			"bot_producer_url",
+			"client_type",
+			"client_name",
+			"client_version",
+			"client_engine",
+			"client_engine_version",
+			"device_type",
+			"device_brand",
+			"device_model",
+			"os_name",
+			"os_version",
+			"os_platform",
+		))
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, event := range events {
+
+		bot := event.DeviceDetector.GetBot()
+		client := event.DeviceDetector.GetClient()
+		device := event.DeviceDetector.GetDevice()
+		os := event.DeviceDetector.GetOs()
+
+		bot_name := ""
+		bot_category := ""
+		bot_url := ""
+		bot_producer_name := ""
+		bot_producer_url := ""
+		client_type := ""
+		client_name := ""
+		client_version := ""
+		client_engine := ""
+		client_engine_version := ""
+		device_type := ""
+		device_brand := ""
+		device_model := ""
+		os_name := ""
+		os_version := ""
+		os_platform := ""
+
+		if bot != nil {
+			bot_name = bot.Name
+			bot_category = bot.Category
+			bot_url = bot.Url
+			bot_producer_name = bot.Producer.Name
+			bot_producer_url = bot.Producer.Url
+		}
+
+		if client != nil {
+			client_type = client.Type
+			client_name = client.Name
+			client_version = client.Version
+			client_engine = client.Engine
+			client_engine_version = client.EngineVersion
+		}
+
+		if device != nil {
+			device_type = device.Type
+			device_brand = device.Brand
+			device_model = device.Model
+		}
+
+		if os != nil {
+			os_name = os.Name
+			os_version = os.Version
+			os_platform = os.Platform
+		}
+
+		_, err := stmt.Exec(
+			event.SessionID,
+			event.Path,
+			event.Timestamp,
+			nil,
+			event.UserAgent,
+			event.Referrer,
+			event.Language,
+			event.Country,
+			event.ScreenWidth,
+			event.ScreenHeight,
+			event.WindowWidth,
+			event.WindowHeight,
+			bot_name,
+			bot_category,
+			bot_url,
+			bot_producer_name,
+			bot_producer_url,
+			client_type,
+			client_name,
+			client_version,
+			client_engine,
+			client_engine_version,
+			device_type,
+			device_brand,
+			device_model,
+			os_name,
+			os_version,
+			os_platform,
+		)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	_, err = stmt.Exec()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = stmt.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = txn.Commit()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+}
 
 type User struct {
 	Country        string
@@ -67,7 +266,6 @@ func getDetectorResult(userAgent string) *devicedetector.DeviceInfo {
 func generateUsers(numberOfVirtualUsers int) []User {
 	users := make([]User, numberOfVirtualUsers)
 	for i := range users {
-		log.Printf("Generating user %d\n", i)
 		screen := getRandomElement(screenSizes)
 		ua := getRandomElement(userAgents)
 		uaInfo := getDetectorResult(ua)
@@ -82,202 +280,6 @@ func generateUsers(numberOfVirtualUsers int) []User {
 		}
 	}
 	return users
-}
-
-func main() {
-	repo := db.NewPostgresRepo()
-	rand.Seed(time.Now().UnixNano())
-	daysCount := 365
-	users := generateUsers(200) // Assuming this function is defined similar to your JS function
-
-	var events []models.WebEvent // This will hold all generated events
-
-	for i := 0; i < daysCount; i++ {
-		fmt.Printf("Generating data for day %d\n", i)
-
-		numberOfUsers := rand.Intn(len(users))
-		usersForDate := users[:numberOfUsers]
-
-		for _, user := range usersForDate {
-			numberOfEvents := rand.Intn(10) + 1
-
-			for j := 0; j < numberOfEvents; j++ {
-				utmSource := getRandomElement(utmSources)
-				utmMedium := getRandomElement(utmMediums)
-				utmCampaign := getRandomElement(utmCampaigns)
-				referrer := getRandomElement(referrers)
-				path := getRandomElement(paths)
-
-				event := models.WebEvent{
-					AppID:          "default",
-					SessionID:      &user.SessionID,
-					Country:        &user.Country,
-					UserAgent:      &user.UserAgent,
-					Language:       &user.Language,
-					ScreenWidth:    &user.ScreenWidth,
-					ScreenHeight:   &user.ScreenHeight,
-					Timestamp:      getDaysAgoRandomTime(i),
-					Path:           &path,
-					Referrer:       &referrer,
-					UtmSource:      &utmSource,
-					UtmMedium:      &utmMedium,
-					UtmCampaign:    &utmCampaign,
-					WindowWidth:    &user.ScreenWidth,
-					WindowHeight:   &user.ScreenHeight,
-					DeviceDetector: user.DeviceDetector,
-				}
-				events = append(events, event)
-			}
-		}
-	}
-
-	// Insert events into the database
-	repo.Db.Exec("TRUNCATE TABLE events")
-
-	txn, err := repo.Db.Begin()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	stmt, err := txn.Prepare(
-		pq.CopyIn("events",
-			"session_id",
-			"path",
-			"timestamp",
-			"ip",
-			"user_agent",
-			"referrer",
-			"language",
-			"country",
-			"screen_width",
-			"screen_height",
-			"window_width",
-			"window_height",
-			"bot_name",
-			"bot_category",
-			"bot_url",
-			"bot_producer_name",
-			"bot_producer_url",
-			"client_type",
-			"client_name",
-			"client_version",
-			"client_engine",
-			"client_engine_version",
-			"device_type",
-			"device_brand",
-			"device_model",
-			"os_name",
-			"os_version",
-			"os_platform",
-		))
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	for i, event := range events {
-		log.Println("Inserting event", i+1)
-		bot := event.DeviceDetector.GetBot()
-		client := event.DeviceDetector.GetClient()
-		device := event.DeviceDetector.GetDevice()
-		os := event.DeviceDetector.GetOs()
-
-		bot_name := ""
-		bot_category := ""
-		bot_url := ""
-		bot_producer_name := ""
-		bot_producer_url := ""
-		client_type := ""
-		client_name := ""
-		client_version := ""
-		client_engine := ""
-		client_engine_version := ""
-		device_type := ""
-		device_brand := ""
-		device_model := ""
-		os_name := ""
-		os_version := ""
-		os_platform := ""
-
-		if bot != nil {
-			bot_name = bot.Name
-			bot_category = bot.Category
-			bot_url = bot.Url
-			bot_producer_name = bot.Producer.Name
-			bot_producer_url = bot.Producer.Url
-		}
-
-		if client != nil {
-			client_type = client.Type
-			client_name = client.Name
-			client_version = client.Version
-			client_engine = client.Engine
-			client_engine_version = client.EngineVersion
-		}
-
-		if device != nil {
-			device_type = device.Type
-			device_brand = device.Brand
-			device_model = device.Model
-		}
-
-		if os != nil {
-			os_name = os.Name
-			os_version = os.Version
-			os_platform = os.Platform
-		}
-
-		_, err := stmt.Exec(
-			event.SessionID,       // "session_id",
-			event.Path,            // "path",
-			event.Timestamp,       // "timestamp",
-			nil,                   // "ip",
-			event.UserAgent,       // "user_agent",
-			event.Referrer,        // "referrer",
-			event.Language,        // "language",
-			event.Country,         // "country",
-			event.ScreenWidth,     // "screen_width",
-			event.ScreenHeight,    // "screen_height",
-			event.WindowWidth,     // "window_width",
-			event.WindowHeight,    // "window_height",
-			bot_name,              // bot_name
-			bot_category,          // bot_category
-			bot_url,               // bot_url
-			bot_producer_name,     // bot_producer_name
-			bot_producer_url,      // bot_producer_url
-			client_type,           // client_type
-			client_name,           // client_name
-			client_version,        // client_version
-			client_engine,         // client_engine
-			client_engine_version, // client_engine_version
-			device_type,           // device_type
-			device_brand,          // device_brand
-			device_model,          // device_model
-			os_name,               // os_name
-			os_version,            // os_version
-			os_platform,           // os_platform
-		)
-
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-
-	_, err = stmt.Exec()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	err = stmt.Close()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	err = txn.Commit()
-	if err != nil {
-		log.Fatal(err)
-	}
-
 }
 
 func getDaysAgoRandomTime(daysAgo int) time.Time {
@@ -297,4 +299,15 @@ func getDaysAgoRandomTime(daysAgo int) time.Time {
 		hours, minutes, seconds, nanoseconds, daysAgoTime.Location())
 
 	return randomTime
+}
+
+func pickRandomUsers(users []User, x int) []User {
+	shuffled := make([]User, len(users))
+	copy(shuffled, users)
+	rand.Shuffle(len(shuffled), func(i, j int) { shuffled[i], shuffled[j] = shuffled[j], shuffled[i] })
+
+	if x > len(shuffled) {
+		x = len(shuffled) // If x is larger than the slice, limit it to the length of the slice
+	}
+	return shuffled[:x]
 }
