@@ -1,6 +1,7 @@
 name: CI Pipeline
 permissions:
   contents: write
+  packages: write
 
 concurrency:
   group: storywise
