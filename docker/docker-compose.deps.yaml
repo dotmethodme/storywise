@@ -2,6 +2,9 @@ version: "3"
 
 services:
   postgres:
+    networks:
+      - storywise
+    hostname: postgres
     image: postgres:15
     container_name: postgres
     environment:
@@ -10,14 +13,31 @@ services:
       - "5444:5432"
 
   timescaledb:
+    networks:
+      - storywise
+    hostname: timescaledb
     image: timescale/timescaledb:latest-pg14
     container_name: timescaledb
     environment:
       POSTGRES_PASSWORD: testing
+      POSTGRES_LOGGING_COLLECTOR: "on"
+      POSTGRES_LOGGING_DIRECTORY: "/var/log/postgresql"
+      POSTGRES_LOGGING_FILENAME: "postgresql.log"
+      POSTGRES_LOGGING_TRUNCATE_ON_ROTATION: "on"
+      POSTGRES_LOGGING_ROTATION_AGE: "1d"
+      POSTGRES_LOGGING_ROTATION_SIZE: "10MB"
+      POSTGRES_LOGGING_MIN_MESSAGES: "INFO"
+      POSTGRES_LOGGING_ERROR_VERBOSITY: "default"
+      POSTGRES_LOGGING_STDERR: "on"
+      POSTGRES_LOGGING_SYSLOG: "off"
+
     ports:
       - "5566:5432"
 
   mongodb:
+    networks:
+      - storywise
+    hostname: mongodb
     image: mongo:6
     container_name: mongodb
     environment:
@@ -27,7 +47,14 @@ services:
       - "27077:27017"
 
   libsql:
+    networks:
+      - storywise
+    hostname: libsql
     image: ghcr.io/libsql/sqld:latest
     container_name: libsql
     ports:
       - "8880:8080"
+
+networks:
+  storywise:
+    external: true
