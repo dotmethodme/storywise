@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { getSessions } from "@/service/data";
+import { generatedApi } from "@/service/data";
 import { useGlobalStore } from "@/stores/global";
 import { getPreferredColorScheme } from "@/utils/theme";
 import * as echarts from "echarts";
@@ -17,16 +17,22 @@ async function render(activeAppId: string, selectedDays: number) {
     chartObj.value.dispose();
   }
 
-  const data = await getSessions(activeAppId, selectedDays);
+  const { data } = await generatedApi.getSessionsPerDay({
+    app_id: activeAppId,
+    days: selectedDays,
+  });
 
-  if (data.length === 0) {
+  if (data.items.length === 0) {
     return;
   }
+
+  const xAxisData = data.items.map((d) => `${d.year}-${d.month}-${d.day}`);
+  const seriesData = data.items.map((d) => d.count);
 
   const option: echarts.EChartsOption = {
     xAxis: {
       type: "category",
-      data: data.map((d) => `${d.year}-${d.month}-${d.day}`),
+      data: xAxisData,
       axisLine: {
         show: false,
       },
@@ -48,7 +54,7 @@ async function render(activeAppId: string, selectedDays: number) {
     },
     series: [
       {
-        data: data.map((d) => d.count),
+        data: seriesData,
         type: "line",
         smooth: true,
       },
@@ -61,18 +67,23 @@ async function render(activeAppId: string, selectedDays: number) {
   chartObj.value = chart;
 }
 
-onMounted(async () => render(store.activeAppId, store.selectedDays));
+onMounted(async () => {
+  setTimeout(() => {
+    render(store.activeAppId, store.selectedDays);
+  }, 100);
+});
 onUnmounted(() => chartObj.value?.dispose());
 watch([activeAppId, selectedDays], ([activeAppId, selectedDays]) => render(activeAppId, selectedDays));
 </script>
 
 <template>
-  <div ref="chartEl" class="chart"></div>
+  <div ref="chartEl" class="chart" style="height: 300px"></div>
 </template>
 
 <style scoped>
 .chart {
   width: 100%;
   height: 300px;
+  min-height: 300px;
 }
 </style>

@@ -1,20 +1,28 @@
-FROM node:18-alpine3.18
+FROM node:22-alpine3.19 as build-frontend
 
 WORKDIR /app
 
 COPY package.json /app
 COPY package-lock.json /app
 
-COPY api/package.json api/
 COPY frontend/package.json frontend/
 
-RUN npm i -w api -w frontend
+RUN npm i -w frontend
 
-COPY api api/
 COPY frontend frontend/
-COPY shared shared/
 
 RUN npm run build
 
-ENTRYPOINT ["npm", "start"]
+FROM golang:1.22-bookworm as build-backend
 
+WORKDIR /app
+
+COPY api-go/ /app/
+COPY --from=build-frontend /app/frontend/dist /app/dist-frontend
+
+RUN go build -o /app/api-go /app/main.go
+
+RUN ls -lah
+
+
+ENTRYPOINT ["/app/api-go"]

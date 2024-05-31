@@ -1,18 +1,16 @@
 <script lang="ts" setup>
 import {
-  getHitsPerPage,
-  getTopReferrers,
-  getUniqueSessionsPerPage,
-  getUniqueVisitorsByCountry,
-  getSessionCountByUserAgent,
-  getSessionCountByUtmTag,
-} from "@/service/data";
+  CountByCountry,
+  CountByKeyValue,
+  CountByReferrer,
+  CountHitsPerPage,
+} from "@/generated/data-contracts";
+import { generatedApi } from "@/service/data";
 import { useGlobalStore } from "@/stores/global";
 import { countryMap } from "@/utils/countries";
-import type { CountByCountry, CountByKeyValue, CountByReferrer, CountHitsPerPage } from "@shared/types";
+import { storeToRefs } from "pinia";
 import { computed, onMounted, ref, watch } from "vue";
 import TableBlock from "./TableBlock.vue";
-import { storeToRefs } from "pinia";
 
 const store = useGlobalStore();
 const { activeAppId, selectedDays } = storeToRefs(store);
@@ -31,56 +29,59 @@ const countByUtmCampaign = ref<CountByKeyValue[]>([]);
 
 async function fetchData(activeAppId: string, days: number) {
   const results = await Promise.all([
-    getUniqueSessionsPerPage(activeAppId, days),
-    getHitsPerPage(activeAppId, days),
-    getTopReferrers(activeAppId, days),
-    getUniqueVisitorsByCountry(activeAppId, days),
-    getSessionCountByUserAgent(activeAppId, "client_name", days),
-    getSessionCountByUserAgent(activeAppId, "os_name", days),
-    getSessionCountByUserAgent(activeAppId, "device_type", days),
-    getSessionCountByUserAgent(activeAppId, "device_brand", days),
-    getSessionCountByUtmTag(activeAppId, "utm_source", days),
-    getSessionCountByUtmTag(activeAppId, "utm_medium", days),
-    getSessionCountByUtmTag(activeAppId, "utm_campaign", days),
+    generatedApi.getUniqueSessionsPerPage({ app_id: activeAppId, days }),
+    generatedApi.getHitsPerPage({ app_id: activeAppId, days }),
+    generatedApi.getTopReferrers({ app_id: activeAppId, days }),
+    generatedApi.getUniqueSessionsByCountry({ app_id: activeAppId, days }),
+    generatedApi.getCountSessionsByUserAgent({ app_id: activeAppId, key: "client_name", days }),
+    generatedApi.getCountSessionsByUserAgent({ app_id: activeAppId, key: "os_name", days }),
+    generatedApi.getCountSessionsByUserAgent({ app_id: activeAppId, key: "device_type", days }),
+    generatedApi.getCountSessionsByUserAgent({ app_id: activeAppId, key: "device_brand", days }),
+    generatedApi.getCountSessionsByUtm({ app_id: activeAppId, key: "utm_source", days }),
+    generatedApi.getCountSessionsByUtm({ app_id: activeAppId, key: "utm_medium", days }),
+    generatedApi.getCountSessionsByUtm({ app_id: activeAppId, key: "utm_campaign", days }),
   ]);
-  sessions.value = results[0];
-  hits.value = results[1];
-  referrers.value = results[2];
-  countries.value = results[3];
-  countByClientName.value = results[4];
-  countByOsName.value = results[5];
-  countByDeviceType.value = results[6];
-  countByDeviceBrand.value = results[7];
-  countByUtmSource.value = results[8];
-  countByUtmMedium.value = results[9];
-  countByUtmCampaign.value = results[10];
+  sessions.value = results[0].data.items;
+  hits.value = results[1].data.items;
+  referrers.value = results[2].data.items;
+  countries.value = results[3].data.items;
+  countByClientName.value = results[4].data.items;
+  countByOsName.value = results[5].data.items;
+  countByDeviceType.value = results[6].data.items;
+  countByDeviceBrand.value = results[7].data.items;
+  countByUtmSource.value = results[8].data.items;
+  countByUtmMedium.value = results[9].data.items;
+  countByUtmCampaign.value = results[10].data.items;
 }
 
 const tableSessions = computed(() => sessions.value.map((x) => ({ key: x.path, value: x.count })));
 const tableHits = computed(() => hits.value.map((x) => ({ key: x.path, value: x.count })));
 const tableReferrers = computed(() => referrers.value.map((x) => ({ key: x.referrer, value: x.count })));
 const tableCountry = computed(() =>
-  countries.value.map((x) => ({ key: countryMap[x.country] || x.country, value: x.count }))
+  countries.value.map((x) => ({
+    key: x.country ? countryMap[x.country] || x.country : x.country,
+    value: x.count,
+  })),
 );
 const tableClientName = computed(() =>
-  countByClientName.value.map((x) => ({ key: x.value, value: x.count }))
+  countByClientName.value.map((x) => ({ key: x.value, value: x.count })),
 );
 const tableOS = computed(() => countByOsName.value.map((x) => ({ key: x.value, value: x.count })));
 const tableDeviceType = computed(() =>
-  countByDeviceType.value.map((x) => ({ key: x.value, value: x.count }))
+  countByDeviceType.value.map((x) => ({ key: x.value, value: x.count })),
 );
 const tableDeviceBrand = computed(() =>
-  countByDeviceBrand.value.map((x) => ({ key: x.value, value: x.count }))
+  countByDeviceBrand.value.map((x) => ({ key: x.value, value: x.count })),
 );
 
 const tableUtmSource = computed(() =>
-  countByUtmSource.value.filter((x) => x.value !== null).map((x) => ({ key: x.value, value: x.count }))
+  countByUtmSource.value.filter((x) => x.value !== null).map((x) => ({ key: x.value, value: x.count })),
 );
 const tableUtmMedium = computed(() =>
-  countByUtmMedium.value.filter((x) => x.value !== null).map((x) => ({ key: x.value, value: x.count }))
+  countByUtmMedium.value.filter((x) => x.value !== null).map((x) => ({ key: x.value, value: x.count })),
 );
 const tableUtmCampaign = computed(() =>
-  countByUtmCampaign.value.filter((x) => x.value !== null).map((x) => ({ key: x.value, value: x.count }))
+  countByUtmCampaign.value.filter((x) => x.value !== null).map((x) => ({ key: x.value, value: x.count })),
 );
 
 onMounted(() => fetchData(activeAppId.value, selectedDays.value));

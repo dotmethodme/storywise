@@ -1,7 +1,14 @@
-export function getDaysAgo(days: number) {
-  const date = new Date();
-  date.setDate(date.getDate() - days);
-  return date;
+import dayjs from "dayjs";
+
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
+
+export function getDaysAgo(days: number): Date {
+  return dayjs().utc().subtract(days, "day").hour(0).minute(0).second(0).millisecond(0).toDate();
+}
+
+export function getDaysAgoString(days: number): string {
+  return dayjs().utc().subtract(days, "day").hour(0).minute(0).second(0).millisecond(0).toISOString();
 }
 
 export function getDaysAgoRandomTime(days: number) {

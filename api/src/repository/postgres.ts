@@ -1,3 +1,4 @@
+import { App } from "@shared/app";
 import {
   CountByCountry,
   CountByKeyValue,
@@ -11,13 +12,12 @@ import {
 } from "@shared/types";
 import fs from "fs/promises";
 import postgres from "postgres";
+import ShortUniqueId from "short-unique-id";
 import { file } from "tmp-promise";
 import { v4 } from "uuid";
 import { WebEvent } from "../types/models";
-import { getDaysAgo } from "../utils/date";
+import { getDaysAgoString } from "../utils/date";
 import { IDataRepo } from "./types";
-import { App } from "@shared/app";
-import ShortUniqueId from "short-unique-id";
 
 export class PostgresRepo implements IDataRepo {
   public sql: postgres.Sql;
@@ -54,7 +54,7 @@ export class PostgresRepo implements IDataRepo {
     return this.sql<CountByKeyValue[]>`
       SELECT ${key} as key, ${this.sql(key)} as value, COUNT(DISTINCT session_id) as count
       FROM events
-      WHERE timestamp >= ${getDaysAgo(numberOfDays).toISOString()}
+      WHERE timestamp >= ${getDaysAgoString(numberOfDays)}
       AND app_id = ${appId}
       GROUP BY ${this.sql(key)}
       ORDER BY count DESC, value ASC
@@ -65,7 +65,7 @@ export class PostgresRepo implements IDataRepo {
     return this.sql<CountByKeyValue[]>`
       SELECT ${key} as key, ${this.sql(key)} as value, COUNT(DISTINCT session_id) as count
       FROM events
-      WHERE timestamp >= ${getDaysAgo(numberOfDays).toISOString()}
+      WHERE timestamp >= ${getDaysAgoString(numberOfDays)}
       AND app_id = ${appId}
       GROUP BY ${this.sql(key)}
       ORDER BY count DESC, value ASC
@@ -86,7 +86,7 @@ export class PostgresRepo implements IDataRepo {
         EXTRACT(DAY FROM timestamp) as day,
         COUNT(DISTINCT session_id) as count
       FROM events
-      WHERE timestamp >= ${getDaysAgo(numberOfDays).toISOString()} 
+      WHERE timestamp >= ${getDaysAgoString(numberOfDays)} 
       AND app_id = ${appId}
       GROUP BY year, month, day
       ORDER BY year, month, day;
@@ -97,7 +97,7 @@ export class PostgresRepo implements IDataRepo {
     return this.sql<CountHitsPerPage[]>`
       SELECT path, COUNT(*) as count
       FROM events
-      WHERE timestamp >= ${getDaysAgo(numberOfDays).toISOString()}
+      WHERE timestamp >= ${getDaysAgoString(numberOfDays)}
       AND app_id = ${appId}
       GROUP BY path
       ORDER BY count DESC, path ASC
@@ -108,7 +108,7 @@ export class PostgresRepo implements IDataRepo {
     return this.sql<CountHitsPerPage[]>`
       SELECT path, COUNT(DISTINCT session_id) as count
       FROM events
-      WHERE timestamp >= ${getDaysAgo(numberOfDays).toISOString()}
+      WHERE timestamp >= ${getDaysAgoString(numberOfDays)}
       AND app_id = ${appId}
       GROUP BY path
       ORDER BY count DESC, path ASC
@@ -119,7 +119,7 @@ export class PostgresRepo implements IDataRepo {
     return this.sql<CountByReferrer[]>`
       SELECT referrer, COUNT(*) as count
       FROM events
-      WHERE timestamp >= ${getDaysAgo(numberOfDays).toISOString()}
+      WHERE timestamp >= ${getDaysAgoString(numberOfDays)}
       AND app_id = ${appId}
       GROUP BY referrer
       ORDER BY count DESC, referrer ASC
@@ -130,7 +130,7 @@ export class PostgresRepo implements IDataRepo {
     return this.sql<CountByCountry[]>`
       SELECT country, COUNT(DISTINCT session_id) as count
       FROM events
-      WHERE timestamp >= ${getDaysAgo(numberOfDays).toISOString()}
+      WHERE timestamp >= ${getDaysAgoString(numberOfDays)}
       AND app_id = ${appId}
       GROUP BY country
       ORDER BY count DESC, country ASC
@@ -138,7 +138,7 @@ export class PostgresRepo implements IDataRepo {
   }
 
   async getStats(appId: string, numberOfDays = 30) {
-    const startDate = getDaysAgo(numberOfDays).toISOString();
+    const startDate = getDaysAgoString(numberOfDays);
     const result = await this.sql<Stats[]>`
       SELECT 
       (

@@ -2,7 +2,7 @@
 import { computed, ref } from "vue";
 
 const props = defineProps<{
-  rows: { key: string; value: number }[];
+  rows: { key: string | null; value: string | number | null }[];
   title: string;
   viewLimit?: number;
 }>();
@@ -31,7 +31,7 @@ const viewingMore = ref(false);
               </span>
             </th>
           </tr>
-          <tr v-for="row in countsVisible" :key="row.key">
+          <tr v-for="(row, i) in countsVisible" :key="i">
             <td>{{ row.key || "None" }}</td>
             <td class="text-right">{{ row.value }}</td>
           </tr>
@@ -49,7 +49,7 @@ const viewingMore = ref(false);
             <th class="font-bold text-right"></th>
           </tr>
 
-          <tr v-for="row in rows" :key="row.key">
+          <tr v-for="(row, i) in rows" :key="i">
             <td :title="row.key ? row.key.toString() : undefined">{{ row.key || "None" }}</td>
             <td class="text-right">{{ row.value }}</td>
           </tr>

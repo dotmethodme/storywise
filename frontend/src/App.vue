@@ -2,17 +2,18 @@
 import Menu from "@/components/Menu.vue";
 import { onMounted, ref } from "vue";
 import { RouterView } from "vue-router";
-import { getSiteConfig } from "@/service/data";
 import { useGlobalStore } from "@/stores/global";
 import { storeToRefs } from "pinia";
 import AppsDropdown from "./components/AppsDropdown.vue";
+import { generatedApi } from "./service/data";
 
 const store = useGlobalStore();
 const { apps } = storeToRefs(store);
 const loadingSiteConfig = ref(false);
 
 onMounted(async () => {
-  store.siteConfig = await getSiteConfig();
+  const result = await generatedApi.getConfig();
+  store.siteConfig = result.data.config;
   store.fetchApps();
   loadingSiteConfig.value = true;
 });

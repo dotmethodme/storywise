@@ -22,7 +22,7 @@ on:
       - "package-lock.json"
 
 env:
-  REGISTRY_IMAGE: mihainueleanu/storywise
+  REGISTRY_IMAGE: ghcr.io/dotmethodme/storywise
 
 jobs:
   tag:
@@ -86,8 +86,9 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push
         uses: docker/build-push-action@v4
@@ -96,10 +97,8 @@ jobs:
           context: .
           file: ./Dockerfile
           platforms: ${{ matrix.platform }}
-          # push: true
           outputs: type=image,name=${{env.REGISTRY_IMAGE}},push-by-digest=true,name-canonical=true,push=true
           labels: ${{ steps.meta.outputs.labels }}
-          # tags: mihainueleanu/storywise:latest,mihainueleanu/storywise:${{ needs.tag.outputs.tag }}
           cache-from: type=registry,ref=${{env.REGISTRY_IMAGE}}:latest
           cache-to: type=inline
 
@@ -192,8 +191,8 @@ jobs:
           context: .
           file: ./Dockerfile.website
           push: true
-          tags: mihainueleanu/storywise-website:latest,mihainueleanu/storywise-website:${{ needs.tag.outputs.tag }}
-          cache-from: type=registry,ref=mihainueleanu/storywise-website:latest
+          tags: ${{env.REGISTRY_IMAGE}}-website:latest,${{env.REGISTRY_IMAGE}}-website:${{ needs.tag.outputs.tag }}
+          cache-from: type=registry,ref=${{env.REGISTRY_IMAGE}}-website:latest
           cache-to: type=inline
 
   push-website:

@@ -1,20 +1,16 @@
 {
   "name": "storywise",
   "scripts": {
-    "build:api": "npm run build -w api",
     "build:frontend": "npm run build -w frontend",
     "build:website": "npm run build -w website",
-    "build": "npm run build:api && npm run build:frontend && npm run copy:frontend",
-    "copy:frontend": "cp -r frontend/dist api/dist-frontend",
-    "start": "npm run start -w api",
-    "dev:api": "npm run dev -w api",
+    "build": "npm run build:frontend",
+    "copy:frontend": "cp -r frontend/dist api-go/dist-frontend",
     "dev:frontend": "npm run dev -w frontend",
     "dev:website": "npm run dev -w website",
     "start:website": "npm run start -w website",
-    "typecheck": "npm run typecheck -w api && npm run typecheck -w frontend && npm run typecheck -w website"
+    "typecheck": "npm run typecheck -w frontend && npm run typecheck -w website"
   },
   "workspaces": [
-    "api",
     "frontend",
     "website"
   ]

@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import CodePreview from "@/components/CodePreview.vue";
-import { deleteApp, deleteDataIo, listDataIo, startExport, updateApp } from "@/service/data";
+import { generatedApi } from "@/service/data";
 import { useGlobalStore } from "@/stores/global";
-import type { DataIo } from "@shared/types";
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { formatDate } from "@/utils/dates";
+import { DataIo } from "@/generated/data-contracts";
 
 const store = useGlobalStore();
 const { activeApp, activeAppId, apps } = storeToRefs(store);
@@ -18,7 +18,7 @@ const deleting = ref(false);
 
 async function deleteAppHandler() {
   deleting.value = true;
-  await deleteApp(activeAppId.value);
+  await generatedApi.deleteApp(activeAppId.value);
   await store.fetchApps();
   deleting.value = false;
   deleteDialog.value = false;
@@ -32,15 +32,17 @@ const updateName = ref("");
 
 async function updateAppHandler() {
   updating.value = true;
-  await updateApp(activeAppId.value, updateName.value);
+  await generatedApi.updateApp(activeAppId.value, { name: updateName.value });
   await store.fetchApps();
   updating.value = false;
 }
 
 const dataIo = ref<DataIo[]>();
 const hasPendingJobs = computed(() => dataIo.value && dataIo.value.some((item) => item.status === "pending"));
+
 async function fetchDataIo() {
-  dataIo.value = await listDataIo();
+  const result = await generatedApi.getDataIo();
+  dataIo.value = result.data.items;
   const hasPendingJobs = dataIo.value && dataIo.value.some((item) => item.status === "pending");
   if (hasPendingJobs) {
     setTimeout(fetchDataIo, 1000);
@@ -48,17 +50,16 @@ async function fetchDataIo() {
 }
 
 async function createExportHander() {
-  await startExport();
+  await generatedApi.startExport();
   await fetchDataIo();
 }
 
 function downloadFile(filePath: string) {
-  const iframe = document.getElementById("downloadIframe") as HTMLIFrameElement;
-  iframe.src = `/admin/api/data_io/storywise_export.jsonl?file_path=${filePath}`;
+  window.open(`/admin/api/data-io/download-file?file_path=` + filePath, "_blank");
 }
 
 async function deleteDataIoHandler(id: string) {
-  await deleteDataIo(id);
+  await generatedApi.deleteDataIo(id);
   await fetchDataIo();
 }
 
@@ -82,18 +83,18 @@ onMounted(() => {
         <tr>
           <th>Created</th>
           <th>Status</th>
-          <th class="text-right">Actions</th>
+          <th class="text-right w-30">Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in dataIo" :key="item.id">
+        <tr v-for="(item, i) in dataIo" :key="i">
           <td>{{ formatDate(item.created_at) }}</td>
           <td>
             {{ item.status }}
           </td>
-          <td class="text-right">
+          <td class="text-right w-30">
             <template v-if="item.status === 'complete'">
-              <button class="btn btn-ghost btn-sm" @click="()=>downloadFile(item.file_path!)">
+              <button class="btn btn-ghost btn-sm" @click="() => downloadFile(item.file_path!)">
                 Download
               </button>
             </template>
@@ -102,13 +103,11 @@ onMounted(() => {
               <div class="loading loading-xs mr-4"></div>
             </template>
 
-            <button class="btn btn-ghost btn-sm" @click="() => deleteDataIoHandler(item.id)">Delete</button>
+            <button class="btn btn-ghost btn-sm" @click="() => deleteDataIoHandler(item.id!)">Delete</button>
           </td>
         </tr>
       </tbody>
     </table>
-
-    <iframe id="downloadIframe" style="display: none"></iframe>
   </div>
 
   <div class="w-full mt-4">

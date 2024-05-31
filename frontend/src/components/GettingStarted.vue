@@ -2,7 +2,6 @@
 import { useGlobalStore } from "@/stores/global";
 
 const store = useGlobalStore();
-store.activeAppId;
 </script>
 <template>
   <div class="hero min-h-full bg-base-200 mt-4 p-10 rounded-lg">

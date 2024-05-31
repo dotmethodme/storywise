@@ -8,9 +8,7 @@
       "name": "Attach",
       "port": 9229,
       "request": "attach",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
+      "skipFiles": ["<node_internals>/**"],
       "type": "node",
       "restart": true
     },
@@ -30,6 +28,23 @@
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "program": "${workspaceFolder}/node_modules/.bin/jest"
+    },
+    {
+      "name": "Launch Package",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${workspaceFolder}/api-go/main.go",
+      "envFile": "${workspaceFolder}/api-go/.env"
+    },
+    {
+      "name": "Launch seed",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${workspaceFolder}/api-go/cmd/seed-run.go",
+      "envFile": "${workspaceFolder}/api-go/.env",
+      "cwd": "${workspaceFolder}/api-go"
     }
   ]
 }

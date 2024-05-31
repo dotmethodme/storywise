@@ -18,10 +18,11 @@
     "@nuxt/devtools": "latest",
     "@tailwindcss/typography": "^0.5.10",
     "@types/bcrypt": "^5.0.2",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/luxon": "^3.4.2",
     "@types/node": "^20",
     "daisyui": "^3.8.3",
-    "nuxt": "^3.10.1",
+    "nuxt": "^3.11.2",
     "nuxt-icon": "^0.6.8",
     "prisma": "^5.9.1"
   },
