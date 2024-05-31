@@ -27,15 +27,15 @@ And the best thing is that you can get up and running with Storywise for **FREE*
 - [x] Top referrers (top 10 + more)
 - [x] Top countries (top 10 + more)
 - [x] Allow multiple database integrations (currently only MongoDb)
-- [ ] Top devices - mobile, desktop, tablet
-- [ ] Top browsers - chrome, safari, firefox, edge, etc
-- [ ] Top OS - windows, mac, linux, ios, android, etc
+- [x] Top devices - mobile, desktop, tablet
+- [x] Top browsers - chrome, safari, firefox, edge, etc
+- [x] Top OS - windows, mac, linux, ios, android, etc
 - [ ] Privacy levels - sever-side only, client-side fingerprint, client-side local storage (current default)
 - [ ] Bounce rate
-- [ ] UTM tags
+- [x] UTM tags
 - [ ] Custom events
 - [ ] User retention analysis
-- [ ] Multi-database support. Currently only MongoDb, future - Postgres, TimescaleDB, Mysql etc
+- [x] Multi-database support. Currently only MongoDb, future - Postgres, TimescaleDB, Libsql, etc
 
 
 # License
