@@ -21,6 +21,7 @@ on:
       - "Dockerfile.website"
       - "package.json"
       - "package-lock.json"
+      - ".github/workflows/**"
 
 env:
   REGISTRY_IMAGE: ghcr.io/dotmethodme/storywise
