@@ -26,9 +26,6 @@ func IsTimescaleEnabled() bool {
 
 func NewPostgresRepo() *PostgresRepo {
 	dbUrl := os.Getenv("POSTGRES_URL")
-	if dbUrl == "" {
-		log.Fatal("POSTGRES_URL is not set")
-	}
 
 	if strings.HasPrefix(dbUrl, "postgresql://") {
 		db, err := sqlx.Connect("postgres", dbUrl)
