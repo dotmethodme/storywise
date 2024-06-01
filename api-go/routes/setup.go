@@ -29,6 +29,7 @@ func CreateApp(pg *db.PostgresRepo) *fiber.App {
 	RegisterAppsRoutes(api, pg)
 	RegisterDataIoRoutes(api, pg, app)
 	RegisterConfigRoutes(api, pg)
+	RegisterEventRoutes(api, pg)
 
 	// Serve frontend
 	if os.Getenv("ENV") == "local" {

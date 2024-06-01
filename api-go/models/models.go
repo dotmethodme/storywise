@@ -85,6 +85,81 @@ type WebEvent struct {
 	DeviceDetector      devicedetector.DeviceInfo `json:"deviceDetector" db:"device_detector"`
 }
 
+type WebEventRead struct {
+	ID                  *int       `json:"id" db:"id"`
+	AppID               *string    `json:"appId" db:"app_id"`
+	SessionID           *string    `json:"sessionId" db:"session_id"`
+	Path                *string    `json:"path" db:"path"`
+	Timestamp           *time.Time `json:"timestamp" db:"timestamp"`
+	IP                  *string    `json:"ip" db:"ip"`
+	UserAgent           *string    `json:"userAgent" db:"user_agent"`
+	Referrer            *string    `json:"referrer" db:"referrer"`
+	Language            *string    `json:"language" db:"language"`
+	Country             *string    `json:"country" db:"country"`
+	ScreenWidth         *int       `json:"screenWidth" db:"screen_width"`
+	ScreenHeight        *int       `json:"screenHeight" db:"screen_height"`
+	WindowWidth         *int       `json:"windowWidth" db:"window_width"`
+	WindowHeight        *int       `json:"windowHeight" db:"window_height"`
+	BotName             *string    `json:"botName" db:"bot_name"`
+	BotCategory         *string    `json:"botCategory" db:"bot_category"`
+	BotURL              *string    `json:"botURL" db:"bot_url"`
+	BotProducerName     *string    `json:"botProducerName" db:"bot_producer_name"`
+	BotProducerURL      *string    `json:"botProducerURL" db:"bot_producer_url"`
+	ClientType          *string    `json:"clientType" db:"client_type"`
+	ClientName          *string    `json:"clientName" db:"client_name"`
+	ClientVersion       *string    `json:"clientVersion" db:"client_version"`
+	ClientEngine        *string    `json:"clientEngine" db:"client_engine"`
+	ClientEngineVersion *string    `json:"clientEngineVersion" db:"client_engine_version"`
+	DeviceType          *string    `json:"deviceType" db:"device_type"`
+	DeviceBrand         *string    `json:"deviceBrand" db:"device_brand"`
+	DeviceModel         *string    `json:"deviceModel" db:"device_model"`
+	OSName              *string    `json:"osName" db:"os_name"`
+	OSVersion           *string    `json:"osVersion" db:"os_version"`
+	OSPlatform          *string    `json:"osPlatform" db:"os_platform"`
+	UtmSource           *string    `json:"utmSource" db:"utm_source"`
+	UtmMedium           *string    `json:"utmMedium" db:"utm_medium"`
+	UtmCampaign         *string    `json:"utmCampaign" db:"utm_campaign"`
+	UtmTerm             *string    `json:"utmTerm" db:"utm_term"`
+	UtmContent          *string    `json:"utmContent" db:"utm_content"`
+}
+
+type WebEventWrite struct {
+	AppID               string    `json:"appId" db:"app_id"`
+	SessionID           string    `json:"sessionId" db:"session_id"`
+	Path                string    `json:"path" db:"path"`
+	Timestamp           time.Time `json:"timestamp" db:"timestamp"`
+	IP                  string    `json:"ip" db:"ip"`
+	UserAgent           string    `json:"userAgent" db:"user_agent"`
+	Referrer            string    `json:"referrer" db:"referrer"`
+	Language            string    `json:"language" db:"language"`
+	Country             string    `json:"country" db:"country"`
+	ScreenWidth         int       `json:"screenWidth" db:"screen_width"`
+	ScreenHeight        int       `json:"screenHeight" db:"screen_height"`
+	WindowWidth         int       `json:"windowWidth" db:"window_width"`
+	WindowHeight        int       `json:"windowHeight" db:"window_height"`
+	BotName             string    `json:"botName" db:"bot_name"`
+	BotCategory         string    `json:"botCategory" db:"bot_category"`
+	BotURL              string    `json:"botURL" db:"bot_url"`
+	BotProducerName     string    `json:"botProducerName" db:"bot_producer_name"`
+	BotProducerURL      string    `json:"botProducerURL" db:"bot_producer_url"`
+	ClientType          string    `json:"clientType" db:"client_type"`
+	ClientName          string    `json:"clientName" db:"client_name"`
+	ClientVersion       string    `json:"clientVersion" db:"client_version"`
+	ClientEngine        string    `json:"clientEngine" db:"client_engine"`
+	ClientEngineVersion string    `json:"clientEngineVersion" db:"client_engine_version"`
+	DeviceType          string    `json:"deviceType" db:"device_type"`
+	DeviceBrand         string    `json:"deviceBrand" db:"device_brand"`
+	DeviceModel         string    `json:"deviceModel" db:"device_model"`
+	OSName              string    `json:"osName" db:"os_name"`
+	OSVersion           string    `json:"osVersion" db:"os_version"`
+	OSPlatform          string    `json:"osPlatform" db:"os_platform"`
+	UtmSource           string    `json:"utmSource" db:"utm_source"`
+	UtmMedium           string    `json:"utmMedium" db:"utm_medium"`
+	UtmCampaign         string    `json:"utmCampaign" db:"utm_campaign"`
+	UtmTerm             string    `json:"utmTerm" db:"utm_term"`
+	UtmContent          string    `json:"utmContent" db:"utm_content"`
+}
+
 type SessionItem struct {
 	Year  string `json:"year"`
 	Month string `json:"month"`

@@ -450,3 +450,16 @@ func toIntString(ptr int) string {
 	}
 	return ""
 }
+
+func InsertEvent(repo *PostgresRepo, event models.WebEventWrite) {
+	repo.Db.NamedExec(
+		`
+			INSERT INTO events 
+				( app_id, session_id, path, timestamp, user_agent, referrer, language, country, screen_width, screen_height, window_width, window_height, bot_name, bot_category, bot_url, bot_producer_name, bot_producer_url, client_type, client_name, client_version, client_engine, client_engine_version, device_type, device_brand, device_model, os_name, os_version, utm_source, utm_medium, utm_campaign, utm_term, utm_content) 
+			VALUES 
+				(:app_id,:session_id,:path,:timestamp,:user_agent,:referrer,:language,:country,:screen_width,:screen_height,:window_width,:window_height,:bot_name,:bot_category,:bot_url,:bot_producer_name,:bot_producer_url,:client_type,:client_name,:client_version,:client_engine,:client_engine_version,:device_type,:device_brand,:device_model,:os_name,:os_version,:utm_source,:utm_medium,:utm_campaign,:utm_term,:utm_content)
+		`,
+		event,
+	)
+
+}
