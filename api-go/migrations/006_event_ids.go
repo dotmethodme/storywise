@@ -9,7 +9,7 @@ var AddEventIdsMigration = Migration{
 	Execute: func(repo *db.PostgresRepo) error {
 		_, err := repo.Db.Exec(`
 			ALTER TABLE events
-			ADD COLUMN IF NOT EXISTS id SERIAL PRIMARY KEY;
+			ADD COLUMN IF NOT EXISTS id SERIAL;
 		`)
 		if err != nil {
 			return err
