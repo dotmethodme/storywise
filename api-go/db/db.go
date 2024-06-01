@@ -6,12 +6,14 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	uuid "github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"joinstorywise.com/api/models"
+	"joinstorywise.com/api/utils"
 )
 
 type PostgresRepo struct {
@@ -28,12 +30,35 @@ func NewPostgresRepo() *PostgresRepo {
 		log.Fatal("POSTGRES_URL is not set")
 	}
 
+	if strings.HasPrefix(dbUrl, "postgresql://") {
+		db, err := sqlx.Connect("postgres", dbUrl)
+		if err != nil {
+			log.Fatalf("Failed to open database: %v", err)
+		}
+		return &PostgresRepo{Db: db}
+	}
+
+	dbUser := utils.GetEnvWithDefault("POSTGRES_USER", "")
+	dbPassword := utils.GetEnvWithDefault("POSTGRES_PASSWORD", "")
+	dbName := utils.GetEnvWithDefault("POSTGRES_DB", "")
+	dbHost := utils.GetEnvWithDefault("POSTGRES_HOST", "localhost")
+	dbPort := utils.GetEnvWithDefault("POSTGRES_PORT", "5432")
+	dbOptions := utils.GetEnvWithDefault("POSTGRES_OPTIONS", "sslmode=disable")
+
+	dbUrl = fmt.Sprintf(
+		"user=%s password=%s dbname=%s host=%s port=%s %s",
+		dbUser,
+		dbPassword,
+		dbName,
+		dbHost,
+		dbPort,
+		dbOptions,
+	)
+
 	db, err := sqlx.Connect("postgres", dbUrl)
 	if err != nil {
 		log.Fatalf("Failed to open database: %v", err)
 	}
-
-	// Additional setup like SSL mode can be added here based on your environment
 
 	return &PostgresRepo{Db: db}
 }
