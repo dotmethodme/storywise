@@ -27,6 +27,6 @@ func main() {
 func loadDotEnv() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Println("Did not load .env file. Using system environment variables.")
 	}
 }

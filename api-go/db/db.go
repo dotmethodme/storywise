@@ -352,7 +352,7 @@ func (repo *PostgresRepo) performExport(filePath string, id string) {
 		"UtmContent",
 	}
 	if err := writer.Write(headers); err != nil {
-		log.Fatalf("Error writing headers to CSV: %v", err)
+		log.Printf("Error writing headers to CSV: %v", err)
 		return
 	}
 
