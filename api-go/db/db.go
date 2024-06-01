@@ -24,7 +24,6 @@ func IsTimescaleEnabled() bool {
 
 func NewPostgresRepo() *PostgresRepo {
 	dbUrl := os.Getenv("POSTGRES_URL")
-	log.Println("Connecting to database at", dbUrl)
 	if dbUrl == "" {
 		log.Fatal("POSTGRES_URL is not set")
 	}
