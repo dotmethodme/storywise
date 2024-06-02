@@ -1,5 +1,7 @@
 package models
 
+import "mime/multipart"
+
 type GenericInput struct {
 	AppId string `query:"app_id" default:"default" doc:"App ID"`
 	Days  int    `query:"days" default:"30" doc:"Days"`
@@ -45,4 +47,8 @@ type CreateEventInput struct {
 	CfConnectingIp string `header:"cf-connecting-ip"`
 	XRealIp        string `header:"x-real-ip"`
 	XForwardedFor  string `header:"x-forwarded-for"`
+}
+
+type ImportDataInput struct {
+	RawBody multipart.Form
 }

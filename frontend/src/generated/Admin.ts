@@ -27,6 +27,8 @@ import {
   GetTopReferrersData,
   GetUniqueSessionsByCountryData,
   GetUniqueSessionsPerPageData,
+  ImportDataData,
+  ImportDataPayload,
   StartExportData,
   UpdateAppData,
   UpdateAppInputBody,
@@ -182,6 +184,21 @@ export class Admin<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
     this.request<GetDataIoData, ErrorModel>({
       path: `/admin/api/data-io`,
       method: "GET",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @name ImportData
+   * @summary Example to upload a file
+   * @request POST:/admin/api/data-io/import
+   */
+  importData = (data: ImportDataPayload, params: RequestParams = {}) =>
+    this.request<ImportDataData, ErrorModel>({
+      path: `/admin/api/data-io/import`,
+      method: "POST",
+      body: data,
+      type: ContentType.FormData,
       ...params,
     });
   /**

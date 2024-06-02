@@ -1,3 +1,5 @@
 __debug*
 exports/*
 api-go
+input.jsonl
+output.csv

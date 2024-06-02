@@ -54,6 +54,30 @@ export interface CreateAppInputBody {
   name: string;
 }
 
+export interface CreateEventInputBody {
+  /**
+   * A URL to the JSON Schema for this object.
+   * @format uri
+   */
+  $schema?: string;
+  app_id: string;
+  path: string;
+  referrer?: string;
+  /** @format int64 */
+  screen_height?: number;
+  /** @format int64 */
+  screen_width?: number;
+  utm_campaign?: string;
+  utm_content?: string;
+  utm_medium?: string;
+  utm_source?: string;
+  utm_term?: string;
+  /** @format int64 */
+  window_height?: number;
+  /** @format int64 */
+  window_width?: number;
+}
+
 export interface DataIo {
   created_at: string | null;
   data: string | null;
@@ -101,6 +125,15 @@ export interface ErrorModel {
    * @default "about:blank"
    */
   type?: string;
+}
+
+export interface EventResponseBody {
+  /**
+   * A URL to the JSON Schema for this object.
+   * @format uri
+   */
+  $schema?: string;
+  event: WebEventWrite;
 }
 
 export interface GetAppsResponseBody {
@@ -211,6 +244,15 @@ export interface GetUniqueSessionsPerPageResponseBody {
   items: CountHitsPerPage[];
 }
 
+export interface MessageResponseBody {
+  /**
+   * A URL to the JSON Schema for this object.
+   * @format uri
+   */
+  $schema?: string;
+  message: string;
+}
+
 export interface SessionItem {
   count: string;
   day: string;
@@ -234,13 +276,55 @@ export interface UpdateAppInputBody {
   name: string;
 }
 
+export interface WebEventWrite {
+  appId: string;
+  botCategory: string;
+  botName: string;
+  botProducerName: string;
+  botProducerURL: string;
+  botURL: string;
+  clientEngine: string;
+  clientEngineVersion: string;
+  clientName: string;
+  clientType: string;
+  clientVersion: string;
+  country: string;
+  deviceBrand: string;
+  deviceModel: string;
+  deviceType: string;
+  ip: string;
+  language: string;
+  osName: string;
+  osPlatform: string;
+  osVersion: string;
+  path: string;
+  referrer: string;
+  /** @format int64 */
+  screenHeight: number;
+  /** @format int64 */
+  screenWidth: number;
+  sessionId: string;
+  /** @format date-time */
+  timestamp: string;
+  userAgent: string;
+  utmCampaign: string;
+  utmContent: string;
+  utmMedium: string;
+  utmSource: string;
+  utmTerm: string;
+  /** @format int64 */
+  windowHeight: number;
+  /** @format int64 */
+  windowWidth: number;
+}
+
 export type GetAppsData = GetAppsResponseBody;
 
-export type CreateAppData = any;
+export type CreateAppData = MessageResponseBody;
 
-export type DeleteAppData = any;
+export type DeleteAppData = MessageResponseBody;
 
-export type UpdateAppData = any;
+export type UpdateAppData = MessageResponseBody;
 
 export type GetConfigData = GetConfigResponseBody;
 
@@ -250,9 +334,21 @@ export type GetCountSessionsByUtmData = GetCountSessionsByUtmResponseBody;
 
 export type GetDataIoData = GetDataIoResponseBody;
 
-export type StartExportData = any;
+export interface ImportDataPayload {
+  /**
+   * filename of the file being uploaded
+   * @format binary
+   */
+  filename?: File;
+  /** general purpose name for multipart form value */
+  name?: string;
+}
 
-export type DeleteDataIoData = any;
+export type ImportDataData = any;
+
+export type StartExportData = MessageResponseBody;
+
+export type DeleteDataIoData = MessageResponseBody;
 
 export type GetHasEventsData = GetHasEventsResponseBody;
 
@@ -267,3 +363,9 @@ export type GetTopReferrersData = GetTopReferrersResponseBody;
 export type GetUniqueSessionsByCountryData = GetUniqueSessionsByCountryResponseBody;
 
 export type GetUniqueSessionsPerPageData = GetUniqueSessionsPerPageResponseBody;
+
+export type CreateEventData = any;
+
+export type EchoEventData = EventResponseBody;
+
+export type HealthCheckData = MessageResponseBody;

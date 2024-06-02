@@ -5,6 +5,7 @@ import (
 	"encoding/csv"
 	"fmt"
 	"log"
+	"mime/multipart"
 	"os"
 	"strings"
 	"time"
@@ -335,50 +336,13 @@ func (repo *PostgresRepo) performExport(filePath string, id string) {
 	defer writer.Flush()
 
 	// Write CSV header
-	headers := []string{
-		"ID",
-		"AppID",
-		"SessionID",
-		"Path",
-		"Timestamp",
-		"IP",
-		"UserAgent",
-		"Referrer",
-		"Language",
-		"Country",
-		"ScreenWidth",
-		"ScreenHeight",
-		"WindowWidth",
-		"WindowHeight",
-		"BotName",
-		"BotCategory",
-		"BotURL",
-		"BotProducerName",
-		"BotProducerURL",
-		"ClientType",
-		"ClientName",
-		"ClientVersion",
-		"ClientEngine",
-		"ClientEngineVersion",
-		"DeviceType",
-		"DeviceBrand",
-		"DeviceModel",
-		"OSName",
-		"OSVersion",
-		"OSPlatform",
-		"UtmSource",
-		"UtmMedium",
-		"UtmCampaign",
-		"UtmTerm",
-		"UtmContent",
-	}
-	if err := writer.Write(headers); err != nil {
+	if err := writer.Write(utils.CsvHeaders); err != nil {
 		log.Printf("Error writing headers to CSV: %v", err)
 		return
 	}
 
 	for {
-		var rows []models.WebEvent
+		var rows []models.WebEventRead
 		query := "SELECT * FROM events WHERE id > $1 ORDER BY id ASC LIMIT $2"
 		err := repo.Db.Select(&rows, query, cursor, limit)
 		if err != nil {
@@ -388,41 +352,41 @@ func (repo *PostgresRepo) performExport(filePath string, id string) {
 
 		for _, row := range rows {
 			record := []string{
-				toIntString(row.ID),
-				row.AppID,
-				row.SessionID,
-				row.Path,
+				intToString(row.ID),
+				pointerToString(row.AppID),
+				pointerToString(row.SessionID),
+				pointerToString(row.Path),
 				row.Timestamp.Format(time.RFC3339),
-				row.IP,
-				row.UserAgent,
-				row.Referrer,
-				row.Language,
-				row.Country,
-				toIntString(row.ScreenWidth),
-				toIntString(row.ScreenHeight),
-				toIntString(row.WindowWidth),
-				toIntString(row.WindowHeight),
-				row.BotName,
-				row.BotCategory,
-				row.BotURL,
-				row.BotProducerName,
-				row.BotProducerURL,
-				row.ClientType,
-				row.ClientName,
-				row.ClientVersion,
-				row.ClientEngine,
-				row.ClientEngineVersion,
-				row.DeviceType,
-				row.DeviceBrand,
-				row.DeviceModel,
-				row.OSName,
-				row.OSVersion,
-				row.OSPlatform,
-				row.UtmSource,
-				row.UtmMedium,
-				row.UtmCampaign,
-				row.UtmTerm,
-				row.UtmContent,
+				pointerToString(row.IP),
+				pointerToString(row.UserAgent),
+				pointerToString(row.Referrer),
+				pointerToString(row.Language),
+				pointerToString(row.Country),
+				intPointerToString(row.ScreenWidth),
+				intPointerToString(row.ScreenHeight),
+				intPointerToString(row.WindowWidth),
+				intPointerToString(row.WindowHeight),
+				pointerToString(row.BotName),
+				pointerToString(row.BotCategory),
+				pointerToString(row.BotURL),
+				pointerToString(row.BotProducerName),
+				pointerToString(row.BotProducerURL),
+				pointerToString(row.ClientType),
+				pointerToString(row.ClientName),
+				pointerToString(row.ClientVersion),
+				pointerToString(row.ClientEngine),
+				pointerToString(row.ClientEngineVersion),
+				pointerToString(row.DeviceType),
+				pointerToString(row.DeviceBrand),
+				pointerToString(row.DeviceModel),
+				pointerToString(row.OSName),
+				pointerToString(row.OSVersion),
+				pointerToString(row.OSPlatform),
+				pointerToString(row.UtmSource),
+				pointerToString(row.UtmMedium),
+				pointerToString(row.UtmCampaign),
+				pointerToString(row.UtmTerm),
+				pointerToString(row.UtmContent),
 			}
 			if err := writer.Write(record); err != nil {
 				log.Printf("Error writing record to CSV: %v", err)
@@ -444,9 +408,20 @@ func (repo *PostgresRepo) performExport(filePath string, id string) {
 	log.Println("Export complete")
 }
 
-func toIntString(ptr int) string {
-	if ptr != 0 {
-		return fmt.Sprintf("%d", ptr)
+func intPointerToString(ptr *int) string {
+	if ptr != nil {
+		return fmt.Sprintf("%d", *ptr)
+	}
+	return ""
+}
+
+func intToString(i int) string {
+	return fmt.Sprintf("%d", i)
+}
+
+func pointerToString(ptr *string) string {
+	if ptr != nil {
+		return *ptr
 	}
 	return ""
 }
@@ -462,4 +437,34 @@ func InsertEvent(repo *PostgresRepo, event models.WebEventWrite) {
 		event,
 	)
 
+}
+
+func (repo *PostgresRepo) ImportDataFromFile(file multipart.File) error {
+	repo.Db.Exec("TRUNCATE TABLE events")
+
+	reader := csv.NewReader(bufio.NewReader(file))
+	reader.FieldsPerRecord = -1
+
+	headers, err := reader.Read()
+	if err != nil {
+		log.Printf("Failed to read CSV headers: %v", err)
+		return err
+	}
+
+	records, err := reader.ReadAll()
+	if err != nil {
+		log.Printf("Failed to read CSV headers: %v", err)
+		return err
+	}
+
+	for i, record := range records {
+		event, err := utils.ParseRecordToWebEvent(headers, record)
+		if err != nil {
+			log.Printf("Failed to parse record %d: %v", i, err)
+			continue
+		}
+		InsertEvent(repo, event)
+	}
+
+	return nil
 }
