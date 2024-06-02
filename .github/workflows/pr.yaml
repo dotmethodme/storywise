@@ -8,7 +8,7 @@ on:
   pull_request:
     branches:
       - main
-    
+
 jobs:
   build-test:
     runs-on: ubuntu-latest
@@ -27,3 +27,35 @@ jobs:
 
       - name: npm run build
         run: npm run build
+
+  build-test-go:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: [1.22.x]
+    steps:
+      - name: Checkout Git repo
+        uses: actions/checkout@master
+
+      - uses: isbang/compose-action@v1.5.1
+        with:
+          compose-file: "./docker/docker-compose.ci.yaml"
+
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.go-version }}
+
+      - name: Build
+        run: go build
+
+      - name: Wait for postgres
+        run: |
+          while ! nc -z 127.0.0.1 5566; do
+            sleep 0.1
+          done
+
+          sleep 5
+
+      - name: Test
+        run: go test
