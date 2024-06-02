@@ -1,7 +1,9 @@
 package routes
 
 import (
+	"log"
 	"os"
+	"strings"
 
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/adapters/humafiber"
@@ -45,5 +47,29 @@ func CreateApp(pg *db.PostgresRepo) *fiber.App {
 		app.Static("/admin", "dist-frontend")
 	}
 
+	scriptFile := loadScriptFile()
+
+	app.Get("/js/script.js", func(c *fiber.Ctx) error {
+		app_id := c.Query("app_id", "default")
+
+		fileContent := strings.ReplaceAll(scriptFile, "{{API_BASE_URL}}", os.Getenv("API_BASE_URL"))
+		fileContent = strings.ReplaceAll(fileContent, "{{APP_ID}}", app_id)
+
+		// set the content type to javascript
+
+		c.Set(fiber.HeaderContentType, "application/javascript")
+
+		return c.SendString(fileContent)
+	})
+
 	return app
+}
+
+func loadScriptFile() string {
+	var stringFileCache, err = os.ReadFile("templates/script.js")
+	if err != nil {
+		log.Fatal("Error reading script.js file")
+	}
+
+	return string(stringFileCache)
 }

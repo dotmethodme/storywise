@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"io"
 	"net/http/httptest"
 	"testing"
 
@@ -15,6 +16,7 @@ import (
 )
 
 func setup(t *testing.T) (*db.PostgresRepo, *fiber.App) {
+	t.Setenv("API_BASE_URL", "http://foobar:3000")
 	t.Setenv("POSTGRES_URL", "postgresql://postgres:testing@localhost:5566/postgres?sslmode=disable")
 	t.Setenv("TIMESCALE_ENABLED", "true")
 	t.Setenv("TOTALLY_INSECURE_MODE_WITH_NO_PASSWORD", "true")
@@ -266,7 +268,6 @@ func TestEvents(t *testing.T) {
 	assert.Equal(t, 100, *row.ScreenHeight)
 
 	// Working with a different event
-
 	req3 := httptest.NewRequest("POST", "/api/event", createEvent(map[string]interface{}{
 		"app_id": "default",
 		"path":   "/testinnng2",
@@ -285,10 +286,47 @@ func TestEvents(t *testing.T) {
 	assert.Equal(t, 0, *row.ScreenWidth)
 	assert.Equal(t, 0, *row.ScreenHeight)
 
+	// Working with a different event
+	req4 := httptest.NewRequest("POST", "/api/event", createEvent(map[string]interface{}{
+		"app_id":   "default",
+		"path":     "/testinnng3",
+		"referrer": "asd",
+	}))
+	resp4, _ := app.Test(req4)
+	assert.Equal(t, 204, resp4.StatusCode)
+
+	// Check inside the database
+	err = pg.Db.Select(&rows, "SELECT * FROM events order by id desc")
+	assert.Nil(t, err)
+	assert.NotNil(t, rows)
+	row = rows[0]
+	assert.Nil(t, err)
+	assert.Equal(t, "default", *row.AppID)
+	assert.Equal(t, "/testinnng3", *row.Path)
+	assert.Equal(t, 0, *row.ScreenWidth)
+	assert.Equal(t, 0, *row.ScreenHeight)
+	assert.Equal(t, "asd", *row.Referrer)
 }
 
 func createEvent(input map[string]interface{}) *bytes.Buffer {
 	buffer := new(bytes.Buffer)
 	json.NewEncoder(buffer).Encode(input)
 	return buffer
+}
+
+func TestScriptFile(t *testing.T) {
+	_, app := setup(t)
+
+	req := httptest.NewRequest("GET", "/js/script.js", nil)
+	resp, _ := app.Test(req)
+
+	assert.Equal(t, 200, resp.StatusCode)
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		t.Fatalf("Failed to read response body: %v", err)
+	}
+	defer resp.Body.Close()
+
+	assert.Contains(t, string(body), "http://foobar:3000")
 }
