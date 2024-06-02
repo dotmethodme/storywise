@@ -10,6 +10,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/assert"
 	"joinstorywise.com/api/db"
+	"joinstorywise.com/api/migrations"
 	"joinstorywise.com/api/models"
 	"joinstorywise.com/api/routes"
 	"joinstorywise.com/api/scripts"
@@ -21,6 +22,8 @@ func setup(t *testing.T) (*db.PostgresRepo, *fiber.App) {
 	t.Setenv("TIMESCALE_ENABLED", "true")
 	t.Setenv("TOTALLY_INSECURE_MODE_WITH_NO_PASSWORD", "true")
 	pg := db.NewPostgresRepo()
+	migrations.ExecuteAll(pg)
+
 	app := routes.CreateApp(pg)
 	return pg, app
 }

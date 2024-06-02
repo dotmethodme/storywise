@@ -1,7 +1,7 @@
 name: PR Checks
 
 concurrency:
-  group: storywise-pr
+  group: pr-${{ github.head_ref }}
   cancel-in-progress: true
 
 on:
