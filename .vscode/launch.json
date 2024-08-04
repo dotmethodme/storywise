@@ -5,32 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Attach",
-      "port": 9229,
-      "request": "attach",
-      "skipFiles": ["<node_internals>/**"],
-      "type": "node",
-      "restart": true
-    },
-    {
-      "type": "node",
-      "name": "vscode-jest-tests.v2",
-      "request": "launch",
-      "args": [
-        "--runInBand",
-        "--watchAll=false",
-        "--testNamePattern",
-        "${jest.testNamePattern}",
-        "--runTestsByPath",
-        "${jest.testFile}"
-      ],
-      "cwd": "${workspaceFolder}/api",
-      "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
-      "program": "${workspaceFolder}/node_modules/.bin/jest"
-    },
-    {
-      "name": "Launch Package",
+      "name": "Launch go backend",
       "type": "go",
       "request": "launch",
       "mode": "auto",
