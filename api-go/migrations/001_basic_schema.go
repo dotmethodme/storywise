@@ -5,6 +5,13 @@ import "joinstorywise.com/api/db"
 var BasicSchemaMigration = Migration{
 	ID: "001_basic_schema",
 	Execute: func(repo *db.PostgresRepo) error {
+		if db.IsTimescaleEnabled() {
+			_, err := repo.Db.Exec(`CREATE EXTENSION IF NOT EXISTS timescaledb CASCADE;`)
+			if err != nil {
+				return err
+			}
+		}
+
 		_, err := repo.Db.Exec(`
 			CREATE TABLE IF NOT EXISTS events (
 				session_id TEXT NOT NULL,
