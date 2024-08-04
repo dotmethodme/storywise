@@ -8,6 +8,7 @@ import (
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/adapters/humafiber"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/proxy"
 	"joinstorywise.com/api/db"
@@ -19,7 +20,15 @@ func CreateApp(pg *db.PostgresRepo) *fiber.App {
 	app := fiber.New()
 	api := humafiber.New(app, huma.DefaultConfig("Storywise API", "1.0.0"))
 
-	// Middleware
+	// Middlewares
+	if os.Getenv("ALLOWED_ORIGINS") == "" {
+		app.Use(cors.New())
+	} else {
+		app.Use(cors.New(cors.Config{
+			AllowOrigins: os.Getenv("ALLOWED_ORIGINS"),
+			AllowHeaders: "Origin, Content-Type, Accept",
+		}))
+	}
 	app.Use(logger.New(logger.Config{
 		Format: `{"time":"${time}","status":${status},"latency":"${latency}","ip":"${ip}","method":"${method}","path":"${path}","error":"${error}"}` + "\n",
 	}))
