@@ -63,10 +63,29 @@ async function deleteDataIoHandler(id: string) {
   await fetchDataIo();
 }
 
+async function importDataHandler() {
+  if (importing.value) return;
+
+  const fileInput = document.querySelector("input[type=file]") as HTMLInputElement;
+  if (!fileInput.files || !fileInput.files[0]) {
+    return;
+  }
+
+  importing.value = true;
+
+  const file = fileInput.files[0];
+  await generatedApi.importData({ filename: file, name: "file" });
+  await fetchDataIo();
+  openDialog.value = false;
+}
+
 onMounted(() => {
   updateName.value = activeApp.value?.name || "";
   fetchDataIo();
 });
+
+const openDialog = ref(false);
+const importing = ref(false);
 </script>
 
 <template>
@@ -110,10 +129,36 @@ onMounted(() => {
     </table>
   </div>
 
-  <div class="w-full mt-4">
+  <div class="flex w-full mt-4 gap-2">
     <button class="btn btn-primary" @click="createExportHander" :disabled="hasPendingJobs">
       Export data
     </button>
+
+    <button class="btn btn-primary" @click="() => (openDialog = true)" :disabled="hasPendingJobs">
+      Import data
+    </button>
+
+    <!-- dialog -->
+    <dialog class="modal modal-bottom sm:modal-middle" :class="openDialog ? 'modal-open' : ''">
+      <form method="dialog" class="modal-box max-h-max m-auto">
+        <h1 class="text-2xl mb-4 serif tracking-tight">Data import</h1>
+
+        <p class="mb-4">
+          If you've previously exported data from another site, you can import it here. The file format must
+          be csv.
+        </p>
+
+        <input type="file" class="file-input w-full max-w-xs" />
+
+        <div>
+          <button class="btn btn-primary mt-4 w-full" @click="importDataHandler">
+            <span v-if="importing">Importing...</span>
+            <span v-else>Import</span>
+          </button>
+        </div>
+      </form>
+      <form method="dialog" class="modal-backdrop" @click="() => (openDialog = false)"></form>
+    </dialog>
   </div>
 
   <h2 class="my-8 text-xl font-bold tracking-tight text-base-content text-left">Configuration</h2>

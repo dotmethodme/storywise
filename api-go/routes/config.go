@@ -42,8 +42,6 @@ func RegisterConfigRoutes(api huma.API, pg *db.PostgresRepo) {
 		return config, nil
 	})
 
-	// health check
-
 	huma.Register(api, huma.Operation{
 		OperationID: "HealthCheck",
 		Path:        "/api/health",
@@ -54,5 +52,4 @@ func RegisterConfigRoutes(api huma.API, pg *db.PostgresRepo) {
 		response.Body.Message = "Success"
 		return response, nil
 	})
-
 }

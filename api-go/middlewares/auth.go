@@ -10,7 +10,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// authMiddleware checks for various authentication methods and proceeds accordingly.
+// AuthMiddleware authenticates requests using Basic Auth or JWT.
 func AuthMiddleware(c *fiber.Ctx) error {
 	// Skip authentication in totally insecure mode.
 	if os.Getenv("TOTALLY_INSECURE_MODE_WITH_NO_PASSWORD") == "true" {
@@ -18,8 +18,8 @@ func AuthMiddleware(c *fiber.Ctx) error {
 	}
 
 	// JWT token present in cookies.
-	if cookie := c.Cookies("storywise_token"); cookie != "" {
-		_, err := VerifyJwt(cookie) // Assume verifyJwt is adapted to Fiber.
+	if storywiseToken := c.Cookies("storywise_token"); storywiseToken != "" {
+		_, err := VerifyJwt(storywiseToken)
 		if err == nil {
 			return c.Next()
 		}
@@ -28,25 +28,8 @@ func AuthMiddleware(c *fiber.Ctx) error {
 	}
 
 	expectedUser := os.Getenv("STORYWISE_USERNAME")
-	if expectedUser == "" {
-		expectedUser = os.Getenv("USERNAME")
-		if expectedUser == "" {
-			expectedUser = "admin"
-		}
-	}
-
 	expectedPass := os.Getenv("STORYWISE_PASSWORD")
-	if expectedPass == "" {
-		expectedPass = os.Getenv("PASSWORD")
-		if expectedPass == "" {
-			expectedPass = "123"
-		}
-	}
-
 	expectedPassHash := os.Getenv("STORYWISE_PASSWORD_HASH")
-	if expectedPassHash == "" {
-		expectedPassHash = os.Getenv("PASSWORD_HASH")
-	}
 
 	authorization := c.Get("Authorization")
 	if authorization == "" {
@@ -62,7 +45,7 @@ func AuthMiddleware(c *fiber.Ctx) error {
 		if err == nil && incomingUser == expectedUser {
 			return c.Next()
 		}
-	} else {
+	} else if expectedPass != "" {
 		// Direct password comparison.
 		if incomingUser == expectedUser && incomingPass == expectedPass {
 			return c.Next()

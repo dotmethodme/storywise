@@ -1,28 +1,36 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
+	"io"
 	"net/http/httptest"
 	"testing"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/assert"
 	"joinstorywise.com/api/db"
+	"joinstorywise.com/api/migrations"
+	"joinstorywise.com/api/models"
 	"joinstorywise.com/api/routes"
 	"joinstorywise.com/api/scripts"
 )
 
 func setup(t *testing.T) (*db.PostgresRepo, *fiber.App) {
-	t.Setenv("POSTGRES_URL", "postgresql://postgres:testing@localhost:5444/postgres?sslmode=disable")
+	t.Setenv("API_BASE_URL", "http://foobar:3000")
+	t.Setenv("POSTGRES_URL", "postgresql://postgres:testing@localhost:5566/postgres?sslmode=disable")
+	t.Setenv("TIMESCALE_ENABLED", "true")
 	t.Setenv("TOTALLY_INSECURE_MODE_WITH_NO_PASSWORD", "true")
 	pg := db.NewPostgresRepo()
+	migrations.ExecuteAll(pg)
+
 	app := routes.CreateApp(pg)
-	scripts.SeedDemo(30)
 	return pg, app
 }
 
 func TestHealth(t *testing.T) {
 	_, app := setup(t)
+	scripts.SeedDemo(30)
 
 	req := httptest.NewRequest("GET", "/api/health", nil)
 	resp, _ := app.Test(req)
@@ -34,6 +42,7 @@ func TestHealth(t *testing.T) {
 
 func TestSessionsPerDay(t *testing.T) {
 	_, app := setup(t)
+	scripts.SeedDemo(30)
 
 	req1 := httptest.NewRequest("GET", "/admin/api/sessions_per_day?app_id=default", nil)
 	resp2, _ := app.Test(req1)
@@ -226,5 +235,101 @@ func TestSessionsPerDay(t *testing.T) {
 		assert.NotNil(t, itemMap["key"])
 		assert.Equal(t, "utm_source", itemMap["key"])
 	}
+}
 
+func TestEvents(t *testing.T) {
+	pg, app := setup(t)
+	scripts.CleanDb()
+
+	// Broken
+	req1 := httptest.NewRequest("POST", "/api/event", nil)
+	resp1, _ := app.Test(req1)
+	assert.Equal(t, 400, resp1.StatusCode)
+
+	// Working
+	req2 := httptest.NewRequest("POST", "/api/event", createEvent(map[string]interface{}{
+		"app_id":        "default",
+		"path":          "/testinnng",
+		"screen_width":  100,
+		"screen_height": 100,
+		"utm_source":    "test",
+		"referrer":      "asd",
+	}))
+	resp2, _ := app.Test(req2)
+	assert.Equal(t, 204, resp2.StatusCode)
+
+	// Check inside the database
+	var rows []models.WebEventRead
+	err := pg.Db.Select(&rows, "SELECT * FROM events order by id desc")
+	assert.Nil(t, err)
+	assert.NotNil(t, rows)
+	row := rows[0]
+	assert.Nil(t, err)
+	assert.Equal(t, "default", *row.AppID)
+	assert.Equal(t, "/testinnng", *row.Path)
+	assert.Equal(t, 100, *row.ScreenWidth)
+	assert.Equal(t, 100, *row.ScreenHeight)
+
+	// Working with a different event
+	req3 := httptest.NewRequest("POST", "/api/event", createEvent(map[string]interface{}{
+		"app_id": "default",
+		"path":   "/testinnng2",
+	}))
+	resp3, _ := app.Test(req3)
+	assert.Equal(t, 204, resp3.StatusCode)
+
+	// Check inside the database
+	err = pg.Db.Select(&rows, "SELECT * FROM events order by id desc")
+	assert.Nil(t, err)
+	assert.NotNil(t, rows)
+	row = rows[0]
+	assert.Nil(t, err)
+	assert.Equal(t, "default", *row.AppID)
+	assert.Equal(t, "/testinnng2", *row.Path)
+	assert.Equal(t, 0, *row.ScreenWidth)
+	assert.Equal(t, 0, *row.ScreenHeight)
+
+	// Working with a different event
+	req4 := httptest.NewRequest("POST", "/api/event", createEvent(map[string]interface{}{
+		"app_id":   "default",
+		"path":     "/testinnng3",
+		"referrer": "asd",
+	}))
+	resp4, _ := app.Test(req4)
+	assert.Equal(t, 204, resp4.StatusCode)
+
+	// Check inside the database
+	err = pg.Db.Select(&rows, "SELECT * FROM events order by id desc")
+	assert.Nil(t, err)
+	assert.NotNil(t, rows)
+	row = rows[0]
+	assert.Nil(t, err)
+	assert.Equal(t, "default", *row.AppID)
+	assert.Equal(t, "/testinnng3", *row.Path)
+	assert.Equal(t, 0, *row.ScreenWidth)
+	assert.Equal(t, 0, *row.ScreenHeight)
+	assert.Equal(t, "asd", *row.Referrer)
+}
+
+func createEvent(input map[string]interface{}) *bytes.Buffer {
+	buffer := new(bytes.Buffer)
+	json.NewEncoder(buffer).Encode(input)
+	return buffer
+}
+
+func TestScriptFile(t *testing.T) {
+	_, app := setup(t)
+
+	req := httptest.NewRequest("GET", "/js/script.js", nil)
+	resp, _ := app.Test(req)
+
+	assert.Equal(t, 200, resp.StatusCode)
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		t.Fatalf("Failed to read response body: %v", err)
+	}
+	defer resp.Body.Close()
+
+	assert.Contains(t, string(body), "http://foobar:3000")
 }

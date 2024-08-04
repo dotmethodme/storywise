@@ -9,7 +9,7 @@ import (
 	jwt "github.com/golang-jwt/jwt"
 )
 
-// jwtAuthMiddleware authenticates requests using JWT.
+// Authenticates requests using JWT.
 func JwtAuthMiddleware(c *fiber.Ctx) error {
 	publicKeyString := os.Getenv("JWT_PUBLIC_KEY")
 	appName := os.Getenv("DATABASE_NAME")

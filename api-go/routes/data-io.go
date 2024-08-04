@@ -63,19 +63,60 @@ func RegisterDataIoRoutes(api huma.API, pg *db.PostgresRepo, app *fiber.App) {
 		return response, nil
 	})
 
+	huma.Register(api, huma.Operation{
+		OperationID: "ImportData",
+		Method:      http.MethodPost,
+		Path:        "/admin/api/data-io/import",
+		Summary:     "Example to upload a file",
+	}, func(ctx context.Context, input *models.ImportDataInput) (*struct{}, error) {
+		file := input.RawBody.File
+		if file == nil {
+			return nil, fiber.NewError(fiber.StatusBadRequest, "Missing file")
+		}
+
+		fileName := file["filename"]
+		if fileName == nil {
+			return nil, fiber.NewError(fiber.StatusBadRequest, "Missing filename")
+		}
+
+		firstPart := fileName[0]
+		if firstPart == nil {
+			return nil, fiber.NewError(fiber.StatusBadRequest, "Missing first part")
+		}
+
+		// validate file type (csv)
+		if firstPart.Header.Get("Content-Type") != "text/csv" {
+			return nil, fiber.NewError(fiber.StatusBadRequest, "Invalid file type")
+		}
+
+		openedFile, err := firstPart.Open()
+		if openedFile == nil {
+			return nil, fiber.NewError(fiber.StatusBadRequest, "Missing opened file")
+		}
+		defer openedFile.Close()
+		if err != nil {
+			return nil, err
+		}
+
+		// parse file into database
+		err = pg.ImportDataFromFile(openedFile)
+		if err != nil {
+			return nil, err
+		}
+
+		return &struct{}{}, nil
+	})
+
 	app.Get("/admin/api/data-io/download-file", func(c *fiber.Ctx) error {
-		// Extract the file_path query parameter
 		filePath := c.Query("file_path")
 		if filePath == "" {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Missing file_path"})
 		}
 
-		// Optional: Perform security checks on filePath here to prevent directory traversal attacks
 		if !isValidPath(filePath) {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Invalid file_path"})
 		}
 
-		// Serve the file
 		return c.SendFile("./" + filePath)
 	})
 }
