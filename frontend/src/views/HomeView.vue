@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import GettingStarted from "@/components/GettingStarted.vue";
-import SessionsOverTime from "@/components/SessionsOverTime.vue";
+import SessionsOverTime from "@/components/SessionsOverTimeChart.vue";
 import Stats from "@/components/Stats.vue";
 import Sessions from "@/components/UniqueSessions.vue";
 import PeriodSelector from "@/components/PeriodSelector.vue";
@@ -32,15 +32,16 @@ watch(activeAppId, fetchHasEvents, { immediate: true });
   <main class="w-full">
     <template v-if="doesAppHaveEvents">
       <div class="flex mb-4 mt-4 justify-between lg:flex-row flex-col gap-4">
-        <h2 class="text-xl font-normal tracking-tight text-left">Unique visitors</h2>
+        <div></div>
         <PeriodSelector />
       </div>
 
       <SessionsOverTime />
-      <div class="mt-8"></div>
-      <Stats />
-      <div class="mt-4"></div>
 
+      <div class="mt-4"></div>
+      <Stats />
+
+      <div class="mt-4"></div>
       <Sessions />
     </template>
     <div v-else>

@@ -30,30 +30,8 @@ services:
       POSTGRES_LOGGING_ERROR_VERBOSITY: "default"
       POSTGRES_LOGGING_STDERR: "on"
       POSTGRES_LOGGING_SYSLOG: "off"
-
     ports:
       - "5566:5432"
-
-  mongodb:
-    networks:
-      - storywise
-    hostname: mongodb
-    image: mongo:6
-    container_name: mongodb
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: testing
-    ports:
-      - "27077:27017"
-
-  libsql:
-    networks:
-      - storywise
-    hostname: libsql
-    image: ghcr.io/libsql/sqld:latest
-    container_name: libsql
-    ports:
-      - "8880:8080"
 
 networks:
   storywise:
