@@ -1,15 +1,48 @@
-version: "3"
-
 services:
-  storywise-demo:
-    image: mihainueleanu/storywise:latest
-    ports:
-      - 3000:3000
+  storywise:
+    depends_on:
+      timescaledb:
+        condition: service_healthy
+
+    networks:
+      - storywise
+    hostname: storywise
+    image: ghcr.io/dotmethodme/storywise:latest
     environment:
-      - API_BASE_URL=https://demo.joinstorywise.com
-      - ALLOWED_ORIGIN=*
-      - DATABASE_NAME=demo
-      - MONGODB_URI=mongodb://mongo:27017
-      - USERNAME=admin
-      - PASSWORD=123
-    restart: unless-stopped
+      PORT: ${PORT:-3777}
+      API_BASE_URL: ${API_BASE_URL:-http://localhost:3777}
+      ALLOWED_ORIGIN: "*"
+      TIMESCALE_ENABLED: "true"
+      POSTGRES_HOST: timescaledb
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+      POSTGRES_PORT: "5432"
+      POSTGRES_OPTIONS: "sslmode=disable binary_parameters=yes"
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-testing}
+      STORYWISE_PASSWORD: ${STORYWISE_PASSWORD:-testing}
+      STORYWISE_USERNAME: ${STORYWISE_USERNAME:-testing}
+    ports:
+      - "3777:3777"
+
+  timescaledb:
+    networks:
+      - storywise
+    hostname: timescaledb
+    image: timescale/timescaledb:latest-pg15
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-testing}
+      PGUSER: ${POSTGRES_USER:-postgres} # used by the healthcheck
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 1s
+      timeout: 5s
+      retries: 5
+
+networks:
+  storywise:
+    external: false
+
+volumes:
+  storywise:
+    external: false

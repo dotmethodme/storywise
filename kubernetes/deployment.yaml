@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: storywise
+  name: storywise-demo
+spec:
+  selector:
+    matchLabels:
+      app: storywise-demo
+  template:
+    metadata:
+      labels:
+        app: storywise-demo
+    spec:
+      containers:
+        - name: storywise-demo
+          image: ghcr.io/dotmethodme/storywise:latest
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "200Mi"
+          livenessProbe:
+            initialDelaySeconds: 5
+            httpGet:
+              path: /api/health
+              port: 3777
+          readinessProbe:
+            initialDelaySeconds: 5
+            httpGet:
+              path: /api/health
+              port: 3777
+          ports:
+            - containerPort: 3777
+          envFrom:
+            - configMapRef:
+                name: storywise-demo
+            - secretRef:
+                name: storywise-demo

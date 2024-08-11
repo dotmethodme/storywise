@@ -72,18 +72,21 @@ onMounted(async () => {
     render(store.activeAppId, store.selectedDays);
   }, 100);
 });
-onUnmounted(() => chartObj.value?.dispose());
-watch([activeAppId, selectedDays], ([activeAppId, selectedDays]) => render(activeAppId, selectedDays));
+
+onUnmounted(() => {
+  chartObj.value?.dispose();
+});
+
+watch([activeAppId, selectedDays], ([activeAppId, selectedDays]) => {
+  render(activeAppId, selectedDays);
+});
 </script>
 
 <template>
-  <div ref="chartEl" class="chart" style="height: 300px"></div>
+  <div class="card bg-base-100 shadow card-compact">
+    <div class="card-body">
+      <h2 class="mb-2 font-bold">Unique visitors over time</h2>
+      <div ref="chartEl" class="h-[300px] min-h-[300px] w-full" style="height: 300px"></div>
+    </div>
+  </div>
 </template>
-
-<style scoped>
-.chart {
-  width: 100%;
-  height: 300px;
-  min-height: 300px;
-}
-</style>

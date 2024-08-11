@@ -130,11 +130,11 @@ const importing = ref(false);
   </div>
 
   <div class="flex w-full mt-4 gap-2">
-    <button class="btn btn-primary" @click="createExportHander" :disabled="hasPendingJobs">
+    <button class="btn btn-outline btn-sm" @click="createExportHander" :disabled="hasPendingJobs">
       Export data
     </button>
 
-    <button class="btn btn-primary" @click="() => (openDialog = true)" :disabled="hasPendingJobs">
+    <button class="btn btn-outline btn-sm" @click="() => (openDialog = true)" :disabled="hasPendingJobs">
       Import data
     </button>
 

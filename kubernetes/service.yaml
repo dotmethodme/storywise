@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: storywise
+  name: storywise-demo
+spec:
+  selector:
+    app: storywise-demo
+  ports:
+    - port: 80
+      targetPort: 3777
+      protocol: TCP
