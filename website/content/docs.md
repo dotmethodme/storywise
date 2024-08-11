@@ -83,13 +83,19 @@ cd storywise
 ```
 
 
-Make sure to update the environment variables in the docker-compose file with new values relevant for your setup:
+Make sure to update the environment variables in the docker-compose file (or (env file)[https://docs.docker.com/compose/environment-variables/set-environment-variables/#use-the-env_file-attribute]) with new values relevant for your setup:
 
-- MONGODB_URI
-- DATABASE_NAME
-- USERNAME
-- PASSWORD
+- PORT
 - API_BASE_URL
+- ALLOWED_ORIGIN
+- POSTGRES_HOST
+- POSTGRES_DB
+- POSTGRES_PORT
+- POSTGRES_OPTIONS
+- POSTGRES_USER
+- POSTGRES_PASSWORD
+- STORYWISE_PASSWORD
+- STORYWISE_USERNAME
 
 Then run:
 
@@ -97,26 +103,10 @@ Then run:
 docker compose up
 ```
 
-## Deploy on Kubernetes (helm)
-
-You can deploy Storywise on Kubernetes using the following helm chart:
-
-```sh
-helm repo add storywise https://dotmethodme.github.io/storywise
-helm repo update
-
-helm install my-storywise storywise/storywise \
-  --set host=example.joinstorywise.com \
-  --set configMapData.DATABASE_NAME=demo \
-  --set secretData.MONGODB_URI="mongodb://example.com:27017/" \
-  --set secretData.USERNAME=admin \
-  --set secretData.PASSWORD=mysecretpassword
-```
-
-## Deploy on Kubernetes (yaml)
+## Deploy on Kubernetes 
 
 You can deploy Storywise on Kubernetes using the following template:
-[storywise/blob/main/kubernetes/everything.yaml](https://github.com/dotmethodme/storywise/blob/main/kubernetes/everything.yaml)
+[storywise/blob/main/kubernetes/everything.yaml](https://github.com/dotmethodme/storywise/blob/main/kubernetes)
 
 Start by cloning the repository:
 
@@ -126,26 +116,31 @@ cd storywise/kubernetes
 ```
 
 
-Make sure to update the ConfigMap and Secret with new values relevant for your setup:
+Make sure to update the `configmap.yaml` and `secret.yaml` with new values relevant for your setup:
 
-- MONGODB_URI
-- DATABASE_NAME
-- USERNAME
-- PASSWORD
 - API_BASE_URL
+- PORT
+- POSTGRES_HOST
+- POSTGRES_PORT
+- POSTGRES_OPTIONS
+- POSTGRES_USER
+- POSTGRES_DB
+- POSTGRES_PASSWORD
+- STORYWISE_USERNAME
+- STORYWISE_PASSWORD
 
 Another thing to update is the ingress address: here you want to configure the domain name that you've already setup to point to your Kubernetes cluster.
 
-*Note: if you wish to deploy in a namespace other than `default`, make sure to update that as well, everywhere in the yaml file*
+*Note: if you wish to deploy in a namespace other than `storywise`, make sure to update that as well, everywhere in the yaml file*
 
 Once that's done, apply the yaml file:
 
 ```sh
-kubectl apply -f everything.yaml
+kubectl apply -f .
 ```
 
 
-And that's all. The admin panel of Storywise is available at `https://your.address.example.com/admin`, and you can login using the credentials you configured in the steps above (USERNAME, and PASSWORD).
+And that's all. The admin panel of Storywise is available at `https://your.address.example.com/admin`, and you can login using the credentials you configured in the steps above (STORYWISE_USERNAME, and STORYWISE_PASSWORD).
 
 ## Embed
 
@@ -172,9 +167,10 @@ Thank you!
 ## Tech stack
 
 Storywise is built using the following very simple and accessible technologies:
-- MongoDB
-- Node.js, Express, Typescript
-- Vue.js and Nuxt (public website)
+- Postgres (database)
+- Go (backend)
+- Vue.js (admin panel)
+- Nuxt (public website)
 - Tailwind and DaisyUI
 
 For hosting, I prefer to use Kubernetes, but you can use whatever you want. I've also included a docker-compose file, and a deployment template for Kubernetes. And I welcome any contributions for other hosting options.
