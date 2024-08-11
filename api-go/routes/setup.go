@@ -71,6 +71,11 @@ func CreateApp(pg *db.PostgresRepo) *fiber.App {
 		return c.SendString(fileContent)
 	})
 
+	app.Use("/", func(ctx *fiber.Ctx) error {
+		// redirect to admin page
+		return ctx.Redirect("/admin/")
+	})
+
 	return app
 }
 

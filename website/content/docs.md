@@ -4,16 +4,28 @@
 
 You'll only need the following to get started:
 
-MongoDB  
-We use the simplest most popular document database to store data, and yes, it'll be good enough for your needs.
+Postgres  
+The best and largest open-source database in the world. You can use it for free, and it's very reliable.
 
-Hosting  
+Hosting
 You can host it anywhere you want - we have a container image for you to use, a Kubernetes deployment template, or you can host it on Heroku, or you can host it on your own server. It's up to you.
 
-## Deploy in the cloud (free*)
 
-**1. Create a MongoDB database**  
-The easiest way to start is to get a free database from MongoDB Atlas. They have a generous free tier which comes with 512MB of storage. And you can get one an overview of their managed services and get started [here](https://www.mongodb.com/pricing).
+## Deploy locally with docker compose
+
+```sh
+git clone https://github.com/dotmethodme/storywise.git
+cd storywise
+docker compose up
+```
+
+## Deploy in the cloud (possibly free*)
+
+**1. Create a database**
+Depending on your cloud of choice, you can create a postgres database anywhere you prefer. Some free* options are:
+- [Neon](https://neon.tech/) - serverless, free tier available
+- [Fly.io](https://fly.io/docs/about/pricing/#fly-postgres) - cloud hosted Postgres, free tier available
+- [Aiven.io](https://aiven.io/free-postgresql-database) - database platform - free tier available
 
 **2. Deploy storywise**  
 You can choose from a whole host of options to deploy storywise. Some easy options are:
@@ -22,7 +34,7 @@ You can choose from a whole host of options to deploy storywise. Some easy optio
 - [railway.app](https://railway.app/) - similar to render.com, free tier which comes with enough resources to run various workloads for free
 - Container based - either docker or Kubernetes
 
-*not guaranteed free, since it entirely depends on how you use the free tiers of various cloud services.*
+*not guaranteed free, since it entirely depends on how you use the free tiers of various cloud services.
 
 ## Resources
 
@@ -46,18 +58,18 @@ You can choose from a whole host of options to deploy storywise. Some easy optio
 
 ## Environment variables
 
-| Name                                 | Description                                                                                                                                                       |
-| ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| DATABASE_NAME <br> **required**      | The name of the database to be used (regardless of database type)                                                                                                 |
-| MONGODB_URI                          | The connection string to your MongoDB database.                                                                                                                   |
-| POSTGRES_URL                         | The connection string to your Postgres database.                                                                                                                  |
-| TIMESCALEDB_URL                      | The connection string to your TimescaleDB database.                                                                                                               |
-| LIBSQL_URL                           | The connection string to your Libsql database.                                                                                                                    |
-| STORYWISE_USERNAME <br> **required** | The username you want to use to log in to the admin panel.                                                                                                        |
-| STORYWISE_PASSWORD <br> **required** | The password you want to use to log in to the admin panel.                                                                                                        |
-| API_BASE_URL <br> **required**       | The base URL of your API. This is used to produce the right URLs for the tracking scripts.                                                                        |
-| NODE_ENV                             | The environment you're running the app in. If the environment is `local`, the app will be able to preserve certain features such as Hot Module Reloading.         |
-| ALLOWED_ORIGIN                       | The origin that browsers are allowed to send requests from. This is in effect used as a CORS policy for the API which receives user activity events. Default: `*` |
+- PORT=${PORT:-3777}
+- API_BASE_URL=${API_BASE_URL:-http://localhost:3777}
+- ALLOWED_ORIGIN="*"
+- TIMESCALE_ENABLED="true"
+- POSTGRES_HOST=timescaledb
+- POSTGRES_DB=${POSTGRES_DB:-postgres}
+- POSTGRES_PORT="5432"
+- POSTGRES_OPTIONS="sslmode=disable binary_parameters=yes"
+- POSTGRES_USER=${POSTGRES_USER:-postgres}
+- POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-testing}
+- STORYWISE_PASSWORD=${STORYWISE_PASSWORD:-testing}
+- STORYWISE_USERNAME=${STORYWISE_USERNAME:-testing}
 
 ## Deploy on docker-compose
 
@@ -82,7 +94,7 @@ Make sure to update the environment variables in the docker-compose file with ne
 Then run:
 
 ```sh
-docker-compose up
+docker compose up
 ```
 
 ## Deploy on Kubernetes (helm)
