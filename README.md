@@ -35,8 +35,3 @@ And the best thing is that you can get up and running with Storywise for **FREE*
 - [ ] Privacy levels - sever-side only, client-side fingerprint, client-side local storage (current default)
 - [ ] Bounce rate
 - [ ] User retention analysis
-
-
-# License
-
-Storywise is licensed under the GPL-3.0 License. See [LICENSE](LICENSE.md) for the full license text.
