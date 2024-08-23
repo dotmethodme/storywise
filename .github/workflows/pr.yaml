@@ -48,7 +48,7 @@ jobs:
 
       - name: Build
         run: go build
-        working-directory: ./api-go
+        working-directory: ./backend
 
       - name: Wait for postgres
         run: |
@@ -60,4 +60,4 @@ jobs:
 
       - name: Test
         run: go test
-        working-directory: ./api-go
+        working-directory: ./backend
