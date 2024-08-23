@@ -48,7 +48,7 @@ jobs:
           skip-on-empty: "false"
           skip-version-file: true
           output-file: false
-          skip-commit: false
+          skip-commit: true
           preset: conventionalcommits
 
       - name: Automated GitHub Release
