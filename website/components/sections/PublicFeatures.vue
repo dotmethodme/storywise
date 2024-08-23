@@ -6,9 +6,8 @@ const features = [
       "Did I mention \"simple\"? Yes, think I did already. But damn, that's the best part - it's simple. It's easy to use. It's easy to setup. It's easy to understand. It's easy to love.",
   },
   {
-    title: "Multi-database",
-    description:
-      "We support multiple databases - Postgres, MongoDB, SQLite (LibSql) and TimescaleDB. Depending on what you're comfortable with, you can use the database of your choice.",
+    title: "Lightweight",
+    description: "Built on nimble technologies, storywise is lightweight and fast.",
   },
   {
     title: "Export & import your data",

@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "build-only": "vite build",
     "typecheck": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
+    "copy:frontend": "cp -r ./dist ../api/dist-frontend",
     "gen": "sta -p http://localhost:3002/openapi.json -o ./src/generated -n api.ts --modular --extract-response-body --extract-request-body --axios"
   },
   "dependencies": {

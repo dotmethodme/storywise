@@ -1,5 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  experimental: {
+    watcher: "chokidar",
+  },
   typescript: {
     strict: true,
   },
@@ -46,7 +49,7 @@ export default defineNuxtConfig({
     },
   },
   modules: [
-    "nuxt-icon",
+    "@nuxt/icon",
     "@pinia/nuxt",
     "@nuxt/content",
     "@sidebase/nuxt-auth",
@@ -83,11 +86,9 @@ export default defineNuxtConfig({
   },
   nitro: {
     plugins: [],
-    // ["~/server/index.ts"],
   },
   auth: {
     isEnabled: true,
-    origin: getOrigin(),
     provider: {
       type: "authjs",
     },
@@ -99,11 +100,3 @@ export default defineNuxtConfig({
     "/admin/**": { ssr: false },
   },
 });
-
-function getOrigin() {
-  if (process.env.NODE_ENV === "production") {
-    return "https://joinstorywise.com";
-  } else {
-    return undefined;
-  }
-}
