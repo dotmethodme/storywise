@@ -4,9 +4,20 @@ var storywise = {
   app_id: "{{APP_ID}}",
   base: "{{API_BASE_URL}}",
   pageview,
+  track,
 };
 
+window.storywise = storywise;
+
 function pageview() {
+  track("pageview");
+}
+
+/**
+ *
+ * @param {string} eventType
+ */
+function track(eventType) {
   const url = `${storywise.base}/api/event`;
 
   const referrer = document.referrer;
@@ -20,6 +31,7 @@ function pageview() {
     screen_height: window.screen.height,
     window_width: window.innerWidth,
     window_height: window.innerHeight,
+    event_type: eventType,
   };
 
   // capture utm tags if they exist

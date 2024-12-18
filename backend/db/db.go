@@ -88,6 +88,7 @@ func (repo *PostgresRepo) GetSessionCountByUserAgent(appId string, key string, n
         FROM events
         WHERE timestamp >= $1
         AND app_id = $2
+        AND event_type = 'pageview'
         GROUP BY %s
         ORDER BY count DESC, value ASC`, column, column, column)
 	results := []models.CountByKeyValue{}
@@ -105,6 +106,7 @@ func (repo *PostgresRepo) GetSessionsPerDay(appId string, numberOfDays int) ([]m
 		FROM events
 		WHERE timestamp >= $1
 		AND app_id = $2
+		AND event_type = 'pageview'
 		GROUP BY year, month, day
 		ORDER BY year, month, day;
 	`
@@ -119,6 +121,7 @@ func (repo *PostgresRepo) GetTopReferrers(appId string, numberOfDays int) ([]mod
 		FROM events
 		WHERE timestamp >= $1
 		AND app_id = $2
+		AND event_type = 'pageview'
 		GROUP BY referrer
 		ORDER BY count DESC, referrer ASC
 	`
@@ -133,6 +136,7 @@ func (repo *PostgresRepo) GetHitsPerPage(appId string, numberOfDays int) ([]mode
 		FROM events
 		WHERE timestamp >= $1
 		AND app_id = $2
+		AND event_type = 'pageview'
 		GROUP BY path
 		ORDER BY count DESC, path ASC
 	`
@@ -148,6 +152,7 @@ func (repo *PostgresRepo) GetUniqueSessionsPerPage(appId string, numberOfDays in
 		FROM events
 		WHERE timestamp >= $1
 		AND app_id = $2
+		AND event_type = 'pageview'
 		GROUP BY path
 		ORDER BY count DESC, path ASC
 	`
@@ -162,6 +167,7 @@ func (repo *PostgresRepo) GetUniqueSessionsByCountry(appId string, numberOfDays 
 		FROM events
 		WHERE timestamp >= $1
 		AND app_id = $2
+		AND event_type = 'pageview'
 		GROUP BY country
 		ORDER BY count DESC, country ASC
 	`
@@ -178,11 +184,13 @@ func (repo *PostgresRepo) GetStats(appId string, numberOfDays int) (models.Stats
 			FROM events
 			WHERE timestamp >= $1
 			AND app_id = $2
+			AND event_type = 'pageview'
 		) as "uniqueVisitors",
 		(
 			select COUNT(path) as totalPageviews FROM events
 			WHERE timestamp >= $1
 			AND app_id = $2
+			AND event_type = 'pageview'
 		) as "totalPageviews",
 		(
 			SELECT AVG(viewsPerVisitor) FROM (
@@ -190,6 +198,7 @@ func (repo *PostgresRepo) GetStats(appId string, numberOfDays int) (models.Stats
 				FROM events
 				WHERE timestamp >= $1
 				AND app_id = $2
+				AND event_type = 'pageview'
 				GROUP BY session_id
 			) as subq
 		) as "viewsPerVisitor"
@@ -242,6 +251,7 @@ func (repo *PostgresRepo) GetSessionCountByUtmTag(appId string, key string, numb
 		FROM events
 		WHERE timestamp >= $1
 		AND app_id = $2
+		AND event_type = 'pageview'
 		GROUP BY %s
 		ORDER BY count DESC, value ASC`, column, column, column)
 	results := []models.CountByKeyValue{}
@@ -430,13 +440,12 @@ func InsertEvent(repo *PostgresRepo, event models.WebEventWrite) {
 	repo.Db.NamedExec(
 		`
 			INSERT INTO events 
-				( app_id, session_id, path, timestamp, user_agent, referrer, language, country, screen_width, screen_height, window_width, window_height, bot_name, bot_category, bot_url, bot_producer_name, bot_producer_url, client_type, client_name, client_version, client_engine, client_engine_version, device_type, device_brand, device_model, os_name, os_version, utm_source, utm_medium, utm_campaign, utm_term, utm_content) 
+				( app_id, session_id, path, timestamp, user_agent, referrer, language, country, screen_width, screen_height, window_width, window_height, bot_name, bot_category, bot_url, bot_producer_name, bot_producer_url, client_type, client_name, client_version, client_engine, client_engine_version, device_type, device_brand, device_model, os_name, os_version, utm_source, utm_medium, utm_campaign, utm_term, utm_content, event_type) 
 			VALUES 
-				(:app_id,:session_id,:path,:timestamp,:user_agent,:referrer,:language,:country,:screen_width,:screen_height,:window_width,:window_height,:bot_name,:bot_category,:bot_url,:bot_producer_name,:bot_producer_url,:client_type,:client_name,:client_version,:client_engine,:client_engine_version,:device_type,:device_brand,:device_model,:os_name,:os_version,:utm_source,:utm_medium,:utm_campaign,:utm_term,:utm_content)
+				(:app_id,:session_id,:path,:timestamp,:user_agent,:referrer,:language,:country,:screen_width,:screen_height,:window_width,:window_height,:bot_name,:bot_category,:bot_url,:bot_producer_name,:bot_producer_url,:client_type,:client_name,:client_version,:client_engine,:client_engine_version,:device_type,:device_brand,:device_model,:os_name,:os_version,:utm_source,:utm_medium,:utm_campaign,:utm_term,:utm_content,:event_type)
 		`,
 		event,
 	)
-
 }
 
 func (repo *PostgresRepo) ImportDataFromFile(file multipart.File) error {
