@@ -83,6 +83,7 @@ type WebEvent struct {
 	UtmTerm             string                    `json:"utmTerm" db:"utm_term"`
 	UtmContent          string                    `json:"utmContent" db:"utm_content"`
 	DeviceDetector      devicedetector.DeviceInfo `json:"deviceDetector" db:"device_detector"`
+	EventType           string                    `json:"eventType" db:"event_type"`
 }
 
 type WebEventRead struct {
@@ -121,6 +122,7 @@ type WebEventRead struct {
 	UtmCampaign         *string    `json:"utmCampaign" db:"utm_campaign" csv:"utm_campaign"`
 	UtmTerm             *string    `json:"utmTerm" db:"utm_term" csv:"utm_term"`
 	UtmContent          *string    `json:"utmContent" db:"utm_content" csv:"utm_content"`
+	EventType           *string    `json:"eventType" db:"event_type" csv:"event_type"`
 }
 
 type WebEventWrite struct {
@@ -158,6 +160,7 @@ type WebEventWrite struct {
 	UtmCampaign         string    `json:"utmCampaign" db:"utm_campaign"`
 	UtmTerm             string    `json:"utmTerm" db:"utm_term"`
 	UtmContent          string    `json:"utmContent" db:"utm_content"`
+	EventType           string    `json:"eventType" db:"event_type"`
 }
 
 type SessionItem struct {

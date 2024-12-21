@@ -18,6 +18,7 @@ var AllMigrations = []Migration{
 	CreateEventsAppIDIndexMigration,
 	AddUTMColumnsMigration,
 	AddEventIdsMigration,
+	AddEventTypeMigration,
 }
 
 func ExecuteAll(repo *db.PostgresRepo) {
