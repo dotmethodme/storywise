@@ -1,4 +1,8 @@
-FROM node:22-alpine
+# needed to pin to alpine 3.20 because Prisma uses OpenSSL which it has 
+# been moved to another location in 3.21
+# Ref: https://github.com/prisma/prisma/issues/25817
+# Solution: https://github.com/prisma/prisma/issues/25817#issuecomment-2529926082
+FROM node:22-alpine3.20
 
 WORKDIR /app
 
