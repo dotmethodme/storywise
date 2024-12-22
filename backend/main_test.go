@@ -309,6 +309,38 @@ func TestEvents(t *testing.T) {
 	assert.Equal(t, 0, *row.ScreenWidth)
 	assert.Equal(t, 0, *row.ScreenHeight)
 	assert.Equal(t, "asd", *row.Referrer)
+
+	// Working with fields that don't exist
+	req5 := httptest.NewRequest("POST", "/api/event", createEvent(map[string]interface{}{
+		"app_id":        "default",
+		"path":          "/testinnng3",
+		"screen_width":  100,
+		"screen_height": 100,
+		"utm_source":    "test",
+		"referrer":      "asd",
+		"asdgssdasd":    "asd",
+	}))
+	resp5, _ := app.Test(req5)
+	assert.Equal(t, 204, resp5.StatusCode)
+
+	// Test custom event type
+	req6 := httptest.NewRequest("POST", "/api/event", createEvent(map[string]interface{}{
+		"app_id":     "default",
+		"path":       "/testinnng3",
+		"event_type": "custom",
+	}))
+	resp6, _ := app.Test(req6)
+	assert.Equal(t, 204, resp6.StatusCode)
+
+	// Check inside the database
+	err = pg.Db.Select(&rows, "SELECT * FROM events order by id desc")
+	assert.Nil(t, err)
+	assert.NotNil(t, rows)
+	row = rows[0]
+	assert.Nil(t, err)
+	assert.Equal(t, "default", *row.AppID)
+	assert.Equal(t, "/testinnng3", *row.Path)
+	assert.Equal(t, "custom", *row.EventType)
 }
 
 func createEvent(input map[string]interface{}) *bytes.Buffer {

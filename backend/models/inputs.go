@@ -28,18 +28,20 @@ type CreateAppInput struct {
 
 type CreateEventInput struct {
 	Body struct {
-		AppId        string `json:"app_id" required:"true"`
-		Path         string `json:"path" required:"true"`
-		Referrer     string `json:"referrer" required:"false"`
-		ScreenWidth  int    `json:"screen_width" required:"false"`
-		ScreenHeight int    `json:"screen_height" required:"false"`
-		WindowWidth  int    `json:"window_width" required:"false"`
-		WindowHeight int    `json:"window_height" required:"false"`
-		UtmSource    string `json:"utm_source" required:"false"`
-		UtmMedium    string `json:"utm_medium" required:"false"`
-		UtmCampaign  string `json:"utm_campaign" required:"false"`
-		UtmTerm      string `json:"utm_term" required:"false"`
-		UtmContent   string `json:"utm_content" required:"false"`
+		_            struct{} `json:"-" additionalProperties:"true"`
+		AppId        string   `json:"app_id" required:"true"`
+		Path         string   `json:"path" required:"true"`
+		Referrer     string   `json:"referrer" required:"false"`
+		ScreenWidth  int      `json:"screen_width" required:"false"`
+		ScreenHeight int      `json:"screen_height" required:"false"`
+		WindowWidth  int      `json:"window_width" required:"false"`
+		WindowHeight int      `json:"window_height" required:"false"`
+		UtmSource    string   `json:"utm_source" required:"false"`
+		UtmMedium    string   `json:"utm_medium" required:"false"`
+		UtmCampaign  string   `json:"utm_campaign" required:"false"`
+		UtmTerm      string   `json:"utm_term" required:"false"`
+		UtmContent   string   `json:"utm_content" required:"false"`
+		EventType    string   `json:"event_type" required:"false"`
 	}
 	UserAgent      string `header:"user-agent"`
 	AcceptLanguage string `header:"accept-language"`

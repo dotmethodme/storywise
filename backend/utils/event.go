@@ -31,6 +31,11 @@ func ExtractEvent(input *models.CreateEventInput) models.WebEventWrite {
 	os_version := ""
 	os_platform := ""
 
+	event_type := "pageview"
+	if input.Body.EventType != "" {
+		event_type = input.Body.EventType
+	}
+
 	deviceDetector := dd.Parse(input.UserAgent)
 	if deviceDetector != nil {
 		bot := deviceDetector.GetBot()
@@ -80,6 +85,7 @@ func ExtractEvent(input *models.CreateEventInput) models.WebEventWrite {
 		UserAgent:    input.UserAgent,
 		Language:     input.AcceptLanguage,
 		Country:      input.CfIpCountry,
+		EventType:    event_type,
 
 		// Utm
 		UtmSource:   input.Body.UtmSource,
