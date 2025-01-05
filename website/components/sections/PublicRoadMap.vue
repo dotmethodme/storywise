@@ -8,7 +8,6 @@ const done = [
   "Top referrers (top 10 + more)",
   "Top countries (top 10 + more)",
   "Documentation website",
-  "MongoDB support",
   "Postgres support",
   "SQLite support (libsql)",
   "Top devices - mobile, desktop, tablet",
@@ -16,16 +15,14 @@ const done = [
   "Top OS - windows, mac, linux, ios, android, etc",
   "TimescaleDB support",
   "Export data to json",
+  "Import data from json",
+  "UTM tags",
 ];
 
 const todo = [
-  "Import data from json",
   "Privacy levels - sever-side only, client-side fingerprint, client-side local storage (current default)",
-  "Bounce rate",
-  "UTM tags",
   "Custom events",
   "User retention analysis",
-  "More database support. Examples - Postgres, TimescaleDB, Mysql etc",
 ];
 </script>
 

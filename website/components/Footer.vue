@@ -37,14 +37,6 @@
       <NuxtLink class="link link-hover" href="https://discord.gg/vuWTHEGB2y" target="_blank">
         Discord
       </NuxtLink>
-
-      <NuxtLink
-        class="link link-hover"
-        href="https://hub.docker.com/r/mihainueleanu/storywise"
-        target="_blank"
-      >
-        Dockerhub
-      </NuxtLink>
     </div>
     <div></div>
     <div></div>

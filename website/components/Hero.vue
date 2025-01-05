@@ -7,8 +7,8 @@ const showModal = ref(false);
       <div class="flex-1 lg:pr-10">
         <h1 class="text-5xl font-bold serif tracking-tight">Simple analytics</h1>
         <p class="py-6 text-xl max-w-xl">
-          Simple, open-source, privacy-friendly analytics for your website and for your apps. Multi-database
-          support. Easy to self-host or use our upcoming cloud service.
+          Simple, open-source, privacy-friendly analytics for your website and for your apps. Easy to
+          self-host or use our upcoming cloud service.
         </p>
         <a class="btn btn-primary mr-2" href="#sign-up">
           <Icon name="mdi:heart" size="2em" class="mr-1" />
