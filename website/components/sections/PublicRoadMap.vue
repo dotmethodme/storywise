@@ -29,7 +29,7 @@ const todo = [
 <template>
   <section class="bg-base-100 mb-10">
     <div class="py-10 px-4 sm:px-8 xl:px-0 mx-auto max-w-6xl">
-      <h1 class="text-4xl font-bold tracking-tight text-center mb-4">The road so far...</h1>
+      <h1 id="roadmap" class="text-4xl font-bold tracking-tight text-center mb-4">The road so far...</h1>
 
       <div class="grid grid-cols-1 md:grid-cols-2 mt-4">
         <div class="mb-4">

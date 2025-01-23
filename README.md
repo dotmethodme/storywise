@@ -11,6 +11,7 @@ And the best thing is that you can get up and running with Storywise for **FREE*
 - [Documentation](https://joinstorywise.com/docs)
 - [Demo](https://demo.joinstorywise.com/admin)
 - [Discord](https://discord.gg/vuWTHEGB2y)
+- [Roadmap](https://joinstorywise.com/#roadmap)
 
 # Core design principles
 
@@ -18,20 +19,3 @@ And the best thing is that you can get up and running with Storywise for **FREE*
 - 🚀 **Lightweight**: It's built to be small and nimble, while still good enough for most websites out there.
 - 🫴 **Open Source**: It's open source, free to use and free to self-host (for the most part).
 
-# Feature roadmap
-- [x] Time range selector (preset for now)
-- [x] Unique visitors over time
-- [x] General stats (total visitors, total pageviews, views per visitor)
-- [x] Unique visitors per page (top 10 + more)
-- [x] Pageviews per page (top 10 + more)
-- [x] Top referrers (top 10 + more)
-- [x] Top countries (top 10 + more)
-- [x] Allow multiple database integrations (currently only MongoDb)
-- [x] Top devices - mobile, desktop, tablet
-- [x] Top browsers - chrome, safari, firefox, edge, etc
-- [x] Top OS - windows, mac, linux, ios, android, etc
-- [x] UTM tags
-- [ ] Custom events
-- [ ] Privacy levels - sever-side only, client-side fingerprint, client-side local storage (current default)
-- [ ] Bounce rate
-- [ ] User retention analysis
